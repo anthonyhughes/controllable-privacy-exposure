@@ -1,0 +1,234 @@
+
+
+##Original Discharge##
+
+ 
+Name:  ___                  Unit No:   ___
+ 
+Admission Date:  ___              Discharge Date:   ___
+ 
+Date of Birth:  ___             Sex:   F
+ 
+Service: MEDICINE
+ 
+Allergies: 
+Penicillins / Tetracycline / Erythromycin Base / Codeine / 
+Ciprofloxacin / Bactrim / Biaxin / Sulfa(Sulfonamide 
+Antibiotics) / azithromycin / Bactroban / hydrochlorothiazide / 
+cefpodoxime
+ 
+Attending: ___.
+ 
+Chief Complaint:
+diarrhea
+ 
+Major Surgical or Invasive Procedure:
+None
+
+ 
+History of Present Illness:
+Ms. ___ is a ___ woman with ___ disease,
+Meniere's, ___ disease, and asthma who presents with
+cough and congestion for the last week. She also called her 
+PCP's
+office on the day of presentation to complain of severe diarrhea
+x3 days and dizziness. 
+
+In the ED, a BNP was obtained and she was incidentally found to
+have a level of 662. She was given 20 mg IV furosemide. 
+
+On interview upon arrival to the floor, she reports that she
+presented to the ED because of several days of diarrhea. She 
+says
+that she has chronic intermittent dizziness from her Meniere's
+that is no worse than usual. She denies any nausea or vomiting.
+She denies any sick contacts. She reports a chronic stuffy nose
+for many years with post-nasal drip. She denies any shortness of
+breath with rest or activity, orthopnea, PND, or peripheral 
+edema
+aside from swelling in her toes when she stands too long. 
+
+- In the ED, initial vitals were:
+T 97.7 HR 57 BP 126/59 HR20 93% RA 
+
+- Labs were notable for:
+Trop-T: <0.01
+proBNP: 662
+Lactate:0.9
+
+- Studies were notable for:
+CXR: 
+IMPRESSION:  
+No radiographic evidence for pneumonia.  Mild pulmonary vascular
+congestion. Interval development of a moderate midthoracic
+vertebral compression deformity, of indeterminate age. 
+Progressive compression deformity of the L1 vertebral body. 
+
+- The patient was given:
+___ 20:18 IV Furosemide 20 mg 
+
+- Case Management was consulted, who recommended:
+"Patient declined any services. ___ d/c patient if medically
+cleared."
+
+On arrival to the floor, she feels well apart from her chronic
+stuffy nose. 
+
+ 
+Past Medical History:
+Meniere's disease   
+___ disease, type 1  
+Osteoarthritis
+Osteoporosis  
+___ disease  
+Asthma  
+Hypertension  
+Obstructive sleep apnea  
+GERD  
+Cataracts 
+Recurrent UTIs
+Vaginal prolapse-pessary in place 
+Hx of colonic adenomas
+Chronic low back pain, and R hip and leg pain that can interfere
+with walking, partially secondary to ___ disease 
+
+Past Surgical History:
+--s/p hysterectomy
+ 
+Social History:
+___
+Family History:
+Mother - CHF 
+Sister - ___ disease 
+ 
+Physical Exam:
+ADMISSION PHYSICAL EXAM:
+========================
+VITALS:
+___ 2343 Temp: 97.5 PO BP: 155/77 HR: 63 RR: 19 O2 sat: 95%
+O2 delivery: Ra 
+GENERAL: Well-appearing elderly woman in NAD. 
+HEENT: PERRL, EOMI. Sclera anicteric and without injection. MMM.
+NECK: No cervical lymphadenopathy. No JVD.
+CARDIAC: Regular rhythm, normal rate. Audible S1 and S2. No
+murmurs/rubs/gallops.
+LUNGS: Clear to auscultation bilaterally. No wheezes, rhonchi or
+rales. No increased work of breathing.
+ABDOMEN: Normal bowels sounds, non distended, non-tender to deep
+palpation in all four quadrants. 
+EXTREMITIES: No clubbing, cyanosis, or edema. Pulses DP/Radial 
+2+
+bilaterally.
+SKIN: Warm. Cap refill <2s. No rashes.
+NEUROLOGIC: AOx3. CN2-12 intact. Moving all 4 limbs
+spontaneously. ___ strength throughout. Normal sensation.
+
+DISCHARGE PHYSICAL EXAM:
+General: walking with physical therapy, in no acute distress
+HEENT: NC/AT, dentures in place
+Pulm: breathing comfortably with no increased work of breathing
+Neuro: cranial nerves grossly intact, moving all 4 extremities 
+without difficulty
+ 
+Pertinent Results:
+___ 03:10PM BLOOD WBC-9.6 RBC-4.08 Hgb-12.8 Hct-37.7 MCV-92 
+MCH-31.4 MCHC-34.0 RDW-15.9* RDWSD-53.3* Plt ___
+___ 03:10PM BLOOD Neuts-68.2 ___ Monos-6.7 Eos-0.1* 
+Baso-0.7 Im ___ AbsNeut-6.51* AbsLymp-2.30 AbsMono-0.64 
+AbsEos-0.01* AbsBaso-0.07
+___ 03:10PM BLOOD Glucose-96 UreaN-21* Creat-1.1 Na-141 
+K-4.5 Cl-104 HCO3-23 AnGap-14
+___ 03:10PM BLOOD ALT-17 AST-21 AlkPhos-87 TotBili-0.4
+___ 03:10PM BLOOD cTropnT-<0.01 proBNP-662*
+___ 03:10PM BLOOD Albumin-4.2 Calcium-9.1 Phos-3.7 Mg-2.5
+___ 04:22PM STOOL CDIFPCR-NEG
+ 
+
+
+TRANSITIONAL ISSUES:
+====================
+[] pt expressed concerns about food insecurity. ___ benefit from 
+Meals on Wheels or other food assistance services.
+ 
+Medications on Admission:
+The Preadmission Medication list is accurate and complete.
+1. Estrogens Conjugated 1 gm VG ASDIR 
+2. Benzonatate 100 mg PO TID:PRN cough 
+3. LORazepam 0.5 mg PO BID:PRN anxiety 
+4. ClonazePAM 0.5 mg PO BID:PRN anxiety 
+5. azelastine 0.15 % (205.5 mcg) nasal BID 
+6. Rosuvastatin Calcium 20 mg PO QPM 
+7. BuPROPion XL (Once Daily) 150 mg PO DAILY 
+8. Vitamin D ___ UNIT PO MONTHLY 
+9. FLUoxetine 20 mg PO DAILY 
+10. nebivolol 2.5 mg oral DAILY 
+11. Oxybutynin 5 mg PO BID 
+12. ProAir HFA (albuterol sulfate) 90 mcg/actuation inhalation 
+Q6H:PRN 
+13. amLODIPine 10 mg PO DAILY 
+14. Latanoprost 0.005% Ophth. Soln. 1 DROP BOTH EYES QHS 
+15. Fluticasone-Salmeterol Diskus (250/50)  1 INH IH BID 
+16. Fluticasone Propionate NASAL 2 SPRY NU BID 
+
+ 
+Discharge Medications:
+1.  Cetirizine 10 mg PO DAILY 
+RX *cetirizine 10 mg 1 tablet(s) by mouth once a day Disp #*30 
+Tablet Refills:*0 
+2.  amLODIPine 10 mg PO DAILY  
+3.  azelastine 0.15 % (205.5 mcg) nasal BID  
+4.  Benzonatate 100 mg PO TID:PRN cough  
+5.  BuPROPion XL (Once Daily) 150 mg PO DAILY  
+6.  ClonazePAM 0.5 mg PO BID:PRN anxiety  
+7.  Estrogens Conjugated 1 gm VG ASDIR  
+8.  FLUoxetine 20 mg PO DAILY  
+9.  Fluticasone Propionate NASAL 2 SPRY NU BID  
+10.  Fluticasone-Salmeterol Diskus (250/50)  1 INH IH BID  
+11.  Latanoprost 0.005% Ophth. Soln. 1 DROP BOTH EYES QHS  
+12.  LORazepam 0.5 mg PO BID:PRN anxiety  
+13.  nebivolol 2.5 mg oral DAILY  
+14.  Oxybutynin 5 mg PO BID  
+15.  ProAir HFA (albuterol sulfate) 90 mcg/actuation inhalation 
+Q6H:PRN  
+16.  Rosuvastatin Calcium 20 mg PO QPM  
+17.  Vitamin D ___ UNIT PO MONTHLY  
+
+ 
+Discharge Disposition:
+Home With Service
+ 
+Facility:
+___
+ 
+Discharge Diagnosis:
+weakness
+
+ 
+Discharge Condition:
+Mental Status: Clear and coherent.
+Level of Consciousness: Alert and interactive.
+Activity Status: Ambulatory - requires assistance or aid (walker 
+or cane).
+
+ 
+Discharge Instructions:
+Dear Ms. ___,
+
+It was a pleasure taking care of you during your stay at ___.
+
+WHY WAS I HERE?
+-You were feeling weak and had diarrhea
+
+WHAT WAS DONE WHILE I WAS HERE?
+-You were checked for infections that cause diarrhea
+-You were seen by ___ and OT
+
+WHAT SHOULD I DO WHEN I GO HOME?
+-You should see your PCP
+
+___ well!
+
+Your ___ Care Team
+ 
+Followup Instructions:
+___

@@ -1,0 +1,28 @@
+
+
+#Radiology Summary 203155#
+
+EXAMINATION:  CHEST (AP AND LAT)
+
+INDICATION:  History: ___ with cough, congestion, Sat 93%// pneumonia?
+
+TECHNIQUE:  Upright AP and lateral views of the chest
+
+COMPARISON:  Chest radiograph ___. CT chest ___
+
+FINDINGS: 
+
+Heart size is moderately enlarged.  The mediastinal and hilar contours are
+unchanged with diffuse atherosclerotic calcification of the thoracic aorta
+noted.  The pulmonary vasculature is mildly engorged, but no frank pulmonary
+edema.  No focal consolidation, pleural effusion or pneumothorax is seen. 
+Moderate compression deformity of a midthoracic spine vertebral body appears
+new from ___, with a moderate to severe compression deformity of the L1
+vertebral body appearing progressed in the interval.
+
+IMPRESSION: 
+
+No radiographic evidence for pneumonia.  Mild pulmonary vascular congestion. 
+Interval development of a moderate midthoracic vertebral compression
+deformity, of indeterminate age.  Progressive compression deformity of the L1
+vertebral body.

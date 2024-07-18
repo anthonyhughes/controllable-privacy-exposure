@@ -1,0 +1,135 @@
+
+
+##Original Discharge##
+
+ 
+Name:  ___                 Unit No:   ___
+ 
+Admission Date:  ___              Discharge Date:   ___
+ 
+Date of Birth:  ___             Sex:   F
+ 
+Service: MEDICINE
+ 
+Allergies: 
+No Known Allergies / Adverse Drug Reactions
+ 
+Attending: ___.
+ 
+Chief Complaint:
+fever
+ 
+Major Surgical or Invasive Procedure:
+none
+
+ 
+History of Present Illness:
+___ year old female with colon cancer on chemotherapy p/w fever. 
+Pt had home ___ today. Nurse took vitals following ___ and 
+pt found to have temp 101. Pt's oncology fellow contacted and pt 
+referred to the ED. Pt has no associated sxs. She denies HA, 
+sore throat, eye, ear or nose sxs, cp/dyapnea/cough, n/v/d/abd 
+pain, dysuria/hematuris. She has noticed no fevers or chills in 
+the days preceeding.
+.
+In the ED: t 100, hr 109, bp112/75, r18 100% ra. chem 7 notable 
+for k3.2, cr 1.2 (above baseline 0.9). U/A 13 wbcs, neg blood, 
+nitr, bact. CXR: neg. lactate 1.8. Cxs drawn and pt given 
+cefepime/vanc and admitted to OMED.
+.
+ROS: as above, otherwise complete ROS negative.
+ 
+Past Medical History:
+colon CA
+HTN
+GERD
+ 
+Social History:
+___
+Family History:
+Mother ___, living, has h/o colitis & lupus
+Father, d of complications of MI at age ___
+1 sibling, sister age ___, healthy
+Paternal uncle had cancer, ___ whether prostate or colon
+
+ 
+Physical Exam:
+t98.2 95/64 p92 18 97%ra
+NAD
+eomi, mmm
+neck supple
+no ___
+chest clear
+rrr
+abd benign
+ext w/wp
+neuro non-focal
+no rash
+
+Discharge exam:
+
+ 
+Pertinent Results:
+ANC 700
+___ 10:55PM URINE  BLOOD-NEG NITRITE-NEG PROTEIN-TR 
+GLUCOSE-NEG KETONE-NEG BILIRUBIN-NEG UROBILNGN-NEG PH-6.0 
+LEUK-MOD
+___ 10:55PM URINE  RBC-1 WBC-13* BACTERIA-NONE YEAST-NONE 
+EPI-0
+___ 08:07PM   COMMENTS-GREEN TOP
+___ 08:07PM   LACTATE-1.8
+___ 07:40PM   GLUCOSE-115* UREA N-27* CREAT-1.2* SODIUM-137 
+POTASSIUM-3.2* CHLORIDE-104 TOTAL CO2-25 ANION GAP-11
+___ 07:40PM   WBC-2.5* RBC-3.96* HGB-12.5 HCT-37.3 MCV-94 
+MCH-31.4 MCHC-33.4 RDW-15.5
+___ 07:40PM   NEUTS-28* BANDS-0 ___ MONOS-25* EOS-19* 
+BASOS-0 ___ MYELOS-0
+___ 07:40PM   PLT COUNT-169
+
+urine culture no growth
+
+blood cultures
+
+CXR: ight-sided Port-A-Cath tip terminates in the proximal right 
+atrium.  The
+cardiac, mediastinal and hilar contours are normal.  The 
+pulmonary vascularity
+is normal.  Lungs are clear.  No pleural effusion or 
+pneumothorax is present. 
+There are no acute osseous abnormalities.
+ 
+
+
+ 
+Medications on Admission:
+The Preadmission Medication list is accurate and complete.
+1. Triamterene-Hydrochlorothiazide (37.5/___) 1 CAP PO DAILY 
+2. Omeprazole 20 mg PO DAILY 
+
+ 
+Discharge Disposition:
+Home
+ 
+Discharge Diagnosis:
+Primary diagnosis:
+neutropenic fever
+
+Secondary diagnosis:
+stage IIIA colon cancer on FOLFOX
+
+ 
+Discharge Condition:
+Mental Status: Clear and coherent.
+Level of Consciousness: Alert and interactive.
+Activity Status: Ambulatory - Independent.
+
+ 
+Discharge Instructions:
+You were admitted to the hospital with a fever and low white 
+blood cell count.  You received antibiotics for a presumed 
+bacterial infection.  Urine culture remained negative, however 
+you should complete these antibiotics for a 7 day course.  
+Please see below for your follow up appointments.
+ 
+Followup Instructions:
+___

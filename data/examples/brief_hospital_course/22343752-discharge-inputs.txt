@@ -1,0 +1,444 @@
+
+
+##Original Discharge##
+
+ 
+Name:  ___                 Unit No:   ___
+ 
+Admission Date:  ___              Discharge Date:   ___
+ 
+Date of Birth:  ___             Sex:   F
+ 
+Service: SURGERY
+ 
+Allergies: 
+Ace Inhibitors / Bactrim / Hydrochlorothiazide / Aricept
+ 
+Attending: ___.
+ 
+Chief Complaint:
+Slammed into door, sustaining injuries including C4 vertebral 
+fracture, retroperitoneal hematoma, retropharyngeal hematoma.
+ 
+Major Surgical or Invasive Procedure:
+None
+
+ 
+History of Present Illness:
+___ year old female with history of AFib (on warfarin), cognitive 
+impairment with h/o recurrentfalls, CAD s/p remote CABG ___ 
+ago), CKD (baseline Cr 1.5),
+diffuse esophageal spasm, HTN, and ?COPD here after slamming 
+into
+door with active extravastation... retropharyngeal hematoma
+requiring intubation.  
+Patient  was walking in the dark and slammed into a door at 
+home,
+hitting her face. She had a L eyelid laceration, paramedics came
+to see her, and she ultimately declined ED admission. 45min
+afterwards, she felt short of breath and felt like her "airway
+was closing" prompting arrival to ED. The patient then underwent
+emergent intubation for airway protection. Her INR was 1.8 and
+was given K centra and 10 IV vitamin K. 
+ 
+Past Medical History:
+# CAD s/p CABG
+# HTN
+# Mitral Regurgitation
+# Chronic Afib:  On warfarin
+# CKD
+# Hx.of UTIs (typically EColi, variable resistance, most recent 
+pan-sensitive ___
+# Osteopenia
+# Mild Peripheral Neuropathy: previously on gabapentin, did not 
+tolerate ___ cognitive issues
+# Possible Cognitive Impairment (undergoing neuropsych 
+evaluation ___
+ 
+Social History:
+___
+Family History:
+Father died suddenly of a cerebral hemorrhage when pt. was ___.  
+Otherwise, non-contributory
+ 
+Physical Exam:
+PHYSICAL EXAMINATION:  upon admission ___
+ 
+Temp: 97.6 HR: 87 BP: 158/94 Resp: 18 O(2)Sat: 94 Normal
+ 
+Constitutional: Comfortable
+Chest: neck with left sided ttp and fullness; OP clear and
+patent; no bruit on neck exam; from ; no c-spine TTP; ?some
+dysphonation but daughter says no different than usual voice
+Cardiovascular: Regular Rate and Rhythm, Normal first and
+second heart sounds
+Abdominal: Non-tender, Soft, Non-distended
+Skin: Warm and dry
+Neuro: right elbow hematoma with sts; from; nvi right hand
+Psych: Normal mood, Normal mentation; CN intact; PERRL 4 mm
+___: No petechiae
+
+physical examination upon discharge:  ___:
+
+GENERAL:  NAD
+
+vital signs: 98.6, hr=97, bp=150/81, rr=18 98% room air 
+
+HEENT:  Ecchymosis left side face, left cheek bone, left neck
+CV:  Irreg.
+LUNGS:  clear
+ABDOMEN:  hypoactive BS, soft, non-tender
+EXT:  ecchymosis ant. aspect right lower leg, ecchymosis right 
+thigh, no calf pain bil, + dp bil
+NEURO:  alert and oriented x3, speech clear, no tremors
+
+ 
+Pertinent Results:
+CBC
+___ 05:45AM BLOOD WBC-10.5* RBC-3.04* Hgb-9.3* Hct-28.7* 
+MCV-94 MCH-30.6 MCHC-32.4 RDW-14.6 RDWSD-47.9* Plt ___
+___ 05:45AM BLOOD WBC-10.8* RBC-3.10* Hgb-9.4* Hct-28.5* 
+MCV-92 MCH-30.3 MCHC-33.0 RDW-14.1 RDWSD-46.3 Plt ___
+___ 05:21AM BLOOD WBC-12.3* RBC-3.02* Hgb-9.2* Hct-28.1* 
+MCV-93 MCH-30.5 MCHC-32.7 RDW-14.1 RDWSD-47.0* Plt ___
+___ 03:38AM BLOOD WBC-14.0* RBC-3.13* Hgb-9.5* Hct-28.2* 
+MCV-90 MCH-30.4 MCHC-33.7 RDW-13.9 RDWSD-45.4 Plt ___
+___ 03:03AM BLOOD WBC-9.4 RBC-3.19* Hgb-9.6* Hct-29.5* 
+MCV-93 MCH-30.1 MCHC-32.5 RDW-14.1 RDWSD-47.7* Plt ___
+___ 02:21AM BLOOD WBC-8.7 RBC-2.91* Hgb-8.9* Hct-27.1* 
+MCV-93 MCH-30.6 MCHC-32.8 RDW-14.5 RDWSD-48.8* Plt ___
+___ 02:23AM BLOOD WBC-12.0* RBC-3.14* Hgb-9.6* Hct-28.6* 
+MCV-91 MCH-30.6 MCHC-33.6 RDW-14.0 RDWSD-46.4* Plt ___
+___ 09:43PM BLOOD WBC-10.8* RBC-3.09* Hgb-9.6* Hct-28.1* 
+MCV-91 MCH-31.1 MCHC-34.2 RDW-13.8 RDWSD-45.9 Plt ___
+___ 02:04AM BLOOD WBC-11.9* RBC-3.53* Hgb-10.8* Hct-31.6* 
+MCV-90 MCH-30.6 MCHC-34.2 RDW-13.7 RDWSD-44.6 Plt ___
+___ 05:23PM BLOOD WBC-13.0* RBC-3.83* Hgb-11.9 Hct-34.5 
+MCV-90 MCH-31.1 MCHC-34.5 RDW-14.0 RDWSD-45.8 Plt ___
+___ 02:23AM BLOOD WBC-12.0* RBC-3.14* Hgb-9.6* Hct-28.6* 
+MCV-91 MCH-30.6 MCHC-33.6 RDW-14.0 RDWSD-46.4* Plt ___
+___ 09:43PM BLOOD WBC-10.8* RBC-3.09* Hgb-9.6* Hct-28.1* 
+MCV-91 MCH-31.1 MCHC-34.2 RDW-13.8 RDWSD-45.9 Plt ___
+___ 02:04AM BLOOD WBC-11.9* RBC-3.53* Hgb-10.8* Hct-31.6* 
+MCV-90 MCH-30.6 MCHC-34.2 RDW-13.7 RDWSD-44.6 Plt ___
+___ 05:23PM BLOOD WBC-13.0* RBC-3.83* Hgb-11.9 Hct-34.5 
+MCV-90 MCH-31.1 MCHC-34.5 RDW-14.0 RDWSD-45.8 Plt ___
+___ 07:40AM BLOOD WBC-9.7 RBC-3.35* Hgb-10.3* Hct-30.7* 
+MCV-92 MCH-30.7 MCHC-33.6 RDW-14.2 RDWSD-47.0* Plt ___
+___ 01:54AM BLOOD WBC-12.3* RBC-3.47* Hgb-10.7* Hct-32.1* 
+MCV-93 MCH-30.8 MCHC-33.3 RDW-14.4 RDWSD-47.9* Plt ___
+___ 06:15PM BLOOD WBC-12.4* RBC-3.93 Hgb-12.1 Hct-36.1 
+MCV-92 MCH-30.8 MCHC-33.5 RDW-14.0 RDWSD-47.0* Plt ___
+___ 01:50PM BLOOD WBC-11.6* RBC-3.92 Hgb-12.1 Hct-35.8 
+MCV-91 MCH-30.9 MCHC-33.8 RDW-13.9 RDWSD-46.3 Plt ___
+___ 08:30AM BLOOD WBC-14.4*# RBC-4.80 Hgb-14.7 Hct-42.6 
+MCV-89 MCH-30.6 MCHC-34.5 RDW-13.8 RDWSD-44.8 Plt ___
+
+CHEST (PORTABLE AP) Study Date of ___ 8:30 AM 
+FINDINGS:  
+  
+AP portable upright view of the chest.  Midline sternotomy wires 
+and 
+mediastinal clips again noted.  Overlying EKG leads are present. 
+ The heart is stably mildly enlarged.  Prominence of the 
+superior mediastinum reflects known hematoma in the 
+retropharyngeal space extending into the superior mediastinum as 
+seen on same-day neck CT.  Lungs are clear bilaterally.  Bony 
+structures appear intact. 
+
+CT HEAD W/O CONTRAST Study Date of ___ 8:32 AM 
+IMPRESSION: 
+  
+  
+1. No acute hemorrhage or fracture. 
+2. Chronic small vessel disease. 
+3. Small left ___ hematoma. 
+
+ CT NECK W/O CONTRAST (EG: PAROTIDS) Study Date of ___ 
+8:45 AM 
+IMPRESSION:  
+  
+Massive pre-vertebral hematoma with associated hyper extension 
+teardrop 
+fracture at C4 without alignment abnormality or distraction.  
+Recommend urgent CTA to assess active bleeding. 
+  
+
+CTA NECK W&W/OC & RECONS Study Date of ___ 9:21 AM 
+IMPRESSION: 
+  
+  
+1. Extensive retropharyngeal hematoma spanning from C2 through 
+T1, measuring 4.6 x 2.6 cm axially with active extravasation.  
+Unclear whether this represents active extravasation from 
+prevertebral artery versus 
+retropharyngeal branch artery, although the associated vessel 
+does appear to be likely prevertebral (series 2, image 144).  
+Consultation with neurosurgery is recommended. 
+2. An additional linear focus of hyperdensity along the lateral 
+aspect of the hematoma inferiorly (series 2, image 103) cannot 
+be connected to a larger vessel.  This could represent venous 
+hemorrhage.  Close attention on ___ is recommended. 
+3. Additional findings described above. 
+
+CT CHEST W/O CONTRAST Study Date of ___ 4:25 ___ 
+IMPRESSION: 
+  
+  
+1. A large retropharyngeal hematoma extends into the superior 
+mediastinum, not appreciably changed compared to the earlier 
+same day neck CTA.  There is mild mass effect on the posterior 
+wall of the trachea, but no significant luminal narrowing. 
+2. Somewhat nodular opacification focally within the anterior 
+right lower lobe probably reflects atelectasis.  However, 
+recommend three-month ___ chest CT to assess stability. 
+
+CT NECK W/O CONTRAST (EG: PAROTIDS) Study Date of ___ 
+4:25 ___ 
+IMPRESSION: 
+  
+  
+1. Re-demonstration of retropharyngeal hematoma extending from 
+C2 through the right aspect of the posterior mediastinum, 
+slightly decreased in size from the prior study with 
+non-visualized hematocrit levels previously seen, likely 
+secondary to mass effect from endotracheal tubes and intubation. 
+
+2. The hematoma extends to the posterior mediastinum.  The 
+component in the mediastinum appears more prominent when 
+compared to prior examination.  This could represent 
+redistribution, however the findings could represent continued 
+active extravasation and close interval ___ is recommended 
+to document stability/growth. 
+
+Portable TTE (Complete) Done ___ at 12:00:00 ___      FINAL 
+IMPRESSION: Borderline LV systolic function secondary to septal 
+dyssynchrony. Bi-leaflet MVP with moderate mitral regurgitation. 
+Mild pulmonary hypertension.
+
+CHEST (PORTABLE AP) Study Date of ___ 4:50 AM 
+IMPRESSION:  
+  
+Compared to chest radiographs since ___, most recently ___. 
+  
+Lungs clear.  Moderate cardiomegaly is chronic.  No pulmonary 
+edema or pleural effusion. 
+  
+
+MR CERVICAL SPINE W/O CONTRAST Study Date of ___ 9:19 ___ 
+IMPRESSION: 
+  
+  
+1. Acute fracture involving the anterior C4 vertebral body with 
+pre-vertebral soft tissue edema and probable injury to the 
+anterior longitudinal ligament as well the as the inter-spinous 
+ligament. 
+2. Edema within the C6-C7 intervertebral disc space with 
+probable osseous 
+edema of the superior C7 vertebral body. 
+3. Re-demonstration of retropharyngeal hematoma. 
+4. Retrolisthesis of C4 on C5 and anterolisthesis of C2 on C3. 
+5. Multilevel degenerative changes as detailed above, with 
+moderate spinal 
+canal stenosis at C4-C5 through C6-C7 levels with spinal cord 
+remodeling, 
+without definite cord edema. 
+
+CHEST (PORTABLE AP) Study Date of ___ 4:54 AM 
+IMPRESSION:  
+  
+In comparison with the study ___, the monitoring support 
+devices are 
+essentially unchanged.  Cardiac silhouette remains mildly 
+enlarged without 
+evidence of vascular congestion, pleural effusion, or acute 
+focal pneumonia. 
+
+CHEST PORT. LINE PLACEMENT Study Date of ___ 10:53 ___ 
+IMPRESSION:  
+  
+Compared to chest radiographs since ___, most recently 
+___ 
+through ___ at 05:33. 
+  
+Combination of small to moderate pleural effusions and moderate 
+bibasilar 
+atelectasis has increased since earlier in the day.  Moderate 
+cardiomegaly is chronic.  There is also very mild ___ 
+edema. 
+  
+Indwelling cardiopulmonary support devices in standard 
+placements. 
+  
+
+ CHEST (PORTABLE AP) Study Date of ___ 5:31 AM 
+IMPRESSION:  
+  
+Lines and tubes are in standard position.  Bibasilar opacities 
+have markedly improved.  Bilateral effusions have improved.  
+Cardiomegaly, tortuous aorta and prominent hila bilaterally are 
+stable.  There is no evident pneumothorax.  Sternal wires are 
+intact. 
+
+ VIDEO OROPHARYNGEAL SWALLOW Study Date of ___ 11:37 AM 
+IMPRESSION:  
+  
+No aspiration.  Penetration with thin and nectar consistencies. 
+  
+Please refer to the speech and swallow division note in OMR for 
+full details, assessment, and recommendations. 
+
+ CT HEAD W/O CONTRAST Study Date of ___ 5:41 ___ 
+IMPRESSION: 
+  
+  
+1. Findings most consistent with severe chronic small vessel 
+ischemic changes in the absence of acute symptoms.  No 
+intracranial hemorrhage. 
+2. Para-nasal sinus disease, suggestive of acute sphenoid 
+sinusitis in the 
+absence of recent intubation.
+
+___:  CXR;  
+
+In comparison with the study ___, the right IJ catheter 
+has been 
+removed.  Continued enlargement of the cardiac silhouette in a 
+patient with previous CABG procedure an intact midline sternal 
+wires.  Mild elevation of pulmonary venous pressure with small 
+bilateral pleural effusions and compressive atelectasis at the 
+bases. 
+No definite acute focal pneumonia. 
+
+___ 5:24 am STOOL     CONSISTENCY: NOT APPLICABLE
+      Source: Stool. 
+
+                            **FINAL REPORT ___
+
+   C. difficile DNA amplification assay (Final ___: 
+      Negative for toxigenic C. difficile by the Cepheid nucleic 
+acid
+      amplification assay.. 
+           (Reference Range-Negative
+
+ 
+
+ 
+
+ 
+Medications on Admission:
+The Preadmission Medication list is accurate and complete.
+1. amLODIPine 5 mg PO DAILY 
+2. Atorvastatin 10 mg PO QPM 
+3. irbesartan 300 mg oral DAILY 
+4. Metoprolol Succinate XL 50 mg PO DAILY 
+5. Warfarin 2.5 mg PO 2X/WEEK (WE,SA) 
+6. Aspirin 81 mg PO DAILY 
+7. Omeprazole 20 mg PO DAILY 
+8. Latanoprost 0.005% Ophth. Soln. 1 DROP BOTH EYES QHS 
+9. Fish Oil (Omega 3) 1000 mg PO BID 
+10. Warfarin 5 mg PO 5X/WEEK (___) 
+
+ 
+Discharge Medications:
+1.  Acetaminophen (Liquid) 650 mg PO Q6H:PRN Pain - Mild 
+  Reason for PRN duplicate override: Alternating agents for 
+similar severity 
+2.  Artificial Tears ___ DROP BOTH EYES PRN dry eyes  
+3.  Docusate Sodium 100 mg PO BID  
+4.  Donepezil 10 mg PO QHS  
+5.  Heparin 5000 UNIT SC BID 
+___ d/c after ambulatory  
+6.  Ipratropium-Albuterol Neb 1 NEB NEB Q6H  
+7.  Multivitamins W/minerals Liquid 15 mL PO DAILY  
+8.  Nystatin Oral Suspension 5 mL PO QID:PRN swish 
+may diconstinue when no signs or symptoms  
+9.  OxycoDONE Liquid ___ mg PO Q4H:PRN Pain - Moderate 
+RX *oxycodone 5 mg/5 mL ___ mg by mouth every four (4) hours 
+Disp ___ Milliliter Refills:*0 
+10.  Senna 8.6 mg PO BID:PRN constipation  
+11.  Warfarin 2.5 mg PO 2X/WEEK (WE,SA) 
+ON HOLD UNTIL ___ WITH ___. ___  
+12.  amLODIPine 5 mg PO DAILY  
+13.  Aspirin 81 mg PO DAILY  
+14.  Atorvastatin 10 mg PO QPM  
+15.  Fish Oil (Omega 3) 1000 mg PO BID  
+16.  irbesartan 300 mg oral DAILY  
+17.  Latanoprost 0.005% Ophth. Soln. 1 DROP BOTH EYES QHS  
+18.  Metoprolol Succinate XL 50 mg PO DAILY  
+19.  Omeprazole 20 mg PO DAILY  
+20.  Warfarin 5 mg PO 5X/WEEK (___) 
+ON HODL UNTIL FOLLOW UP WITH ___. ___  
+
+ 
+___ Disposition:
+Extended Care
+ 
+Facility:
+___
+ 
+Discharge Diagnosis:
+retropharyngeal hematoma  
+C4 vertebral body fracture  
+
+ 
+Discharge Condition:
+Mental Status: Clear and coherent.
+Level of Consciousness: Alert and interactive.
+Activity Status: Out of Bed with assistance to chair or 
+wheelchair.
+
+ 
+Discharge Instructions:
+You were admitted to the hospital after walking into a door and 
+hitting your face.  You sustained a left eyelid injury.  You 
+were seen by the paramedics and declined admission to the 
+emergency room.  Shortly afterward, you felt short of breath and 
+felt like your "airway was closing" prompting arrival to 
+emergency room.  You had an airway placed for airway protection. 
+ You had an elevated INR of 1.8 and was given medication to 
+lower the level.  You underwent imaging and you were reported to 
+have a retro-pharyngeal hematoma and an isolated fracture to 
+your neck.  You were evaluated by Neurosurgery and no surgery 
+was indicated.  Your vital signs have been stable and you are 
+preparing for discharge to a rehabilitation center to further 
+regain your strength and mobility.  You are being discharged 
+with the following instructions: 
+
+ return to the Emergency Department for any of the following:
+
+*You experience new chest pain, pressure, squeezing or 
+tightness.
+
+*New or worsening cough, shortness of breath, or wheeze.
+
+*If you are vomiting and cannot keep down fluids or your 
+medications.
+
+*You are getting dehydrated due to continued vomiting, diarrhea, 
+or other reasons. Signs of dehydration include dry mouth, rapid 
+heartbeat, or feeling dizzy or faint when standing.
+
+*You see blood or dark/black material when you vomit or have a 
+bowel movement.
+
+*You experience burning when you urinate, have blood in your 
+urine, or experience a discharge.
+
+*You have shaking chills, or fever greater than 101.5 degrees 
+Fahrenheit or 38 degrees Celsius.
+
+*Any change in your symptoms, or any new symptoms that concern 
+you.
+
+Please return to the emergency room if you have a recurrence of 
+neck pain, headache, and throat pain.  If you begin to have 
+difficulty swallowing it is important to return here. 
+
+You will see Dr. ___ prior to resuming your coumadin 
+
+ 
+
+ 
+Followup Instructions:
+___

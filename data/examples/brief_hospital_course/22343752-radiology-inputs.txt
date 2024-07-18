@@ -1,0 +1,613 @@
+
+
+#Radiology Summary 234987#
+
+EXAMINATION:  CHEST (PORTABLE AP)
+
+INDICATION:   ___ s/p fall
+
+COMPARISON:  Same-day neck CTA and chest radiograph from ___
+
+FINDINGS: 
+
+AP portable upright view of the chest.  Midline sternotomy wires and
+mediastinal clips again noted.  Overlying EKG leads are present.  The heart is
+stably mildly enlarged.  Prominence of the superior mediastinum reflects known
+hematoma in the retropharyngeal space extending into the superior mediastinum
+as seen on same-day neck CT.  Lungs are clear bilaterally.  Bony structures
+appear intact.
+
+IMPRESSION: 
+
+As above.
+
+
+#Radiology Summary 234988#
+
+EXAMINATION:  CT HEAD W/O CONTRAST
+
+INDICATION:  ___ with history of headstrike on Coumadin// eval for
+intracranial hemorrhage
+
+TECHNIQUE:  Contiguous axial images of the brain were obtained without
+contrast.
+
+DOSE:  Total DLP (Head) = 803 mGy-cm.
+
+COMPARISON:  CT head ___.
+
+FINDINGS: 
+
+There is no evidence of large vascular territory
+infarction,hemorrhage,edema,or mass effect.  There is prominence of the
+ventricles and sulci suggestive of involutional changes.  Again demonstrated,
+is severe periventricular and subcortical white matter hypodensities,
+consistent with chronic microvascular ischemic disease.  Bilateral basal
+ganglia and thalamic hypodensities are also noted similar to prior.
+
+There is no fracture.  Mild mucosal thickening of the sphenoid sinus.  The
+visualized portion of the remaining paranasal sinuses, mastoid air cells, and
+middle ear cavities are clear.  There is a small ___ and preseptal
+hematoma without underlying fracture or signs of globe injury.
+
+IMPRESSION:
+
+
+1. No acute hemorrhage or fracture.
+2. Chronic small vessel disease.
+3. Small left ___ hematoma.
+
+
+#Radiology Summary 234989#
+
+EXAMINATION:  CT NECK W/O CONTRAST
+
+INDICATION:  ___ year old woman with history of neck fullness on Coumadin with
+concern for collection// eval for hematoma
+
+TECHNIQUE:  Multidetector CT through the neck performed without contrast with
+multiplanar reformations
+
+DOSE:  Total DLP (Body) = 310 mGy-cm.
+
+COMPARISON:  None.
+
+FINDINGS: 
+
+There is a massive midline prevertebral hematoma approximately 12.8 cm in
+craniocaudal dimension and 6.8 (TR) x 4.4 (AP) cm.  Urgent CTA is required to
+assess active bleeding, ? carotid injury.  There is associated mass-effect on
+the airway most pronounced at the level of the epiglottis.  Consider urgent
+intubation for airway protection.
+
+An acute hyperextension fracture is noted at the anterior inferior corner of
+C4 without distraction or alignment abnormality.  Fracture is best appreciated
+on the sagittal reformats, series 602b image 28 through 31.  There is minimal
+anterolisthesis of C2 on C3 which is likely chronic/related to degeneration. 
+Disc disease is most notable spanning C4 through C7 with loss of disc space,
+disc osteophyte complexes which result in mild to moderate central spinal
+canal narrowing.  In addition, uncovertebral joint hypertrophy noted at
+multiple levels results in severe neural foraminal narrowing at C4-5 and C5-6
+on the left.  The lung apices notable for emphysema.  Prevertebral hematoma
+extends to the level of the superior mediastinum.  Thyroid is unremarkable.
+
+IMPRESSION: 
+
+Massive prevertebral hematoma with associated hyper extension teardrop
+fracture at C4 without alignment abnormality or distraction.  Recommend urgent
+CTA to assess active bleeding.
+
+RECOMMENDATION(S):
+-Intubation for airway protection.
+-C-spine collar placement given acute fracture at C4.
+
+
+#Radiology Summary 234990#
+
+EXAMINATION:  CTA NECK WANDW/OC AND RECONS Q25 CT NECK
+
+INDICATION:  History: ___ with head strike with prevertebral hematoma on CT//
+eval for dissection or active extravasation in the neck
+
+TECHNIQUE:  Rapid axial imaging was performed from the aortic arch through the
+skull base during infusion of 70 mL of Omnipaque intravenous contrast
+material. Three-dimensional angiographic volume rendered, curved reformatted
+and segmented images were generated. This report is based on interpretation of
+all of these images.
+
+DOSE:  Acquisition sequence:
+   1) Stationary Acquisition 6.0 s, 0.5 cm; CTDIvol = 65.3 mGy (Head) DLP =
+32.7 mGy-cm.
+   2) Spiral Acquisition 4.3 s, 33.7 cm; CTDIvol = 35.2 mGy (Head) DLP =
+1,186.8 mGy-cm.
+ Total DLP (Head) = 1,219 mGy-cm.
+
+COMPARISON:  CT neck of ___
+
+FINDINGS: 
+
+There is a retropharyngeal hematoma spanning from the level of C2 to T1,
+measuring 12.3 cm with max diameter measuring 4.6 x 2.9 cm on the axial
+dimension, overall similar in prior examination.  Of note, there is a fluid
+fluid level within the ___ the hematoma (series 2, image 135).  At the
+level C3-4 disc space, there is vigorous, active extravasation of intravenous
+contrast into the hematoma (2:150).  The hematoma appears to be connected to a
+small prevertebral arterial vessel (series 2, image 144) although this region
+of enhancement cannot be definitively connected to a larger vessel.  The
+expanded hematoma displaces the esophagus anteriorly and somewhat narrows the
+airways, though the central airways remain patent.  The retroperitoneal
+hematoma extends into the mediastinum to the level of pulmonary artery
+bifurcation.  There is trace linear hyperdensity, likely representing
+additional site of extravasation (series 2, image 103) at the level of the
+thyroid gland, without definitive source.
+
+There is layering fluid in the sphenoid sinus.  Mild mucosal thickening is
+seen in the posterior ethmoid air cells.  The visualized paranasal sinuses,
+mastoid air cells, middle ear cavities are otherwise patent.  Moderate
+calcifications are seen at the bilateral carotid siphons.  While this exam is
+not tailored for intracranial contents, the visualized circle of ___
+appears patent.  No territorial infarct is seen.  Prominent left periorbital
+hematoma and soft tissue stranding is noted.
+
+By NASCET criteria, there is no significant stenosis of the ICA bilaterally. 
+The left vertebral artery is diminutive throughout its course, likely
+congenital variation.
+
+Degenerative changes of the cervical spine with disc space and vertebral body
+height loss, most severe at C4 through C7 is noted.  C4 anterior teardrop
+fracture is better visualized on prior examination.
+
+IMPRESSION:
+
+
+1. Extensive retropharyngeal hematoma spanning from C2 through T1, measuring
+4.6 x 2.6 cm axially with active extravasation.  Unclear whether this
+represents active extravasation from prevertebral artery versus
+retropharyngeal branch artery, although the associated vessel does appear to
+be likely prevertebral (series 2, image 144).  Consultation with neurosurgery
+is recommended.
+2. An additional linear focus of hyperdensity along the lateral aspect of the
+hematoma inferiorly (series 2, image 103) cannot be connected to a larger
+vessel.  This could represent venous hemorrhage.  Close attention on followup
+is recommended.
+3. Additional findings described above.
+
+NOTIFICATION:   The findings were discussed with ___ resident by ___,
+M.D. on the telephone on ___ at 10:03 am, 5 minutes after discovery of
+the findings.
+ The findings were discussed with ___, M.D. by ___, M.D. on the
+telephone on ___ at 10:30 am, 30 minutes after discovery of the findings.
+
+
+#Radiology Summary 234991#
+
+EXAMINATION:  CHEST (PORTABLE AP)
+
+INDICATION:   ___ with s/p intubation// Eval ETT
+
+COMPARISON:  None
+
+FINDINGS: 
+
+AP portable upright view of the chest.  There has been interval placement of
+an endotracheal tube with its tip positioned 3.2 cm above the carina.  An OG
+tube courses into the left upper abdomen with its tip excluded from view. 
+Midline sternotomy wires and mediastinal clips are again noted.  There is
+mediastinal widening which is reflective of known prevertebral/mediastinal
+hematoma, appears increased from prior.  The heart remains stably enlarged. 
+Lungs are clear.  Bony structures are intact.
+
+IMPRESSION: 
+
+Interval intubation with appropriately positioned ET tube.  OG tube positioned
+appropriately.  Expanding mediastinal hematoma.
+
+
+#Radiology Summary 234992#
+
+EXAMINATION:  CT NECK W/O CONTRAST (EG: PAROTIDS) Q21 CT NECK
+
+INDICATION:  ___ year old woman with retropharyngeal hematoma// ?interval
+change
+
+TECHNIQUE:  Imaging was performed after administration of Omnipaque
+intravenous contrast material.
+
+MDCT acquired helical axial images were obtained from the thoracic inlet
+through the skull base.
+
+Coronal and sagittal multiplanar reformats were then produced and reviewed.
+
+DOSE:  Acquisition sequence:
+   1) Spiral Acquisition 3.5 s, 27.7 cm; CTDIvol = 5.4 mGy (Body) DLP = 148.6
+mGy-cm.
+ Total DLP (Body) = 149 mGy-cm.
+
+COMPARISON:  CT neck ___
+
+FINDINGS: 
+
+In comparison with the recent CT neck, there is interval decrease in size of a
+retropharyngeal hematoma which now measures 4.2 x 1.7 cm, previously 4.6 x 2.9
+cm.  The previously seen hematocrit levels are not visualized on this study. 
+This could be secondary to mass effect from intubation and the endotracheal
+tubes.  The hematoma extends from C2 through visualized right aspect of the
+posterior mediastinum.  However, the extent of hematoma within the mediastinum
+appears more prominent when compared to prior examination and findings remain
+concerning for active extravasation versus redistribution secondary to mass
+effect from the intubation.  There is stranding within the soft tissues of the
+lower neck.
+
+There are subcentimeter cervical lymph nodes, possibly reactive.  There are
+vascular calcifications of the aorta and origins of the great vessels.  The
+thyroid gland appears unremarkable.  There are multilevel degenerative changes
+of the cervical spine.  There is dependent atelectasis within the visualized
+lung apices.
+
+IMPRESSION:
+
+
+1. Redemonstration of retropharyngeal hematoma extending from C2 through the
+right aspect of the posterior mediastinum, slightly decreased in size from the
+prior study with nonvisualized hematocrit levels previously seen, likely
+secondary to mass effect from endotracheal tubes and intubation.
+2. The hematoma extends to the posterior mediastinum.  The component in the
+mediastinum appears more prominent when compared to prior examination.  This
+could represent redistribution, however the findings could represent continued
+active extravasation and close interval followup is recommended to document
+stability/growth.
+
+
+#Radiology Summary 234993#
+
+EXAMINATION:  Chest CT
+
+INDICATION:  ___ year old woman with retropharyngeal hematoma.
+
+TECHNIQUE:  Contiguous axial images were obtained through the chest without
+intravenous contrast.  Coronal and sagittal reformats were obtained.
+
+COMPARISON:  Same day neck CTA
+
+FINDINGS: 
+
+HEART AND VASCULATURE:  The there is severe cardiomegaly.  Patient appears
+status-post CABG with median sternotomy wires and mediastinal clips.  Native
+coronary calcifications are severe.  The aorta is normal in caliber.  Aortic
+arch and great vessel origin calcifications are moderate to severe.
+
+MEDIASTINUM: The mediastinal portion of a large retropharyngeal hematoma
+appears no larger than the earlier same day head and neck CTA.  The hematoma
+is smaller at the level of thoracic inlet than it is either superiorly or
+inferiorly.  Inferior to the level of thoracic inlet, the hematoma spans 6.2 x
+3.7 cm, terminating approximately 1 cm superior to the carina (series 602,
+image 64).
+
+PLEURAL SPACES: No pleural effusion or pneumothorax.
+
+LUNGS/AIRWAYS: The mediastinal hematoma exerts mild mass effect on the
+posterior wall of the trachea, though no significant narrowing is noted. An
+endotracheal tube tip terminates approximately 2 cm above the level of the
+carina.  There is a somewhat nodular area of probable atelectasis in the
+anterior right lower lobe abutting the major fissure (series 302, image 158). 
+There is linear atelectasis or scarring elsewhere at lung bases.  There is
+mild pleural thickening and punctate pleural calcifications.
+
+BASE OF NECK: Visualized portions of the base of the neck show no abnormality.
+
+ABDOMEN: There is a 1.6 cm cyst in hepatic segment VII.  An enteric catheter
+courses below the diaphragm and outside the field of view, at least to the
+level of the gastric body.
+
+BONES: No thoracic spine rib fractures visualized.  The known cervical spine
+fracture was not included within the field of view on this examination.
+
+IMPRESSION:
+
+
+1. A large retropharyngeal hematoma extends into the superior mediastinum, not
+appreciably changed compared to the earlier same day neck CTA.  There is mild
+mass effect on the posterior wall of the trachea, but no significant luminal
+narrowing.
+2. Somewhat nodular opacification focally within the anterior right lower lobe
+probably reflects atelectasis.  However, recommend three-month follow-up chest
+CT to assess stability.
+
+RECOMMENDATION(S):  Somewhat nodular opacification focally within the anterior
+right lower lobe probably reflects atelectasis. However, recommend three-month
+follow-up chest CT to assess stability.
+
+
+#Radiology Summary 234994#
+
+EXAMINATION:  CHEST (PORTABLE AP)
+
+INDICATION:  ___ year old woman with intubation// Tube placement, evidence of
+atelectasis or pneumonia      Tube placement, evidence of atelectasis or
+pneumonia
+
+IMPRESSION: 
+
+Compared to chest radiographs since ___, most recently ___.
+
+Lungs clear.  Moderate cardiomegaly is chronic.  No pulmonary edema or pleural
+effusion.
+
+ET tube in standard placement.  Nasogastric drainage tube ends in the upper
+stomach.
+
+
+#Radiology Summary 234995#
+
+EXAMINATION:  MR CERVICAL SPINE W/O CONTRAST ___ MR ___ SPINE
+
+INDICATION:  ___ year old woman with mechanical fall and retropharyngeal
+hematoma.  Evaluate for fracture.
+
+TECHNIQUE:  Sagittal imaging was performed with T2, T1, and STIR technique. 
+Axial T2 and gradient echo imaging were next performed.
+
+COMPARISON:  CT neck ___
+
+FINDINGS: 
+
+There is redemonstration of retropharyngeal hematoma (06:24).  There is linear
+STIR hyperintensity extending through anterior C4 vertebral body through the
+anterior osteophyte extending into the intervertebral disc space, with mild
+intervertebral disc edema.  There is mild prevertebral soft tissue edema with
+questionable injury to the anterior longitudinal ligament.  There is also
+edema along the inter spinous process and ligamentum  nuchae, more significant
+at C4/C5 level, there is fluid within the C6-C7 intervertebral disc space with
+STIR hyperintensity of the superior C7 vertebral body endplate without
+definite T1 hypointensity, possibly related to marrow edema. Patient is
+intubated with presence of an enteric tube.
+
+There is 5 mm retrolisthesis of C4 on C5 and 2 mm anterolisthesis of C 2 on
+C3.  There is loss of intervertebral disc space at C4-C5 through C6-C7 levels
+with disc desiccation related to degenerative process.
+
+C2-C3: There is no spinal canal stenosis or neural foraminal narrowing.
+
+C3-C4: There is a disc bulge with facet and uncovertebral joint arthropathy
+resulting in moderate left and mild right neural foraminal narrowing without
+spinal canal stenosis or cord edema.
+
+C4-C5: There is a disc bulge with facet and uncovertebral joint arthropathy
+causing moderate spinal canal stenosis with remodeling of spinal cord without
+cord edema.  There is moderate to severe right and mild left neural foraminal
+narrowing.
+
+C5-C6: There is a disc bulge with facet and uncovertebral joint arthropathy
+resulting in moderate spinal canal stenosis with remodeling of the ventral
+with remodeling and flattening of the spinal cord (07:27) with moderate
+bilateral neural foraminal narrowing.
+
+C6-C7: There is a disc bulge with facet and uncovertebral joint arthropathy
+resulting in moderate spinal canal stenosis with remodeling of the ventral
+spinal cord without cord edema.  There is moderate left and no right neural
+foraminal narrowing.
+
+C7-T1: There is no spinal canal stenosis or neural foraminal narrowing.
+
+IMPRESSION:
+
+
+1. Acute fracture involving the anterior C4 vertebral body with prevertebral
+soft tissue edema and probable injury to the anterior longitudinal ligament as
+well the as the interspinous ligament.
+2. Edema within the C6-C7 intervertebral disc space with probable osseous
+edema of the superior C7 vertebral body.
+3. Redemonstration of retropharyngeal hematoma.
+4. Retrolisthesis of C4 on C5 and anterolisthesis of C2 on C3.
+5. Multilevel degenerative changes as detailed above, with moderate spinal
+canal stenosis at C4-C5 through C6-C7 levels with spinal cord remodeling,
+without definite cord edema.
+
+
+#Radiology Summary 234996#
+
+EXAMINATION:  CHEST (PORTABLE AP)
+
+INDICATION:  ___ year old woman with interval change// interval change
+
+IMPRESSION: 
+
+In comparison with the study ___, the monitoring support devices are
+essentially unchanged.  Cardiac silhouette remains mildly enlarged without
+evidence of vascular congestion, pleural effusion, or acute focal pneumonia.
+
+
+#Radiology Summary 234997#
+
+EXAMINATION:  CHEST PORT. LINE PLACEMENT
+
+INDICATION:  ___ year old woman with new R IJ CVL// assess for CVL location  
+Contact name: ___: ___     assess for CVL location
+
+IMPRESSION: 
+
+Compared to chest radiographs since ___, most recently ___
+through ___ at 05:33.
+
+Combination of small to moderate pleural effusions and moderate bibasilar
+atelectasis has increased since earlier in the day.  Moderate cardiomegaly is
+chronic.  There is also very mild perihilar edema.
+
+Indwelling cardiopulmonary support devices in standard placements.
+
+
+#Radiology Summary 234998#
+
+EXAMINATION:  CHEST (PORTABLE AP)
+
+INDICATION:  ___ year old woman with retropharyngeal hematoma, intubated// eval
+for interval change
+
+TECHNIQUE:  Single frontal view of the chest
+
+COMPARISON:  ___
+
+IMPRESSION: 
+
+Lines and tubes are in standard position.  Bibasilar opacities have markedly
+improved.  Bilateral effusions have improved.  Cardiomegaly, tortuous aorta
+and prominent hila bilaterally are stable.  There is no evident pneumothorax. 
+Sternal wires are intact.
+
+
+#Radiology Summary 234999#
+
+EXAMINATION:  DX CHEST PORT LINE/TUBE PLCMT 2 EXAMS
+
+INDICATION:  ___ year old woman with feeding needs// eval dobhoff placement
+
+COMPARISON:  Chest x-ray is ___
+
+FINDINGS: 
+
+Portable AP semi upright views of the chest were provided.
+
+Dobhoff tube is seen being advanced through the esophagus and ultimately coils
+at the GE junction.  A enteric feeding tube courses below the diaphragm, but
+terminates beyond the field of view of the image.  A right internal jugular
+central venous catheter terminates in the distal SVC.  Endotracheal tube
+terminates 2.3 cm above level of carina.  There is mild pulmonary vascular
+congestion.  There is moderate cardiomegaly, stable.  There is bibasilar
+atelectasis.
+
+IMPRESSION: 
+
+Interval placement of Dobhoff feeding tube which coils at the GE junction and
+should be repositioned.  No other significant interval change.
+
+
+#Radiology Summary 235000#
+
+EXAMINATION:  CHEST (PORTABLE AP)
+
+INDICATION:  ___ year old woman with retropharyngeal hematoma// Assess for
+interval change      Assess for interval change
+
+IMPRESSION: 
+
+Compared to chest radiographs ___ through ___.
+
+Mild cardiomegaly improved, lungs grossly clear, small bilateral pleural
+effusions new or newly apparent.  No pneumothorax.  Right jugular line ends in
+the low SVC..
+
+
+#Radiology Summary 235001#
+
+EXAMINATION:  DX CHEST PORT LINE/TUBE PLCMT 2 EXAMS
+
+INDICATION:  ___ year old woman with dobhoff placement// dobhoff placement
+
+TECHNIQUE:  Chest single view
+
+COMPARISON:  ___ 12:23
+
+FINDINGS: 
+
+Under radiograph taken at 19:24 feeding tube tip is coiled in the proximal
+stomach.
+On the radiograph taken at 19:32, feeding tube has been pulled back, with tip
+in the distal esophagus.
+Heart size, mild pulmonary vascular congestion are stable.  Mild basilar
+opacities have increased, consider worsening edema or atelectasis.  Small
+bilateral pleural effusions are likely.  No pneumothorax.
+
+IMPRESSION: 
+
+On the second radiograph, feeding tube tip is in distal esophagus, should be
+advanced.
+
+
+#Radiology Summary 235002#
+
+EXAMINATION:  VIDEO OROPHARYNGEAL SWALLOW
+
+INDICATION:  ___ year old woman with retropharyngeal hematoma// ability to eat
+
+TECHNIQUE:  Oropharyngeal swallowing videofluoroscopy was performed in
+conjunction with the speech and swallow division.  Multiple consistencies of
+barium were administered.
+
+DOSE:  Fluoro time: 02:16 min.
+
+COMPARISON:  None.
+
+FINDINGS: 
+
+Barium passes freely through the oropharynx and esophagus without evidence of
+obstruction.  There was no gross aspiration.  Penetration is seen thin and
+nectar consistencies, which cleared with subsequent swallow.
+
+IMPRESSION: 
+
+No aspiration.  Penetration with thin and nectar consistencies.
+
+Please refer to the speech and swallow division note in OMR for full details,
+assessment, and recommendations.
+
+
+#Radiology Summary 235003#
+
+EXAMINATION:  CT HEAD W/O CONTRAST Q111 CT HEAD
+
+INDICATION:  ___ year old woman with RP bleed with C4 VB fx., now with
+increased neck pain and post. head pain// evaluate for interval change
+
+TECHNIQUE:  Contiguous axial images of the brain were obtained without
+contrast. Coronal and sagittal reformations as well as bone algorithm
+reconstructions were provided and reviewed.
+
+DOSE:  Acquisition sequence:
+   1) Sequenced Acquisition 4.0 s, 16.0 cm; CTDIvol = 46.7 mGy (Head) DLP =
+747.3 mGy-cm.
+ Total DLP (Head) = 747 mGy-cm.
+
+COMPARISON:  ___
+
+FINDINGS: 
+
+There is no evidence of acute infarction,hemorrhage,edema, or mass. There is
+prominence of the ventricles and sulci suggestive of involutional changes. 
+Again seen is confluent periventricular and subcortical, brainstem white
+matter hypodensities, nonspecific, however likely sequela of severe chronic
+small vessel ischemic disease in the absence of acute symptoms, similar.. 
+Bilateral basal ganglia and thalamic hypodensities are also unchanged, thought
+to represent a combination of prominent perivascular spaces and chronic
+lacunar infarcts.  Tiny chronic right cerebellar infarct, stable.
+
+There is no evidence of acute fracture.  There is moderate opacification with
+fluid in the sphenoid sinus.  Submucosal retention cyst in the left maxillary
+sinus is.  Trace fluid in the inferior left mastoid air cells.  Otherwise, the
+visualized portion of the paranasal sinuses, mastoid air cells, and middle ear
+cavities are clear.  The visualized portion of the orbits are unremarkable. 
+Dense calcifications in the carotid siphons are noted.
+
+IMPRESSION:
+
+
+1. Findings most consistent with severe chronic small vessel ischemic changes
+in the absence of acute symptoms.  No intracranial hemorrhage.
+2. Paranasal sinus disease, suggestive of acute sphenoid sinusitis in the
+absence of recent intubation.
+
+
+#Radiology Summary 235004#
+
+EXAMINATION:  CHEST (PA AND LAT)
+
+INDICATION:  ___ year old woman with recent trauma to neck now w/ low-grade
+fevers and leukocytosis// rule out pneumonia
+
+IMPRESSION: 
+
+In comparison with the study ___, the right IJ catheter has been
+removed.  Continued enlargement of the cardiac silhouette in a patient with
+previous CABG procedure an intact midline sternal wires.  Mild elevation of
+pulmonary venous pressure with small bilateral pleural effusions and
+compressive atelectasis at the bases.
+No definite acute focal pneumonia.
