@@ -2,15 +2,12 @@ import re
 import pandas as pd
 
 pd.set_option("display.max_columns", None)
-
-
-DATA_ROOT = "data/"
-EXAMPLES_ROOT = DATA_ROOT + "examples/"
-DISCHARGE_ME_ROOT = (
-    DATA_ROOT
-    + "discharge-me-bionlp-acl24-shared-task-on-streamlining-discharge-documentation-1.3/"
+from constants import (
+    TRAIN_DISCHARGE_ME,
+    EXAMPLES_ROOT,
+    TRAIN_DISCHARGE_ME,
+    SUMMARY_TYPES,
 )
-TRAIN_DISCHARGE_ME = DISCHARGE_ME_ROOT + "train/"
 
 
 def load_target_summaries():
@@ -115,25 +112,37 @@ def extract_sample_for_admission(
 
 
 if __name__ == "__main__":
-    example_admission_ids = [22343752, 25404430, 20522931]
-    target_summary_type = "brief_hospital_course"
 
-    original_discharge_summaries = load_original_discharge_summaries()
+    for target_summary_type in SUMMARY_TYPES:
+        example_admission_ids = [
+            22343752,
+            25404430,
+            20522931,
+            22907047,
+            26326405,
+            26818922,
+            23364124,
+            23936893,
+            27771974,
+            20910785,
+        ]
 
-    original_discharge_summaries = preprocessing_of_discharge_summaries(
-        original_discharge_summaries, target_summary_type
-    )
-    radiology_summaries = load_radiology_summaries()
+        original_discharge_summaries = load_original_discharge_summaries()
 
-    print("Loading target summaries:")
-    target_summaries = load_target_summaries()
-
-    for example_admission_id in example_admission_ids:
-        extract_sample_for_admission(
-            example_admission_id,
-            original_discharge_summaries,
-            radiology_summaries,
-            target_summaries,
-            target_summary_type,
+        original_discharge_summaries = preprocessing_of_discharge_summaries(
+            original_discharge_summaries, target_summary_type
         )
+        radiology_summaries = load_radiology_summaries()
+
+        print("Loading target summaries:")
+        target_summaries = load_target_summaries()
+
+        for example_admission_id in example_admission_ids:
+            extract_sample_for_admission(
+                example_admission_id,
+                original_discharge_summaries,
+                radiology_summaries,
+                target_summaries,
+                target_summary_type,
+            )
     print("Done.")
