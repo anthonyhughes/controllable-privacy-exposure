@@ -1,1 +1,9 @@
-print('Starting privacy-preserving federated learning server...')
+from mimic_data import run
+from re_identifier import run_process
+from pseudonymizer import run_all_pseudonmizer_processes
+
+if __name__ == "__main__":
+    print("Starting data pipeline")
+    run()
+    run_process()
+    run_all_pseudonmizer_processes()

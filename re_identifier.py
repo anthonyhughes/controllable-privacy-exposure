@@ -204,13 +204,14 @@ def fill_in_discharge_template(discharge_summary):
 
 def run_process():
     print("Running reidentifier")
+    # for both summary tasks
     for target_summary_type in SUMMARY_TYPES:
-        for id in EXAMPLE_ADMISSION_IDS:
-            # print(res)
+        # and for every patient
+        for id in EXAMPLE_ADMISSION_IDS:        
             print(f"Processing {target_summary_type} for {id}")
-            type = "discharge-inputs"
+            filetype = "discharge-inputs"
             res = fetch_file_names(
-                "data/examples/brief_hospital_course", type, hadm_id=id
+                f"data/examples/{target_summary_type}", filetype, hadm_id=id
             )
             contents = load_file(res[0])
             data = fill_in_discharge_template(contents)
@@ -218,7 +219,7 @@ def run_process():
             if not os.path.exists(f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}"):
                 os.makedirs(f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}")
             with open(
-                f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}/{id}-{type}.txt", "w"
+                f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}/{id}-{filetype}.txt", "w"
             ) as f:
                 f.write(data)
         print("Done.")

@@ -112,8 +112,7 @@ def extract_sample_for_admission(
     print("Done.")
 
 
-if __name__ == "__main__":
-
+def run():
     for target_summary_type in SUMMARY_TYPES:
         original_discharge_summaries = load_original_discharge_summaries()
 
@@ -134,3 +133,7 @@ if __name__ == "__main__":
                 target_summary_type,
             )
     print("Done.")
+
+
+if __name__ == "__main__":
+    run()

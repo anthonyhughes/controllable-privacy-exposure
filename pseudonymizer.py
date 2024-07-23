@@ -195,7 +195,7 @@ def fill_in_target_summary(discharge_summary):
         **date_templates,
         **clinician_templates,
         **patient_templates,
-        **other_templates
+        **other_templates,
     }
     for _, value in templates.items():
         discharge_summary = re.sub(
@@ -228,6 +228,10 @@ def run_pseudonmizer_process(task):
     print("Done.")
 
 
+def run_all_pseudonmizer_processes():
+    for target_summary_type in SUMMARY_TYPES:
+        run_pseudonmizer_process(target_summary_type)
+
+
 if __name__ == "__main__":
-    run_pseudonmizer_process("brief_hospital_course")
-    run_pseudonmizer_process("discharge_instructions")
+    run_all_pseudonmizer_processes()
