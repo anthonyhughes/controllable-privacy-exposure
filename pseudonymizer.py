@@ -1,231 +1,233 @@
+import os
 import re
-from constants import PSEUDO_EXAMPLES_ROOT, SUMMARY_TYPES, EXAMPLE_ADMISSION_IDS
-from pseudonymizer_utils import (
+from constants import PSEUDO_TARGETS_ROOT, SUMMARY_TYPES, EXAMPLE_ADMISSION_IDS
+from reidentify_utils import (
     fetch_file_names,
     load_file,
-    generate_random_name,
-    generate_random_unit_number,
-    generate_random_adult_age,
-    generate_random_date,
-    generate_random_location,
+    remove_extra_redactions,
 )
 
 
-def fill_in_discharge_template(discharge_summary):
-    templates = {
-        "name": {
-            "regex": r"Name:  ___",
-            "target": f"Name:   ",
-            "function": generate_random_name,
+def fill_in_target_summary(discharge_summary):
+    age_templates = {
+        "age": {
+            "regex": r"___ woman",
+            "target": f"a patient",
         },
-        "surname_only": {
-            "regex": r"Ms. ___",
-            "target": f"Ms. ",
-            "function": generate_random_name,
-        },
-        "surname_onl2": {
-            "regex": r"___ is a",
-            "target": f" is a",
-            "function": generate_random_name,
-            "flip": True,
-        },
-        "surname_only_3": {
-            "regex": r"Mr. ___",
-            "target": f"Mr. ",
-            "function": generate_random_name,
-        },
-        "clinician": {
-            "regex": r"Dr. ___",
-            "target": f"Dr. ",
-            "function": generate_random_name,
-        },
-        "clinician2": {
-            "regex": r"Dr. ___ ___",
-            "target": f"Dr. ",
-            "function": generate_random_name,
-        },
-        "clinician3": {
-            "regex": r"Dr. \\n___",
-            "target": f"Dr.",
-            "function": generate_random_name,
-        },
-        "clinician4": {
-            "regex": r"You were seen by ___",
-            "target": f"You were seen by",
-            "function": generate_random_name,
-        },
-        "unit_number": {
-            "regex": r"Unit No:   ___",
-            "target": f"Unit No:",
-            "function": generate_random_unit_number,
-        },
-        "admission_date": {
-            "regex": r"Admission Date:  ___",
-            "target": f"Admission Date:",
-            "function": generate_random_date,
-        },
-        "discharge_date": {
-            "regex": r"Discharge Date:   ___",
-            "target": f"Discharge Date:   ",
-            "function": generate_random_date,
-        },
-        "date_of_birth": {
-            "regex": r"Date of Birth:  ___",
-            "target": f"Date of Birth:   ",
-            "function": generate_random_date,
-        },
-        "gen_date": {
-            "regex": r"on ___",
-            "target": f"on ",
-            "function": generate_random_date,
-        },
-        "attending_physician": {
-            "regex": r"Attending: ___",
-            "target": f"Attending: ",
-            "function": generate_random_name,
-        },
-        "age1": {
-            "regex": r"___ year old",
-            "target": f" year old",
-            "function": generate_random_adult_age,
-            "flip": True,
+        "age4": {
+            "regex": r"___ w",
+            "target": f"Patient",
         },
         "age2": {
-            "regex": r"when pt. was ___",
-            "target": f"when pt. was ",
-            "function": generate_random_adult_age,
-            "flip": False,
-        },
-        "age3": {
-            "regex": r"___ man",
-            "target": f" man",
-            "function": generate_random_adult_age,
-            "flip": True,
-        },
-        "age3": {
             "regex": r"___ yo",
-            "target": f" yo",
-            "function": generate_random_adult_age,
-            "flip": True,
+            "target": f"",
         },
-        "age4": {
-            "regex": r"age ___",
-            "target": f"age ",
-            "function": generate_random_adult_age,
+        "age3": {
+            "regex": r"___ year old",
+            "target": f"",
         },
-        "age4": {
-            "regex": r"___ year-old",
-            "target": f" year-old",
-            "function": generate_random_adult_age,
-            "flip": True,
-        },
+    }
+    location_templates = {
         "location": {
-            "regex": r"your time at ___",
-            "target": f"your time at",
-            "function": generate_random_location,
+            "regex": r"___ Hospital",
+            "target": f"a hospital",
         },
         "location2": {
-            "regex": r"___ ED",
-            "target": f"ED",
-            "function": generate_random_location,
-            "flip": True,
+            "regex": r"referred to\n___",
+            "target": f"referred to a medical center",
         },
         "location3": {
-            "regex": r"taken to ___",
-            "target": f"taken to",
-            "function": generate_random_location,
+            "regex": r"PCP ___",
+            "target": f"PCP",
         },
         "location4": {
-            "regex": r" was in ___",
-            "target": f" was in",
-            "function": generate_random_location,
+            "regex": r"___ ED",
+            "target": f"ED",
         },
         "location5": {
-            "regex": r"presents to ___",
-            "target": f"presents to",
-            "function": generate_random_location,
+            "regex": r"at ___[.]",
+            "target": f"",
         },
         "location6": {
-            "regex": r"previous in ___",
-            "target": f"previous in",
-            "function": generate_random_location,
+            "regex": r"referred to \n___",
+            "target": f"referred to",
         },
         "location7": {
-            "regex": r"stay at ___",
-            "target": f"stay at",
-            "function": generate_random_location,
+            "regex": r"Your ___ (.+)? Team",
+            "target": f"Your Team",
         },
         "location8": {
-            "regex": r"___ Care Team",
-            "target": f"Care Team",
-            "function": generate_random_location,
-            "flip": True,
+            "regex": r"Your ___ Team",
+            "target": f"Your Team",
         },
         "location9": {
             "regex": r"admitted to ___",
-            "target": f"admitted to",
-            "function": generate_random_location,
+            "target": f"admitted to hospital",
         },
         "location10": {
-            "regex": r"___ Team",
-            "target": f" Team",
-            "function": generate_random_location,
-            "flip": True,
+            "regex": r"___ Medicine",
+            "target": f"Medical Team",
         },
-        "location11": {
-            "regex": r"you at ___",
-            "target": f"you at",
-            "function": generate_random_location,
+        "location111": {
+            "regex": r"from ___",
+            "target": f"",
         },
-        "time": {
-            "regex": r"___ weeks",
-            "target": f" weeks",
-            "function": generate_random_unit_number,
-            "flip": True,
+        "location12": {
+            "regex": r"___ (pain)? clinic",
+            "target": f"a clinic",
+        },
+        "location13": {
+            "regex": r"at(\n)?\n___",
+            "target": f"at a care facility",
+        },
+        "location14": {
+            "regex": r"through ___",
+            "target": f"through a care facility",
         },
     }
+    date_templates = {
+        "date": {
+            "regex": r"[Oo]n ___[,.]",
+            "target": f"",
+        },
+        "date3": {
+            "regex": r"on\n ___",
+            "target": f"",
+        },
+        "date4": {
+            "regex": r"on \n___",
+            "target": f"",
+        },
+        "date2": {
+            "regex": r"in ___",
+            "target": f"",
+        },
+        "date5": {
+            "regex": r"on ___",
+            "target": f"",
+        },
+        "date6": {
+            "regex": r" narcotics ___",
+            "target": f" narcotics",
+        },
+        "date6": {
+            "regex": r"seen ___",
+            "target": f"seen",
+        },
+        "date6": {
+            "regex": r"completed ___",
+            "target": f"completed",
+        },
+    }
+    clinician_templates = {
+        "clinician": {
+            "regex": r"Dr. ___",
+            "target": f"a doctor",
+        },
+        "clinician2": {
+            "regex": r"Dr.\n___",
+            "target": f"a doctor",
+        },
+        "clinician3": {
+            "regex": r"Dr. \n___",
+            "target": f"a doctor",
+        },
+        "clinician4": {
+            "regex": r"seen by ___",
+            "target": f"seen by a doctor",
+        },
+    }
+    patient_templates = {
+        "patient": {
+            "regex": r"Ms[.]? ___",
+            "target": f"The patient",
+        },
+        "patient5": {
+            "regex": r"Mr[.]? ___",
+            "target": f"The patient",
+        },
+        "patient2": {
+            "regex": r"___ was contacted",
+            "target": f"the patient was contacted",
+        },
+        "patient3": {
+            "regex": r"is a ___ with",
+            "target": f"has",
+        },
+        "patient4": {
+            "regex": r"^___ with",
+            "target": f"has",
+        },
+        "patient6": {
+            "regex": r"___ speaking",
+            "target": f"",
+        },
+        "patient7": {
+            "regex": r"___ patient",
+            "target": f"A patient",
+        },
+        "patient8": {
+            "regex": r"for ___",
+            "target": f"for the patient",
+        },
+        "patient9": {
+            "regex": r"Dear ___[,]",
+            "target": f"Dear patient",
+        },
+    }
+    other_templates = {
+        "other": {
+            "regex": r"and ___",
+            "target": f"",
+        },
+        "other2": {
+            "regex": r"as ___",
+            "target": f"",
+        },
+        "other3": {
+            "regex": r"called ___",
+            "target": f"",
+        },
+    }
+    templates = {
+        **age_templates,
+        **location_templates,
+        **date_templates,
+        **clinician_templates,
+        **patient_templates,
+        **other_templates
+    }
     for _, value in templates.items():
-        if value.get("flip"):
-            discharge_summary = re.sub(
-                pattern=value["regex"],
-                repl=f"{value['function']()} {value['target']}",
-                string=discharge_summary,
-            )
-        else:
-            discharge_summary = re.sub(
-                pattern=value["regex"],
-                repl=f"{value['target']} {value['function']()}",
-                string=discharge_summary,
-            )
+        discharge_summary = re.sub(
+            pattern=value["regex"],
+            repl=f"{value['target']}",
+            string=discharge_summary,
+        )
     return discharge_summary
 
 
-def remove_extra_redactions(discharge_data):
-    """Remove extra redactions"""
-    discharge_data = discharge_data.replace("(___)", "")
-    discharge_data = discharge_data.replace("___", " ")
-    return discharge_data
-
-
-def run_process():
+def run_pseudonmizer_process(task):
+    """
+    Run the re-identification process
+    """
     print("Running pseudonimizer")
-    for target_summary_type in SUMMARY_TYPES:
-        for id in EXAMPLE_ADMISSION_IDS:
-            # print(res)
-            print(f"Processing {target_summary_type} for {id}")
-            type = "discharge-inputs"
-            res = fetch_file_names(
-                "data/examples/brief_hospital_course", type, hadm_id=id
-            )
-            contents = load_file(res[0])
-            data = fill_in_discharge_template(contents)
-            data = remove_extra_redactions(data)
-            with open(
-                f"{PSEUDO_EXAMPLES_ROOT}/{target_summary_type}/{id}-{type}.txt", "w"
-            ) as f:
-                f.write(data)
-        print("Done.")
+    for id in EXAMPLE_ADMISSION_IDS:
+        # print(res)
+        print(f"Processing {task} for {id}")
+        res = fetch_file_names(f"data/examples/{task}", "target", hadm_id=id)
+        contents = load_file(res[0])
+        data = fill_in_target_summary(contents)
+        data = remove_extra_redactions(data)
+        if not os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{task}"):
+            os.makedirs(f"{PSEUDO_TARGETS_ROOT}/{task}")
+        with open(
+            f"{PSEUDO_TARGETS_ROOT}/{task}/{id}-target.txt",
+            "w",
+        ) as f:
+            f.write(data)
+    print("Done.")
 
 
 if __name__ == "__main__":
-    run_process()
+    run_pseudonmizer_process("brief_hospital_course")
+    run_pseudonmizer_process("discharge_instructions")

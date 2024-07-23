@@ -38,3 +38,10 @@ def generate_random_date():
 
 def generate_random_location():
     return "New York Hospital"
+
+
+def remove_extra_redactions(discharge_data):
+    """Remove extra redactions"""
+    discharge_data = discharge_data.replace("(___)", "")
+    discharge_data = discharge_data.replace("___", " ")
+    return discharge_data
