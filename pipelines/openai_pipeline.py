@@ -8,7 +8,7 @@ from constants import (
     SUMMARY_TYPES,
     EXAMPLE_ADMISSION_IDS,
 )
-from prompts import prompt_prefix_for_task
+from utils.prompts import prompt_prefix_for_task
 
 
 def get_ehr_and_summary(task, hadm_id):
@@ -55,7 +55,7 @@ def save_result(openai_result, task, hadm_id):
         f.write(openai_result)
 
 
-if __name__ == "__main__":
+def run():
     start_time = time.time()
     print("Running the pipelines")
     client = OpenAI(
@@ -71,3 +71,7 @@ if __name__ == "__main__":
     print("All pipelines completed")
     endtime = time.time() - start_time
     print(f"Time taken: {endtime}")
+
+
+if __name__ == "__main__":
+    run()

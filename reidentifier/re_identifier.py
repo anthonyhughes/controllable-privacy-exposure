@@ -1,7 +1,7 @@
 import os
 import re
 from constants import RE_ID_EXAMPLES_ROOT, SUMMARY_TYPES, EXAMPLE_ADMISSION_IDS
-from reidentify_utils import (
+from reidentifier.reidentify_utils import (
     fetch_file_names,
     load_file,
     generate_random_name,
