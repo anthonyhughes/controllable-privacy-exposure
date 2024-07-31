@@ -1,11 +1,14 @@
 import os
 import re
 from constants import PSEUDO_TARGETS_ROOT, SUMMARY_TYPES, EXAMPLE_ADMISSION_IDS
+from mimic.mimic_data import load_original_discharge_summaries
 from reidentifier.reidentify_utils import (
     fetch_file_names,
     load_file,
+    remove_extra_piis,
     remove_extra_redactions,
 )
+from utils.dataset_utils import extract_hadm_ids
 
 
 def fill_in_target_summary(discharge_summary):
@@ -15,7 +18,7 @@ def fill_in_target_summary(discharge_summary):
             "target": f"a patient",
         },
         "age4": {
-            "regex": r"___ w",
+            "regex": r"___ w ",
             "target": f"Patient",
         },
         "age2": {
@@ -150,13 +153,25 @@ def fill_in_target_summary(discharge_summary):
             "regex": r"___ was contacted",
             "target": f"the patient was contacted",
         },
+        "patient12": {
+            "regex": r"___ is a ___ with",
+            "target": f"Patient has",
+        },
         "patient3": {
             "regex": r"is a ___ with",
             "target": f"has",
         },
+        "patient10": {
+            "regex": r"___ with a",
+            "target": f"Patient with a",
+        },
+        "patient11": {
+            "regex": r"^___ with ",
+            "target": f"Patient with ",
+        },
         "patient4": {
             "regex": r"^___ with",
-            "target": f"has",
+            "target": f"Patient has",
         },
         "patient6": {
             "regex": r"___ speaking",
@@ -206,18 +221,19 @@ def fill_in_target_summary(discharge_summary):
     return discharge_summary
 
 
-def run_pseudonmizer_process(task):
+def run_pseudonmizer_process(task, hadm_ids):
     """
     Run the re-identification process
     """
     print("Running pseudonimizer")
-    for id in EXAMPLE_ADMISSION_IDS:
+    for id in hadm_ids:
         # print(res)
         print(f"Processing {task} for {id}")
         res = fetch_file_names(f"data/examples/{task}", "target", hadm_id=id)
         contents = load_file(res[0])
         data = fill_in_target_summary(contents)
         data = remove_extra_redactions(data)
+        data =  remove_extra_piis(data)
         if not os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{task}"):
             os.makedirs(f"{PSEUDO_TARGETS_ROOT}/{task}")
         with open(
@@ -228,10 +244,12 @@ def run_pseudonmizer_process(task):
     print("Done.")
 
 
-def run_all_pseudonmizer_processes():
+def run_all_pseudonmizer_processes(hadm_ids):
     for target_summary_type in SUMMARY_TYPES:
-        run_pseudonmizer_process(target_summary_type)
+        run_pseudonmizer_process(target_summary_type, hadm_ids)
 
 
 if __name__ == "__main__":
-    run_all_pseudonmizer_processes()
+    original_discharge_summaries = load_original_discharge_summaries()
+    hadm_ids = extract_hadm_ids(original_discharge_summaries)
+    run_all_pseudonmizer_processes(hadm_ids)

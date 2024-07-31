@@ -202,12 +202,12 @@ def fill_in_discharge_template(discharge_summary):
     return discharge_summary
 
 
-def run_process():
+def run_process(hadm_ids):
     print("Running reidentifier")
     # for both summary tasks
     for target_summary_type in SUMMARY_TYPES:
         # and for every patient
-        for id in EXAMPLE_ADMISSION_IDS:        
+        for id in hadm_ids:        
             print(f"Processing {target_summary_type} for {id}")
             filetype = "discharge-inputs"
             res = fetch_file_names(

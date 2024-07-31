@@ -34,7 +34,7 @@ def run_eval_for_document(task, hadm_id):
     return rouge_result
 
 
-def calculating_averages(results):
+def calculate_averages(results):
     """
     Calculate the average scores for the evaluation results
     """
@@ -60,7 +60,7 @@ def run():
             else:
                 results[hadm_id].update({task: run_eval_for_document(task, hadm_id)})
     # print(results)    
-    calculating_averages(results)
+    calculate_averages(results)
 
 
 if __name__ == "__main__":

@@ -4,6 +4,8 @@ from pseudonymizer.pseudonymizer import run_all_pseudonmizer_processes
 
 if __name__ == "__main__":
     print("Starting data pipeline")
-    run()
-    run_process()
-    run_all_pseudonmizer_processes()
+    # Mimic extraction
+    hadm_ids = run()
+    run_process(hadm_ids)
+    run_all_pseudonmizer_processes(hadm_ids)
+    print("Done.")

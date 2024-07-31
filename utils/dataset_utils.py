@@ -35,3 +35,8 @@ if __name__ == "__main__":
     tester()
     end = timer() - start
     print(f"Time to complete in secs: {end}")
+
+
+def extract_hadm_ids(original_discharge_summaries, n=100):
+    """Extract the first n admission ids as a list"""
+    return list(original_discharge_summaries.head(n)["hadm_id"])

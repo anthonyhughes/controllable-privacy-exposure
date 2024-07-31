@@ -1,6 +1,8 @@
 import re
 import pandas as pd
 
+from utils.dataset_utils import extract_hadm_ids
+
 pd.set_option("display.max_columns", None)
 from constants import (
     TRAIN_DISCHARGE_ME,
@@ -70,12 +72,12 @@ def extract_sample_for_admission(
     target_summaries_out = ""
 
     if target_summary_type == "discharge_instructions":
-        target_summaries_out += "\n\n##Discharge Target Summary###\n\n"
+        # target_summaries_out += "\n\n##Discharge Target Summary###\n\n"
         discharge_target = example_target_summaries["discharge_instructions"].values[0]
         target_summaries_out += discharge_target
 
     if target_summary_type == "brief_hospital_course":
-        target_summaries_out += "\n\n##Brief Hospital Course Summary###\n\n"
+        # target_summaries_out += "\n\n##Brief Hospital Course Summary###\n\n"
         bhc_target = example_target_summaries["brief_hospital_course"].values[0]
         target_summaries_out += bhc_target
 
@@ -84,7 +86,7 @@ def extract_sample_for_admission(
     )
 
     training_summaries = ""
-    training_summaries += "\n\n##Original Discharge##\n\n"
+    # training_summaries += "\n\n##Original Discharge##\n\n"
     print("Loading original discharge summaries:")
     example_original_discharge_summaries = original_discharge_summaries[
         original_discharge_summaries["hadm_id"] == hadm_id
@@ -102,7 +104,7 @@ def extract_sample_for_admission(
 
     radiology_summaries_out = ""
     for i, row in example_radiology_summaries.iterrows():
-        radiology_summaries_out += f"\n\n#Radiology Summary {i}#\n\n"
+        # radiology_summaries_out += f"\n\n#Radiology Summary {i}#\n\n"
         r_summary = row["text"]
         radiology_summaries_out += r_summary
     save_example_to_file(
@@ -113,6 +115,7 @@ def extract_sample_for_admission(
 
 
 def run():
+    print("Starting extraction of mimic data")
     for target_summary_type in SUMMARY_TYPES:
         original_discharge_summaries = load_original_discharge_summaries()
 
@@ -124,7 +127,12 @@ def run():
         print("Loading target summaries:")
         target_summaries = load_target_summaries()
 
-        for example_admission_id in EXAMPLE_ADMISSION_IDS:
+        # extract the first 100 admission ids as a list
+        target_admission_ids = extract_hadm_ids(
+            original_discharge_summaries=original_discharge_summaries, n=100
+        )
+
+        for example_admission_id in target_admission_ids:
             extract_sample_for_admission(
                 example_admission_id,
                 original_discharge_summaries,
@@ -133,6 +141,7 @@ def run():
                 target_summary_type,
             )
     print("Done.")
+    return target_admission_ids
 
 
 if __name__ == "__main__":
