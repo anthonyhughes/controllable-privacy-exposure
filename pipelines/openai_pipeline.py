@@ -8,6 +8,8 @@ from constants import (
     SUMMARY_TYPES,
     EXAMPLE_ADMISSION_IDS,
 )
+from mimic.mimic_data import load_original_discharge_summaries
+from utils.dataset_utils import extract_hadm_ids
 from utils.prompts import prompt_prefix_for_task
 
 
@@ -26,7 +28,7 @@ def get_ehr_and_summary(task, hadm_id):
     return ehr, summary
 
 
-def run(client, task, hadm_id):
+def inference(client, task, hadm_id):
     """Run the openai query"""
     ehr, summary = get_ehr_and_summary(task, hadm_id)
     prompt = {
@@ -55,7 +57,7 @@ def save_result(openai_result, task, hadm_id):
         f.write(openai_result)
 
 
-def run():
+def run(hadm_ids):
     start_time = time.time()
     print("Running the pipelines")
     client = OpenAI(
@@ -63,15 +65,21 @@ def run():
         api_key=os.environ.get("OPENAI_API_KEY"),
     )
     for task in SUMMARY_TYPES:
-        for id in EXAMPLE_ADMISSION_IDS:
+        for id in hadm_ids:
             print(f"Running pipeline for {task} on patient {id}")
-            result = run(client, task, hadm_id=id)
-            save_result(result, task, hadm_id=id)
-            print("Pipeline completed")
+            if not os.path.exists(f"{RESULTS_DIR}/openai/{task}/{id}_{task}_summary.txt"):
+                print("Starting inference")
+                result = inference(client, task, hadm_id=id)
+                save_result(result, task, hadm_id=id)
+                print("Pipeline completed")
     print("All pipelines completed")
     endtime = time.time() - start_time
     print(f"Time taken: {endtime}")
 
 
 if __name__ == "__main__":
-    run()
+    original_discharge_summaries = load_original_discharge_summaries()
+    target_admission_ids = extract_hadm_ids(
+        original_discharge_summaries=original_discharge_summaries, n=100
+    )
+    run(hadm_ids=target_admission_ids)

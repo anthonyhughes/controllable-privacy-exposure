@@ -43,11 +43,15 @@ def generate_random_location():
 def remove_extra_redactions(discharge_data):
     """Remove extra redactions"""
     discharge_data = discharge_data.replace("(___)", "")
-    discharge_data = discharge_data.replace("___", " ")    
+    discharge_data = discharge_data.replace("___", " ")
     return discharge_data
+
 
 def remove_extra_piis(discharge_data):
     """Remove extra redactions"""
-    for pii in ["year-old", "y/o",]:
+    for pii in [
+        "year-old",
+        "y/o",
+    ]:
         discharge_data = discharge_data.replace(pii, " ")
     return discharge_data
