@@ -1,4 +1,5 @@
 from constants import (
+    MODELS,
     SUMMARY_TYPES,
 )
 
@@ -9,13 +10,13 @@ from pydeidentify import Deidentifier
 d = Deidentifier()
 
 
-def run_pii_check(hadm_id, task):
+def run_pii_check(hadm_id, task, target_model):
     """
     Run PII evaluation for a single document
     """
     print(f"Running PII evaluation for {hadm_id}")
     print(f"Running PII evaluation for task: {task}")
-    generated_summary = open_generated_summary(task, hadm_id)
+    generated_summary = open_generated_summary(task, hadm_id, target_model)
     scrubbed_text = d.deidentify(generated_summary)
     return scrubbed_text
 
@@ -45,16 +46,17 @@ def update_pii_property_counts(scrubber_result, pii_property_counts):
     return pii_property_counts
 
 
-def run_pii_check_for_all_ids(hadm_ids):
+def run_privacy_eval(hadm_ids, target_model):
     """
     Run PII evaluation for all documents
     """
-    for task in SUMMARY_TYPES:
+    for task in SUMMARY_TYPES[0:1]:
         pii_property_counts = {}
         doc_count = 0
         token_count = 0
         for hadm_id in hadm_ids:
-            result = run_pii_check(hadm_id, task)
+            result = run_pii_check(hadm_id, task, target_model)
+            print(result.decode_mapping)
             pii_property_counts = update_pii_property_counts(
                 result, pii_property_counts
             )
@@ -74,4 +76,14 @@ if __name__ == "__main__":
     target_admission_ids = extract_hadm_ids(
         original_discharge_summaries=original_discharge_summaries, n=100
     )
-    run_pii_check_for_all_ids(hadm_ids=target_admission_ids)
+    target_model = MODELS[1]
+    target_admission_ids = [
+        20731670,
+        20783870,
+        20783870,
+        20280072,
+        20356134,
+        20237862,
+        20285402,
+    ]
+    run_privacy_eval(hadm_ids=target_admission_ids, target_model=target_model)

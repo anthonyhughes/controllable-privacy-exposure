@@ -1,7 +1,7 @@
 from datasets import load_dataset
 from timeit import default_timer as timer
 
-from constants import OPEN_AI_RESULTS_DIR, PSEUDO_TARGETS_ROOT
+from constants import RESULTS_DIR, PSEUDO_TARGETS_ROOT
 
 
 # load a huggingface dataset
@@ -37,11 +37,11 @@ def extract_hadm_ids(original_discharge_summaries, n=100):
     return list(original_discharge_summaries.head(n)["hadm_id"])
 
 
-def open_generated_summary(task, hadm_id):
+def open_generated_summary(task, hadm_id, model):
     """
     Load the generated summary for a document
     """
-    with open(f"{OPEN_AI_RESULTS_DIR}/{task}/{hadm_id}_{task}_summary.txt", "r") as f:
+    with open(f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary.txt", "r") as f:
         return f.read()
 
 
