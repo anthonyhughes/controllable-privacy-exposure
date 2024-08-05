@@ -36,9 +36,13 @@ def run_eval_for_document(task, hadm_id):
     """
     generated_summary = open_generated_summary(task, hadm_id)
     ground_truth_summary = open_target_summary(task, hadm_id)
-    result = rouge_eval.compute(predictions=[generated_summary], references=[ground_truth_summary])
-    bertscore_result = bertscore.compute(predictions=[generated_summary], references=[ground_truth_summary], lang="en")
-    result['bertscore'] = bertscore_result['f1'][0]
+    result = rouge_eval.compute(
+        predictions=[generated_summary], references=[ground_truth_summary]
+    )
+    bertscore_result = bertscore.compute(
+        predictions=[generated_summary], references=[ground_truth_summary], lang="en"
+    )
+    result["bertscore"] = bertscore_result["f1"][0]
     return result
 
 

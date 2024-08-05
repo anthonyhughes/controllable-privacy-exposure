@@ -1,6 +1,8 @@
 from datasets import load_dataset
 from timeit import default_timer as timer
 
+from constants import OPEN_AI_RESULTS_DIR, PSEUDO_TARGETS_ROOT
+
 
 # load a huggingface dataset
 def load_cnn_dataset():
@@ -30,13 +32,29 @@ def tester():
     print(somerow["highlights"])
 
 
+def extract_hadm_ids(original_discharge_summaries, n=100):
+    """Extract the first n admission ids as a list"""
+    return list(original_discharge_summaries.head(n)["hadm_id"])
+
+
+def open_generated_summary(task, hadm_id):
+    """
+    Load the generated summary for a document
+    """
+    with open(f"{OPEN_AI_RESULTS_DIR}/{task}/{hadm_id}_{task}_summary.txt", "r") as f:
+        return f.read()
+
+
+def open_target_summary(task, hadm_id):
+    """
+    Load the target summary for a document
+    """
+    with open(f"{PSEUDO_TARGETS_ROOT}{task}/{hadm_id}-target.txt", "r") as f:
+        return f.read()
+
+
 if __name__ == "__main__":
     start = timer()
     tester()
     end = timer() - start
     print(f"Time to complete in secs: {end}")
-
-
-def extract_hadm_ids(original_discharge_summaries, n=100):
-    """Extract the first n admission ids as a list"""
-    return list(original_discharge_summaries.head(n)["hadm_id"])
