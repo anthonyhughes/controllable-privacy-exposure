@@ -1,60 +1,60 @@
 import os
 import re
-from constants import RE_ID_EXAMPLES_ROOT, SUMMARY_TYPES, EXAMPLE_ADMISSION_IDS
+from constants import RE_ID_EXAMPLES_ROOT, SUMMARY_TYPES
+from mimic.mimic_data import load_original_discharge_summaries
 from reidentifier.reidentify_utils import (
     fetch_file_names,
+    generate_random_profile,
     load_file,
-    generate_random_name,
     generate_random_unit_number,
-    generate_random_adult_age,
-    generate_random_date,
-    generate_random_location,
     remove_extra_redactions,
 )
+from utils.dataset_utils import extract_hadm_ids
 
 
-def fill_in_discharge_template(discharge_summary):
+def fill_in_discharge_template(discharge_summary, id):
+    profile = generate_random_profile(id)
     templates = {
         "name": {
             "regex": r"Name:  ___",
             "target": f"Name:   ",
-            "function": generate_random_name,
+            "value": profile["name"],
         },
         "surname_only": {
             "regex": r"Ms. ___",
             "target": f"Ms. ",
-            "function": generate_random_name,
+            "value": profile["name"],
         },
         "surname_onl2": {
             "regex": r"___ is a",
             "target": f" is a",
-            "function": generate_random_name,
+            "value": profile["name"],
             "flip": True,
         },
         "surname_only_3": {
             "regex": r"Mr. ___",
             "target": f"Mr. ",
-            "function": generate_random_name,
+            "value": profile["name"],
         },
         "clinician": {
             "regex": r"Dr. ___",
             "target": f"Dr. ",
-            "function": generate_random_name,
+            "value": profile["clinician_name"],
         },
         "clinician2": {
             "regex": r"Dr. ___ ___",
             "target": f"Dr. ",
-            "function": generate_random_name,
+            "value": profile["clinician_name"],
         },
         "clinician3": {
             "regex": r"Dr. \\n___",
             "target": f"Dr.",
-            "function": generate_random_name,
+            "value": profile["clinician_name"],
         },
         "clinician4": {
             "regex": r"You were seen by ___",
             "target": f"You were seen by",
-            "function": generate_random_name,
+            "value": profile["clinician_name"],
         },
         "unit_number": {
             "regex": r"Unit No:   ___",
@@ -64,120 +64,120 @@ def fill_in_discharge_template(discharge_summary):
         "admission_date": {
             "regex": r"Admission Date:  ___",
             "target": f"Admission Date:",
-            "function": generate_random_date,
+            "value": profile["in_date"],
         },
         "discharge_date": {
             "regex": r"Discharge Date:   ___",
             "target": f"Discharge Date:   ",
-            "function": generate_random_date,
+            "value": profile["out_date"],
         },
         "date_of_birth": {
             "regex": r"Date of Birth:  ___",
             "target": f"Date of Birth:   ",
-            "function": generate_random_date,
+            "value": profile["birth_date"],
         },
         "gen_date": {
             "regex": r"on ___",
             "target": f"on ",
-            "function": generate_random_date,
+            "value": profile["intervention_date"],
         },
         "attending_physician": {
             "regex": r"Attending: ___",
             "target": f"Attending: ",
-            "function": generate_random_name,
+            "value": profile["clinician_name"],
         },
         "age1": {
             "regex": r"___ year old",
             "target": f" year old",
-            "function": generate_random_adult_age,
+            "value": profile["age"],
             "flip": True,
         },
         "age2": {
             "regex": r"when pt. was ___",
             "target": f"when pt. was ",
-            "function": generate_random_adult_age,
+            "value": profile["age"],
             "flip": False,
         },
         "age3": {
             "regex": r"___ man",
             "target": f" man",
-            "function": generate_random_adult_age,
+            "value": profile["age"],
             "flip": True,
         },
         "age3": {
             "regex": r"___ yo",
             "target": f" yo",
-            "function": generate_random_adult_age,
+            "value": profile["age"],
             "flip": True,
         },
         "age4": {
             "regex": r"age ___",
             "target": f"age ",
-            "function": generate_random_adult_age,
+            "value": profile["age"],
         },
         "age4": {
             "regex": r"___ year-old",
             "target": f" year-old",
-            "function": generate_random_adult_age,
+            "value": profile["age"],
             "flip": True,
         },
         "location": {
             "regex": r"your time at ___",
             "target": f"your time at",
-            "function": generate_random_location,
+            "value": profile["location"],
         },
         "location2": {
             "regex": r"___ ED",
             "target": f"ED",
-            "function": generate_random_location,
+            "value": profile["location"],
             "flip": True,
         },
         "location3": {
             "regex": r"taken to ___",
             "target": f"taken to",
-            "function": generate_random_location,
+            "value": profile["location"],
         },
         "location4": {
             "regex": r" was in ___",
             "target": f" was in",
-            "function": generate_random_location,
+            "value": profile["location"],
         },
         "location5": {
             "regex": r"presents to ___",
             "target": f"presents to",
-            "function": generate_random_location,
+            "value": profile["location"],
         },
         "location6": {
             "regex": r"previous in ___",
             "target": f"previous in",
-            "function": generate_random_location,
+            "value": profile["location"],
         },
         "location7": {
             "regex": r"stay at ___",
             "target": f"stay at",
-            "function": generate_random_location,
+            "value": profile["location"],
         },
         "location8": {
             "regex": r"___ Care Team",
             "target": f"Care Team",
-            "function": generate_random_location,
+            "value": profile["location"],
             "flip": True,
         },
         "location9": {
             "regex": r"admitted to ___",
             "target": f"admitted to",
-            "function": generate_random_location,
+            "value": profile["location"],
         },
         "location10": {
             "regex": r"___ Team",
             "target": f" Team",
-            "function": generate_random_location,
+            "value": profile["location"],
             "flip": True,
         },
         "location11": {
             "regex": r"you at ___",
             "target": f"you at",
-            "function": generate_random_location,
+            "value": profile["location"],
         },
         "time": {
             "regex": r"___ weeks",
@@ -187,18 +187,32 @@ def fill_in_discharge_template(discharge_summary):
         },
     }
     for _, value in templates.items():
-        if value.get("flip"):
-            discharge_summary = re.sub(
-                pattern=value["regex"],
-                repl=f"{value['function']()} {value['target']}",
-                string=discharge_summary,
-            )
+        if "function" in value:
+            if value.get("flip"):
+                discharge_summary = re.sub(
+                    pattern=value["regex"],
+                    repl=f"{value['function']()} {value['target']}",
+                    string=discharge_summary,
+                )
+            else:
+                discharge_summary = re.sub(
+                    pattern=value["regex"],
+                    repl=f"{value['target']} {value['function']()}",
+                    string=discharge_summary,
+                )
         else:
-            discharge_summary = re.sub(
-                pattern=value["regex"],
-                repl=f"{value['target']} {value['function']()}",
-                string=discharge_summary,
-            )
+            if value.get("flip"):
+                discharge_summary = re.sub(
+                    pattern=value["regex"],
+                    repl=f"{value['value']} {value['target']}",
+                    string=discharge_summary,
+                )
+            else:
+                discharge_summary = re.sub(
+                    pattern=value["regex"],
+                    repl=f"{value['target']} {value['value']}",
+                    string=discharge_summary,
+                )
     return discharge_summary
 
 
@@ -207,14 +221,14 @@ def run_process(hadm_ids):
     # for both summary tasks
     for target_summary_type in SUMMARY_TYPES:
         # and for every patient
-        for id in hadm_ids:        
+        for id in hadm_ids:
             print(f"Processing {target_summary_type} for {id}")
             filetype = "discharge-inputs"
             res = fetch_file_names(
                 f"data/examples/{target_summary_type}", filetype, hadm_id=id
             )
             contents = load_file(res[0])
-            data = fill_in_discharge_template(contents)
+            data = fill_in_discharge_template(contents, id)
             data = remove_extra_redactions(data)
             if not os.path.exists(f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}"):
                 os.makedirs(f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}")
@@ -226,4 +240,8 @@ def run_process(hadm_ids):
 
 
 if __name__ == "__main__":
-    run_process()
+    original_discharge_summaries = load_original_discharge_summaries()
+    target_admission_ids = extract_hadm_ids(
+        original_discharge_summaries=original_discharge_summaries, n=100
+    )
+    run_process(hadm_ids=target_admission_ids)

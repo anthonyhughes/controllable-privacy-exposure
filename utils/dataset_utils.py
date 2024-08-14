@@ -1,7 +1,9 @@
 from datasets import load_dataset
 from timeit import default_timer as timer
 
-from constants import RESULTS_DIR, PSEUDO_TARGETS_ROOT
+import pandas as pd
+
+from constants import RESULTS_DIR, PSEUDO_TARGETS_ROOT, TRAIN_DISCHARGE_ME
 
 
 # load a huggingface dataset
@@ -51,6 +53,14 @@ def open_target_summary(task, hadm_id):
     """
     with open(f"{PSEUDO_TARGETS_ROOT}{task}/{hadm_id}-target.txt", "r") as f:
         return f.read()
+
+
+def fetch_admission_info(hadm_id):
+    """Fetch admission info"""
+    print(f"Admission info for {hadm_id}")
+    df = pd.read_csv(f"{TRAIN_DISCHARGE_ME}/edstays.csv")
+    edstay = df[df["hadm_id"] == str(hadm_id)]
+    return edstay
 
 
 if __name__ == "__main__":

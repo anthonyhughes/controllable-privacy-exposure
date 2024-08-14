@@ -11,3 +11,4 @@ bert_score==0.3.13
 scrubadub==2.0.1
 pydeidentify==0.2.2
 spacy-transformers==1.3.5
+names==0.3.0
