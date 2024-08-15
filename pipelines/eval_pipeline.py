@@ -1,4 +1,3 @@
-import json
 from constants import (
     MODELS,
     SUMMARY_TYPES,
@@ -11,7 +10,7 @@ from utils.dataset_utils import (
     open_generated_summary,
     open_target_summary,
 )
-from utils.pii_eval import run_privacy_eval
+from utils.pii_eval import run_privacy_eval, store_results
 
 bertscore = load("bertscore")
 rouge_eval = load("rouge")
@@ -33,12 +32,6 @@ def run_eval_for_document(task, hadm_id, target_model):
     return result
 
 
-def store_results(results, target_model):
-    """Store results"""
-    with open(f"data/results_{target_model}.json", "w") as f:
-        json.dump(results, f, indent=4)
-
-
 def calculate_averages(results, hadm_ids):
     """
     Calculate the average scores for the evaluation results
@@ -47,7 +40,7 @@ def calculate_averages(results, hadm_ids):
         SUMMARY_TYPES[0]: {},
         SUMMARY_TYPES[1]: {},
     }
-    for task in SUMMARY_TYPES[0:1]:
+    for task in SUMMARY_TYPES:
         print(f"Calculating average scores for task: {task}")
         for metric in results[hadm_ids[0]][task]:
             avg_scores[task][metric] = 0
@@ -58,10 +51,12 @@ def calculate_averages(results, hadm_ids):
 
 
 def run_utility_eval(hadm_ids, target_model):
-    """ """
+    """
+    Get the scores for utility
+    """
     print("Running evaluation pipeline")
     results = {}
-    for task in SUMMARY_TYPES[0:1]:
+    for task in SUMMARY_TYPES:
         print(f"Running evaluation for task: {task}")
         for hadm_id in hadm_ids:
             if hadm_id not in results:
@@ -73,25 +68,15 @@ def run_utility_eval(hadm_ids, target_model):
                     {task: run_eval_for_document(task, hadm_id, target_model)}
                 )
     results = calculate_averages(results, hadm_ids)
-    store_results(results, target_model)
-
+    store_results(results, target_model, "utility")
 
 
 if __name__ == "__main__":
-    target_model = MODELS[1]
     original_discharge_summaries = load_original_discharge_summaries()
     target_admission_ids = extract_hadm_ids(
         original_discharge_summaries=original_discharge_summaries, n=100
     )
-    target_admission_ids = [
-            20731670,
-            20783870,
-            20783870,
-            20280072,
-            20356134,
-            20237862,
-            20285402,
-        ]
-    print(f"Running evaluation pipeline for model: {target_model}")
-    # run_utility_eval(hadm_ids=target_admission_ids, target_model=target_model)
-    run_privacy_eval(hadm_ids=target_admission_ids)
+    for target_model in MODELS:
+        print(f"Running evaluation pipeline for model: {target_model}")
+        run_utility_eval(hadm_ids=target_admission_ids, target_model=target_model)
+        run_privacy_eval(hadm_ids=target_admission_ids, target_model=target_model)

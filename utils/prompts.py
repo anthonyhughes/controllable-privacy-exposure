@@ -16,5 +16,6 @@ prompt_prefix_for_task = {
                 Summarise the following free text clinical notes into a discharge letter for the patient.
                 However, you must not reveal any personally identifying information; such as names, ages, locations, race and dates.
                 Do not mask or placeholder the identfying information, but replace it with information linguistically similar.""",
-    "baseline_summary": """You are a medical doctor.Summarise the following free text clinical notes into a brief hospital course summary.""",
+    "brief_hospital_course_baseline_summary_task": """You are a medical doctor. Summarise the following free text clinical notes into a brief hospital course summary.""",
+    "discharge_instructions_baseline_summary_task": """You are a medical doctor. Summarise the following free text clinical notes into a discharge letter for the patient."""
 }

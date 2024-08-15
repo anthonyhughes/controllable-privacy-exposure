@@ -22,4 +22,4 @@ EXAMPLE_ADMISSION_IDS = [
     20910785,
 ]
 RESULTS_DIR = DATA_ROOT + "/results"
-MODELS = ["openai-gpt-4o", "mistral-instruct-7b",]
+MODELS = ["gpt-4o-mini", "mistral-instruct-7b",]

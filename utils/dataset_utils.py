@@ -3,7 +3,7 @@ from timeit import default_timer as timer
 
 import pandas as pd
 
-from constants import RESULTS_DIR, PSEUDO_TARGETS_ROOT, TRAIN_DISCHARGE_ME
+from constants import RE_ID_EXAMPLES_ROOT, RESULTS_DIR, PSEUDO_TARGETS_ROOT, SUMMARY_TYPES, TRAIN_DISCHARGE_ME
 
 
 # load a huggingface dataset
@@ -17,21 +17,6 @@ def update_article_prefix(dataset, prefix):
     """Update the article prefix"""
     dataset = dataset.map(lambda example: {"article": prefix + example["article"]})
     return dataset
-
-
-def tester():
-    dataset = load_cnn_dataset()
-    somerow = dataset["train"][0]
-    print(somerow["id"])
-    print(somerow["article"][0:100])
-    print(somerow["highlights"])
-    updated_dataset = update_article_prefix(
-        dataset, "You are an expert is news. Summarise the following article:\n"
-    )
-    somerow = updated_dataset["train"][0]
-    print(somerow["id"])
-    print(somerow["article"][0:100])
-    print(somerow["highlights"])
 
 
 def extract_hadm_ids(original_discharge_summaries, n=100):
@@ -63,8 +48,17 @@ def fetch_admission_info(hadm_id):
     return edstay
 
 
+def run_packaging_for_colab():
+    # create a tar of multiple directories using python
+    import tarfile
+    with(tarfile.open("input-files-output.tar.gz", "a:")) as target_pckg:
+        target_pckg.add(f"{RE_ID_EXAMPLES_ROOT}/{SUMMARY_TYPES[0]}")
+        target_pckg.add(f"{RE_ID_EXAMPLES_ROOT}/{SUMMARY_TYPES[1]}")
+        target_pckg.add(f"{PSEUDO_TARGETS_ROOT}/{SUMMARY_TYPES[0]}")
+        target_pckg.add(f"{PSEUDO_TARGETS_ROOT}/{SUMMARY_TYPES[1]}")
+
 if __name__ == "__main__":
     start = timer()
-    tester()
+    run_packaging_for_colab()
     end = timer() - start
     print(f"Time to complete in secs: {end}")

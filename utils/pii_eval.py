@@ -1,3 +1,4 @@
+import json
 from constants import (
     MODELS,
     SUMMARY_TYPES,
@@ -50,25 +51,55 @@ def run_privacy_eval(hadm_ids, target_model):
     """
     Run PII evaluation for all documents
     """
-    for task in SUMMARY_TYPES[0:1]:
+    results = {}
+    for task in SUMMARY_TYPES:
         pii_property_counts = {}
+        baseline_doc_count = 0
         doc_count = 0
+        baseline_token_count = 0
         token_count = 0
         for hadm_id in hadm_ids:
+            baseline_task = f"{task}_baseline_summary_task"
+            baseline_results = run_pii_check(hadm_id, baseline_task, target_model)
+            baseline_pii_property_counts = update_pii_property_counts(
+                baseline_results, pii_property_counts
+            )
+            baseline_counts = fetch_total_pii_count(baseline_results)
+
             result = run_pii_check(hadm_id, task, target_model)
-            print(result.decode_mapping)
             pii_property_counts = update_pii_property_counts(
                 result, pii_property_counts
             )
             counts = fetch_total_pii_count(result)
+
+            # Build privacy counts
             if counts > 0:
                 doc_count += 1
                 token_count += counts
-        print(f"Total documents with PII: {doc_count}")
-        print(f"Total documents checked: {len(hadm_ids)}")
-        print(f"PII percentage: {doc_count/len(hadm_ids)}")
-        print(f"Total PII tokens: {token_count}")
-        print(f"PII property counts: {pii_property_counts}")
+            if baseline_counts > 0:
+                baseline_doc_count += 1
+                baseline_token_count += baseline_counts
+        results[task] = {
+            "exposed_docs_count": doc_count,
+            "docs_count": len(hadm_ids),
+            "exposed_tokens_count": token_count,
+            "exposed_pii_per_property": pii_property_counts,
+            "pii__document_percentage": doc_count / len(hadm_ids),
+        }
+        results[baseline_task] = {
+            "exposed_docs_count": baseline_doc_count,
+            "docs_count": len(hadm_ids),
+            "exposed_tokens_count": baseline_token_count,
+            "exposed_pii_per_property": baseline_pii_property_counts,
+            "pii__document_percentage": baseline_doc_count / len(hadm_ids),
+        }
+    store_results(results, target_model, "privacy")
+
+
+def store_results(results, target_model, results_type):
+    """Store results"""
+    with open(f"data/results_{results_type}_{target_model}.json", "w") as f:
+        json.dump(results, f, indent=4)
 
 
 if __name__ == "__main__":
@@ -76,14 +107,5 @@ if __name__ == "__main__":
     target_admission_ids = extract_hadm_ids(
         original_discharge_summaries=original_discharge_summaries, n=100
     )
-    target_model = MODELS[1]
-    target_admission_ids = [
-        20731670,
-        20783870,
-        20783870,
-        20280072,
-        20356134,
-        20237862,
-        20285402,
-    ]
-    run_privacy_eval(hadm_ids=target_admission_ids, target_model=target_model)
+    for model in MODELS:
+        run_privacy_eval(hadm_ids=target_admission_ids, target_model=model)
