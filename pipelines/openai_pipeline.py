@@ -55,7 +55,7 @@ def save_result(openai_result, task, hadm_id, model):
     if not os.path.exists(f"data/results/{model}/{task}"):
         os.makedirs(f"data/results/{model}/{task}")
     with open(
-        f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary.txt",
+        f"{RESULTS_DIR}/{model}/{task}/{hadm_id}-discharge-inputs.txt",
         "w",
     ) as f:
         f.write(openai_result)
@@ -78,7 +78,7 @@ def run(hadm_ids, model="gpt-4o-mini"):
                 main_prompt = prompt_prefix_for_task[task]
                 pseudonymised_result = inference(client, task, hadm_id=id, model=model, prompt=main_prompt)
                 save_result(pseudonymised_result, task, hadm_id=id, model=model)
-                save_result(baseline_result, f"{task}_baseline_summary_task", hadm_id=id, model=model)
+                save_result(baseline_result, f"{task}_baseline", hadm_id=id, model=model)
                 print("Pipeline completed")
     print("All pipelines completed")
     endtime = time.time() - start_time

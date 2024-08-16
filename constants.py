@@ -21,5 +21,6 @@ EXAMPLE_ADMISSION_IDS = [
     27771974,
     20910785,
 ]
-RESULTS_DIR = DATA_ROOT + "/results"
+RESULTS_DIR = DATA_ROOT + "results"
 MODELS = ["gpt-4o-mini", "mistral-instruct-7b",]
+EVAL_MODELS = ["gpt-4o-mini", "mistral-7b-instruct-v0.3-bnb-4bit", "llama-3-8b-Instruct-bnb-4bit"]

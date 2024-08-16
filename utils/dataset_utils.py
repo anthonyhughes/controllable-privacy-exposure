@@ -3,7 +3,13 @@ from timeit import default_timer as timer
 
 import pandas as pd
 
-from constants import RE_ID_EXAMPLES_ROOT, RESULTS_DIR, PSEUDO_TARGETS_ROOT, SUMMARY_TYPES, TRAIN_DISCHARGE_ME
+from constants import (
+    RE_ID_EXAMPLES_ROOT,
+    RESULTS_DIR,
+    PSEUDO_TARGETS_ROOT,
+    SUMMARY_TYPES,
+    TRAIN_DISCHARGE_ME,
+)
 
 
 # load a huggingface dataset
@@ -28,7 +34,14 @@ def open_generated_summary(task, hadm_id, model):
     """
     Load the generated summary for a document
     """
-    with open(f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary.txt", "r") as f:
+    if "baseline" in task and model == "gpt-4o-mini":
+        target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary_task_summary.txt"
+    elif "baseline" not in task and model == "gpt-4o-mini":
+        target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary.txt"
+    else:
+        target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}-discharge-inputs.txt"
+        
+    with open(target_file, "r") as f:
         return f.read()
 
 
@@ -51,11 +64,13 @@ def fetch_admission_info(hadm_id):
 def run_packaging_for_colab():
     # create a tar of multiple directories using python
     import tarfile
-    with(tarfile.open("input-files-output.tar.gz", "a:")) as target_pckg:
+
+    with tarfile.open("input-files-output.tar.gz", "a:") as target_pckg:
         target_pckg.add(f"{RE_ID_EXAMPLES_ROOT}/{SUMMARY_TYPES[0]}")
         target_pckg.add(f"{RE_ID_EXAMPLES_ROOT}/{SUMMARY_TYPES[1]}")
         target_pckg.add(f"{PSEUDO_TARGETS_ROOT}/{SUMMARY_TYPES[0]}")
         target_pckg.add(f"{PSEUDO_TARGETS_ROOT}/{SUMMARY_TYPES[1]}")
+
 
 if __name__ == "__main__":
     start = timer()

@@ -31,6 +31,7 @@ def fetch_total_pii_count(scrubber_result):
     for entity in pii_counts.keys():
         pii_counts[entity] >= 1
         token_count += pii_counts[entity]
+        
     return token_count
 
 
@@ -84,6 +85,7 @@ def run_privacy_eval(hadm_ids, target_model):
             "docs_count": len(hadm_ids),
             "exposed_tokens_count": token_count,
             "exposed_pii_per_property": pii_property_counts,
+            "average_exposed_pii_per_property_per_document": pii_property_counts / len(hadm_ids),
             "pii__document_percentage": doc_count / len(hadm_ids),
         }
         results[baseline_task] = {

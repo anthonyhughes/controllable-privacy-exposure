@@ -1,4 +1,5 @@
 from constants import (
+    EVAL_MODELS,
     MODELS,
     SUMMARY_TYPES,
 )
@@ -57,15 +58,18 @@ def run_utility_eval(hadm_ids, target_model):
     print("Running evaluation pipeline")
     results = {}
     for task in SUMMARY_TYPES:
+        baseline_task = f"{task}_baseline"
         print(f"Running evaluation for task: {task}")
         for hadm_id in hadm_ids:
             if hadm_id not in results:
-                results[hadm_id] = {
-                    task: run_eval_for_document(task, hadm_id, target_model)
-                }
+                eval_res = run_eval_for_document(task, hadm_id, target_model)
+                baseline_eval_res = run_eval_for_document(
+                    f"{task}_baseline", hadm_id, target_model
+                )
+                results[hadm_id] = {task: eval_res, baseline_task: baseline_eval_res}
             else:
                 results[hadm_id].update(
-                    {task: run_eval_for_document(task, hadm_id, target_model)}
+                    {task: eval_res, baseline_task: baseline_eval_res}
                 )
     results = calculate_averages(results, hadm_ids)
     store_results(results, target_model, "utility")
@@ -76,7 +80,8 @@ if __name__ == "__main__":
     target_admission_ids = extract_hadm_ids(
         original_discharge_summaries=original_discharge_summaries, n=100
     )
-    for target_model in MODELS:
+    target_admission_ids[0:5]
+    for target_model in EVAL_MODELS:
         print(f"Running evaluation pipeline for model: {target_model}")
         run_utility_eval(hadm_ids=target_admission_ids, target_model=target_model)
-        run_privacy_eval(hadm_ids=target_admission_ids, target_model=target_model)
+        # run_privacy_eval(hadm_ids=target_admission_ids, target_model=target_model)
