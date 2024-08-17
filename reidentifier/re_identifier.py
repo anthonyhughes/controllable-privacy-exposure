@@ -1,6 +1,7 @@
+import json
 import os
 import re
-from constants import RE_ID_EXAMPLES_ROOT, SUMMARY_TYPES
+from constants import RE_ID_EXAMPLES_ROOT, SUMMARY_TYPES, RE_ID_TARGETS_ROOT
 from mimic.mimic_data import load_original_discharge_summaries
 from reidentifier.reidentify_utils import (
     fetch_file_names,
@@ -12,8 +13,7 @@ from reidentifier.reidentify_utils import (
 from utils.dataset_utils import extract_hadm_ids
 
 
-def fill_in_discharge_template(discharge_summary, id):
-    profile = generate_random_profile(id)
+def fill_in_discharge_template(discharge_summary, profile):    
     templates = {
         "name": {
             "regex": r"Name:  ___",
@@ -216,28 +216,54 @@ def fill_in_discharge_template(discharge_summary, id):
     return discharge_summary
 
 
+def reidentify_ehr_record(target_summary_type, filetype, id, profile):
+    res = fetch_file_names(f"data/examples/{target_summary_type}", filetype, hadm_id=id)
+    contents = load_file(res[0])
+    data = fill_in_discharge_template(contents, profile)
+    data = remove_extra_redactions(data)
+    return data
+
+
+def reidentify_target_summary(target_summary_type, filetype, id, profile):
+    res = fetch_file_names(f"data/examples/{target_summary_type}", "target", hadm_id=id)
+    target_summary = load_file(res[0])
+    data = fill_in_discharge_template(target_summary, profile)
+    data = remove_extra_redactions(data)
+    return data
+
+
 def run_process(hadm_ids):
     print("Running reidentifier")
     # for both summary tasks
+    profiles = []
     for target_summary_type in SUMMARY_TYPES:
         # and for every patient
         for id in hadm_ids:
             print(f"Processing {target_summary_type} for {id}")
             filetype = "discharge-inputs"
-            res = fetch_file_names(
-                f"data/examples/{target_summary_type}", filetype, hadm_id=id
-            )
-            contents = load_file(res[0])
-            data = fill_in_discharge_template(contents, id)
-            data = remove_extra_redactions(data)
+            profile = generate_random_profile(id)
+            profiles.append(profile)
+            data = reidentify_ehr_record(target_summary_type, filetype, id, profile)
             if not os.path.exists(f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}"):
                 os.makedirs(f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}")
             with open(
                 f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}/{id}-{filetype}.txt", "w"
             ) as f:
                 f.write(data)
-        print("Done.")
 
+            baseline_summary = reidentify_target_summary(
+                target_summary_type, filetype, id, profile
+            )
+            if not os.path.exists(f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline"):
+                os.makedirs(f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline")
+            with open(
+                f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline/{id}-target.txt", "w"
+            ) as f:
+                f.write(baseline_summary)
+
+        print("Done.")
+    with open("data/pseudo-profiles.json", "w") as f:
+        json.dump(profiles, f)
 
 if __name__ == "__main__":
     original_discharge_summaries = load_original_discharge_summaries()

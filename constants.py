@@ -1,7 +1,7 @@
 DATA_ROOT = "data/"
 EXAMPLES_ROOT = DATA_ROOT + "examples/"
 PSEUDO_TARGETS_ROOT = DATA_ROOT + "pseudonymized_targets/"
-RED_ID_TARGETS_ROOT = DATA_ROOT + "re_identified_targets/"
+RE_ID_TARGETS_ROOT = DATA_ROOT + "re_identified_targets"
 RE_ID_EXAMPLES_ROOT = DATA_ROOT + "re_identified_examples/"
 DISCHARGE_ME_ROOT = (
     DATA_ROOT
