@@ -31,7 +31,7 @@ def fetch_total_pii_count(scrubber_result):
     for entity in pii_counts.keys():
         pii_counts[entity] >= 1
         token_count += pii_counts[entity]
-        
+
     return token_count
 
 
@@ -48,31 +48,46 @@ def update_pii_property_counts(scrubber_result, pii_property_counts):
     return pii_property_counts
 
 
+def create_average_pii_per_property(pii_property_counts, doc_count):
+    """
+    Create average PII per property
+    """
+    average_pii_per_property = {}
+    for entity in pii_property_counts.keys():
+        average_pii_per_property[entity] = pii_property_counts[entity] / doc_count
+    return average_pii_per_property
+
+
 def run_privacy_eval(hadm_ids, target_model):
     """
     Run PII evaluation for all documents
     """
     results = {}
+    raw_results = {}
     for task in SUMMARY_TYPES:
         pii_property_counts = {}
+        baseline_pii_property_counts = {}
         baseline_doc_count = 0
         doc_count = 0
         baseline_token_count = 0
         token_count = 0
         for hadm_id in hadm_ids:
-            baseline_task = f"{task}_baseline_summary_task"
-            baseline_results = run_pii_check(hadm_id, baseline_task, target_model)
-            baseline_pii_property_counts = update_pii_property_counts(
-                baseline_results, pii_property_counts
-            )
-            baseline_counts = fetch_total_pii_count(baseline_results)
-
             result = run_pii_check(hadm_id, task, target_model)
             pii_property_counts = update_pii_property_counts(
                 result, pii_property_counts
             )
             counts = fetch_total_pii_count(result)
 
+            baseline_task = f"{task}_baseline"
+            baseline_results = run_pii_check(hadm_id, baseline_task, target_model)
+            baseline_pii_property_counts = update_pii_property_counts(
+                baseline_results, baseline_pii_property_counts
+            )
+            baseline_counts = fetch_total_pii_count(baseline_results)
+            raw_results[hadm_id] = {
+                baseline_task: baseline_counts,
+                task: counts,
+            }
             # Build privacy counts
             if counts > 0:
                 doc_count += 1
@@ -85,7 +100,9 @@ def run_privacy_eval(hadm_ids, target_model):
             "docs_count": len(hadm_ids),
             "exposed_tokens_count": token_count,
             "exposed_pii_per_property": pii_property_counts,
-            "average_exposed_pii_per_property_per_document": pii_property_counts / len(hadm_ids),
+            "average_exposed_pii_per_property_per_document": create_average_pii_per_property(
+                pii_property_counts, doc_count
+            ),
             "pii__document_percentage": doc_count / len(hadm_ids),
         }
         results[baseline_task] = {
@@ -93,9 +110,13 @@ def run_privacy_eval(hadm_ids, target_model):
             "docs_count": len(hadm_ids),
             "exposed_tokens_count": baseline_token_count,
             "exposed_pii_per_property": baseline_pii_property_counts,
+            "average_exposed_pii_per_property_per_document": create_average_pii_per_property(
+                baseline_pii_property_counts, baseline_doc_count
+            ),
             "pii__document_percentage": baseline_doc_count / len(hadm_ids),
         }
     store_results(results, target_model, "privacy")
+    store_results(raw_results, target_model, "raw_privacy")
 
 
 def store_results(results, target_model, results_type):

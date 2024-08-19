@@ -9,6 +9,7 @@ from constants import (
     PSEUDO_TARGETS_ROOT,
     SUMMARY_TYPES,
     TRAIN_DISCHARGE_ME,
+    RE_ID_TARGETS_ROOT
 )
 
 
@@ -35,10 +36,12 @@ def open_generated_summary(task, hadm_id, model):
     Load the generated summary for a document
     """
     if "baseline" in task and model == "gpt-4o-mini":
+        task = task.replace("_summary_task", "")
         target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary_task_summary.txt"
     elif "baseline" not in task and model == "gpt-4o-mini":
         target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary.txt"
     else:
+        task = task.replace("_summary_task", "")
         target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}-discharge-inputs.txt"
         
     with open(target_file, "r") as f:
@@ -49,7 +52,11 @@ def open_target_summary(task, hadm_id):
     """
     Load the target summary for a document
     """
-    with open(f"{PSEUDO_TARGETS_ROOT}{task}/{hadm_id}-target.txt", "r") as f:
+    if "baseline" in task:
+        target_file = f"{RE_ID_TARGETS_ROOT}/{task}/{hadm_id}-target.txt"
+    else:
+        target_file = f"{RE_ID_EXAMPLES_ROOT}/{task}/{hadm_id}-discharge-inputs.txt"
+    with open(target_file, "r") as f:
         return f.read()
 
 
