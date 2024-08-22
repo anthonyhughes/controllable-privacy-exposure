@@ -8,5 +8,5 @@ if __name__ == "__main__":
     hadm_ids = run()
     run_process(hadm_ids)
     run_all_pseudonmizer_processes(hadm_ids)
-    run_packaging_for_colab()
+    # run_packaging_for_colab()
     print("Done.")
