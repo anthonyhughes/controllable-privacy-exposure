@@ -5,7 +5,7 @@ from constants import (
 )
 
 from mimic.mimic_data import load_original_discharge_summaries
-from utils.dataset_utils import extract_hadm_ids, open_generated_summary
+from utils.dataset_utils import extract_hadm_ids, open_generated_summary, result_file_is_present
 from pydeidentify import Deidentifier
 
 d = Deidentifier()
@@ -85,23 +85,24 @@ def run_privacy_eval(hadm_ids, target_model):
         pii_property_counts = {}
         baseline_pii_property_counts = {}
         for hadm_id in hadm_ids:
-            result = run_pii_check(hadm_id, task, target_model)
-            token_length = len(result.text.split())
-            pii_property_counts = update_pii_property_counts(
-                result, pii_property_counts
-            )
-            counts = fetch_total_pii_count(result)
-            all_token_counts.append(counts)
-            all_normalised_token_counts.append(counts / token_length)
+            if result_file_is_present(task, hadm_id, target_model):
+                result = run_pii_check(hadm_id, task, target_model)
+                token_length = len(result.text.split())
+                pii_property_counts = update_pii_property_counts(
+                    result, pii_property_counts
+                )
+                counts = fetch_total_pii_count(result)
+                all_token_counts.append(counts)
+                all_normalised_token_counts.append(counts / token_length)
 
-            baseline_task = f"{task}_baseline"
-            baseline_results = run_pii_check(hadm_id, baseline_task, target_model)
-            baseline_pii_property_counts = update_pii_property_counts(
-                baseline_results, baseline_pii_property_counts
-            )
-            baseline_counts = fetch_total_pii_count(baseline_results)
-            baseline_all_token_counts.append(baseline_counts)
-            baseline_normalised_token_counts.append(baseline_counts / token_length)
+                baseline_task = f"{task}_baseline"
+                baseline_results = run_pii_check(hadm_id, baseline_task, target_model)
+                baseline_pii_property_counts = update_pii_property_counts(
+                    baseline_results, baseline_pii_property_counts
+                )
+                baseline_counts = fetch_total_pii_count(baseline_results)
+                baseline_all_token_counts.append(baseline_counts)
+                baseline_normalised_token_counts.append(baseline_counts / token_length)
         doc_count = len(list(filter(lambda x: x > 0, all_token_counts)))
         baseline_doc_count = len(
             list(filter(lambda x: x > 0, baseline_all_token_counts))

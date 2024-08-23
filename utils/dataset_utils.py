@@ -1,3 +1,4 @@
+import os
 from datasets import load_dataset
 from timeit import default_timer as timer
 
@@ -9,7 +10,7 @@ from constants import (
     PSEUDO_TARGETS_ROOT,
     SUMMARY_TYPES,
     TRAIN_DISCHARGE_ME,
-    RE_ID_TARGETS_ROOT
+    RE_ID_TARGETS_ROOT,
 )
 
 
@@ -37,13 +38,15 @@ def open_generated_summary(task, hadm_id, model):
     """
     if "baseline" in task and model == "gpt-4o-mini":
         task = task.replace("_summary_task", "")
-        target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary_task_summary.txt"
+        target_file = (
+            f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary_task_summary.txt"
+        )
     elif "baseline" not in task and model == "gpt-4o-mini":
         target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary.txt"
     else:
         task = task.replace("_summary_task", "")
         target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}-discharge-inputs.txt"
-        
+
     with open(target_file, "r") as f:
         return f.read()
 
@@ -77,6 +80,27 @@ def run_packaging_for_colab():
         target_pckg.add(f"{RE_ID_EXAMPLES_ROOT}/{SUMMARY_TYPES[1]}")
         target_pckg.add(f"{PSEUDO_TARGETS_ROOT}/{SUMMARY_TYPES[0]}")
         target_pckg.add(f"{PSEUDO_TARGETS_ROOT}/{SUMMARY_TYPES[1]}")
+
+
+def result_file_is_present(task, hadm_id, target_model) -> bool:
+    """
+    Check if the result file is present
+    """
+    if "baseline" in task and target_model == "gpt-4o-mini":
+        task = task.replace("_summary_task", "")
+        target_file = f"{RESULTS_DIR}/{target_model}/{task}/{hadm_id}_{task}_summary_task_summary.txt"
+        return os.path.exists(target_file)
+    elif "baseline" not in task and target_model == "gpt-4o-mini":
+        target_file = (
+            f"{RESULTS_DIR}/{target_model}/{task}/{hadm_id}_{task}_summary.txt"
+        )
+        return os.path.exists(target_file)
+    else:
+        task = task.replace("_summary_task", "")
+        target_file = (
+            f"{RESULTS_DIR}/{target_model}/{task}/{hadm_id}-discharge-inputs.txt"
+        )
+        return os.path.exists(target_file)
 
 
 if __name__ == "__main__":

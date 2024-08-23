@@ -10,6 +10,7 @@ from utils.dataset_utils import (
     extract_hadm_ids,
     open_generated_summary,
     open_target_summary,
+    result_file_is_present,
 )
 from utils.pii_eval import run_privacy_eval, store_results
 from timeit import default_timer as timer
@@ -50,7 +51,9 @@ def calculate_averages(results, hadm_ids):
         for metric in results[hadm_ids[0]][task]:
             avg_scores[task][metric] = 0
             for hadm_id in hadm_ids:
-                avg_scores[task][metric] += results[hadm_id][task][metric]
+                if hadm_id in results:
+                    if task in results[hadm_id]:
+                        avg_scores[task][metric] += results[hadm_id][task][metric]
             avg_scores[task][metric] /= len(hadm_ids)
     return avg_scores
 
@@ -67,16 +70,22 @@ def run_utility_eval(hadm_ids, target_model):
         for i, hadm_id in enumerate(hadm_ids):
             print(f"Running evaluation for document: {hadm_id}")
             print(f"Document {i+1}/{len(hadm_ids)}")
-            if hadm_id not in results:
-                eval_res = run_eval_for_document(task, hadm_id, target_model)
-                baseline_eval_res = run_eval_for_document(
-                    f"{task}_baseline", hadm_id, target_model
-                )
-                results[hadm_id] = {task: eval_res, baseline_task: baseline_eval_res}
+            if result_file_is_present(task, hadm_id, target_model):
+                if hadm_id not in results:
+                    eval_res = run_eval_for_document(task, hadm_id, target_model)
+                    baseline_eval_res = run_eval_for_document(
+                        f"{task}_baseline", hadm_id, target_model
+                    )
+                    results[hadm_id] = {
+                        task: eval_res,
+                        baseline_task: baseline_eval_res,
+                    }
+                else:
+                    results[hadm_id].update(
+                        {task: eval_res, baseline_task: baseline_eval_res}
+                    )
             else:
-                results[hadm_id].update(
-                    {task: eval_res, baseline_task: baseline_eval_res}
-                )
+                print(f"Result file not present for document: {hadm_id}")
     store_results(results, target_model, "raw_utility")
     avg_results = calculate_averages(results, hadm_ids)
     store_results(avg_results, target_model, "utility")
@@ -88,10 +97,9 @@ if __name__ == "__main__":
     target_admission_ids = extract_hadm_ids(
         original_discharge_summaries=original_discharge_summaries, n=100
     )
-    # target_admission_ids = target_admission_ids[0:5]
-    for target_model in EVAL_MODELS:
+    for target_model in EVAL_MODELS[3:]:
         print(f"Running evaluation pipeline for model: {target_model}")
-        # run_utility_eval(hadm_ids=target_admission_ids, target_model=target_model)
+        run_utility_eval(hadm_ids=target_admission_ids, target_model=target_model)
         run_privacy_eval(hadm_ids=target_admission_ids, target_model=target_model)
     end = timer() - start
     print(f"Time to complete in secs: {end}")
