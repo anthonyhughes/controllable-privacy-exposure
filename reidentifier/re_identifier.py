@@ -13,7 +13,7 @@ from reidentifier.reidentify_utils import (
 from utils.dataset_utils import extract_hadm_ids
 
 
-def fill_in_discharge_template(discharge_summary, profile):    
+def fill_in_discharge_template(discharge_summary, profile):
     templates = {
         "name": {
             "regex": r"Name:  ___",
@@ -254,16 +254,20 @@ def run_process(hadm_ids):
             baseline_summary = reidentify_target_summary(
                 target_summary_type, filetype, id, profile
             )
-            if not os.path.exists(f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline"):
+            if not os.path.exists(
+                f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline"
+            ):
                 os.makedirs(f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline")
             with open(
-                f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline/{id}-target.txt", "w"
+                f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline/{id}-target.txt",
+                "w",
             ) as f:
                 f.write(baseline_summary)
 
         print("Done.")
     with open("data/pseudo-profiles.json", "w") as f:
         json.dump(profiles, f)
+
 
 if __name__ == "__main__":
     original_discharge_summaries = load_original_discharge_summaries()

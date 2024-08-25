@@ -5,7 +5,11 @@ from constants import (
 )
 
 from mimic.mimic_data import load_original_discharge_summaries
-from utils.dataset_utils import extract_hadm_ids, open_generated_summary, result_file_is_present
+from utils.dataset_utils import (
+    extract_hadm_ids,
+    open_generated_summary,
+    result_file_is_present,
+)
 from pydeidentify import Deidentifier
 
 d = Deidentifier()
@@ -59,6 +63,9 @@ def create_average_pii_per_property(pii_property_counts, doc_count):
 
 
 def print_as_latex_table(results, model):
+    """
+    Print the results as a latex table
+    """
     for key in results.keys():
         res = results[key]
         exposed_res = res["exposed_pii_per_property"]
@@ -67,7 +74,7 @@ def print_as_latex_table(results, model):
         exposed_res = dict(sorted(exposed_res.items()))
         exposed_res["total"] = sum(exposed_res.values())
         exposed_res["latex"] = " & ".join([str(v) for v in exposed_res.values()])
-        with(open(f"data/results/privacy_latex.txt", "a")) as f:
+        with open(f"data/results/privacy_latex.txt", "a") as f:
             f.write(f"{key}-{model} & {exposed_res['latex']} \\\\ \n")
 
 

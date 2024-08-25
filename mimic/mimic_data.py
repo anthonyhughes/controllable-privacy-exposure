@@ -9,7 +9,6 @@ from constants import (
     EXAMPLES_ROOT,
     TRAIN_DISCHARGE_ME,
     SUMMARY_TYPES,
-    EXAMPLE_ADMISSION_IDS,
 )
 
 
@@ -129,7 +128,7 @@ def run():
 
         # extract the first 100 admission ids as a list
         target_admission_ids = extract_hadm_ids(
-            original_discharge_summaries=original_discharge_summaries, n=100
+            original_discharge_summaries=original_discharge_summaries, n=10000
         )
 
         for example_admission_id in target_admission_ids:

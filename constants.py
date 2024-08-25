@@ -22,5 +22,17 @@ EXAMPLE_ADMISSION_IDS = [
     20910785,
 ]
 RESULTS_DIR = DATA_ROOT + "results"
-MODELS = ["gpt-4o-mini", "mistral-instruct-7b",]
-EVAL_MODELS = ["gpt-4o-mini", "mistral-7b-instruct-v0.3-bnb-4bit", "llama-3-8b-Instruct-bnb-4bit", "claude-3-5-sonnet-20240620"]
+MODELS = [
+    "gpt-4o-mini",
+    "mistral-instruct-7b",
+]
+EVAL_MODELS = [
+    "gpt-4o-mini",
+    "mistral-7b-instruct-v0.3-bnb-4bit",
+    "llama-3-8b-Instruct-bnb-4bit",
+    "claude-3-5-sonnet-20240620",
+]
+BASELINE_SUMMARY_TASK = "_baseline_summary_task"
+PRIV_SUMMARY_TASK = ""
+IN_CONTEXT_SUMMARY_TASK = "_in_context_summary_task"
+TASK_SUFFIXES = [BASELINE_SUMMARY_TASK, PRIV_SUMMARY_TASK, IN_CONTEXT_SUMMARY_TASK]

@@ -34,7 +34,8 @@ def generate_random_adult_age(start=18, end=100):
     return random.randint(start, end)
 
 
-def generate_random_name():
+def generate_random_name(gender):
+    gender = 'male' if gender == 'M' else 'female'
     return f"{names.get_full_name()}"
 
 
@@ -61,7 +62,9 @@ def generate_birth_date(age, discharge_date):
     Generate birth date based on age and discharge date
     """
     parsed_dt = parser.parse(discharge_date)
-    return parsed_dt - relativedelta(years=age)
+    new_d = parsed_dt - relativedelta(years=age)
+    new_date = new_d.strftime("%Y-%m-%d")
+    return new_date
 
 
 def generate_random_location():
@@ -85,16 +88,18 @@ def remove_extra_piis(discharge_data):
     return discharge_data
 
 
+
 def generate_random_profile(hadm_id):
     admission_info = fetch_admission_info(hadm_id)
     age = generate_random_adult_age()
+    gender = admission_info["gender"].values[0]
     out_date = (
         list(admission_info["outtime"])[0]
         if len(admission_info["outtime"].values) > 0
         else generate_random_date()
     )
     return {
-        "name": generate_random_name(),
+        "name": generate_random_name(gender),
         "clinician_name": generate_random_clinician_name(),
         "age": age,
         "in_date": (
@@ -106,4 +111,5 @@ def generate_random_profile(hadm_id):
         "birth_date": generate_birth_date(age, out_date),
         "location": generate_random_location(),
         "intervention_date": generate_intervention_date(out_date),
+        "gender": gender,
     }

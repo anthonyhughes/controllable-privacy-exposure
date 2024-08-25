@@ -13,6 +13,7 @@ from constants import (
     RE_ID_TARGETS_ROOT,
 )
 
+ed_train_df = pd.read_csv(f"{TRAIN_DISCHARGE_ME}/edstays.csv")
 
 # load a huggingface dataset
 def load_cnn_dataset():
@@ -66,8 +67,7 @@ def open_target_summary(task, hadm_id):
 def fetch_admission_info(hadm_id):
     """Fetch admission info"""
     print(f"Admission info for {hadm_id}")
-    df = pd.read_csv(f"{TRAIN_DISCHARGE_ME}/edstays.csv")
-    edstay = df[df["hadm_id"] == str(hadm_id)]
+    edstay = ed_train_df[ed_train_df["hadm_id"] == str(hadm_id)]
     return edstay
 
 
