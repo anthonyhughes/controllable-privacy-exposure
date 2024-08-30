@@ -5,6 +5,8 @@ from utils.dataset_utils import extract_hadm_ids
 
 pd.set_option("display.max_columns", None)
 from constants import (
+    PSEUDO_TARGETS_ROOT,
+    RE_ID_EXAMPLES_ROOT,
     TRAIN_DISCHARGE_ME,
     EXAMPLES_ROOT,
     TRAIN_DISCHARGE_ME,
@@ -126,7 +128,7 @@ def run():
         print("Loading target summaries:")
         target_summaries = load_target_summaries()
 
-        # extract the first 100 admission ids as a list
+        # extract the first n admission ids as a list
         target_admission_ids = extract_hadm_ids(
             original_discharge_summaries=original_discharge_summaries, n=10000
         )
@@ -141,6 +143,21 @@ def run():
             )
     print("Done.")
     return target_admission_ids
+
+
+def get_ehr_and_summary(task, hadm_id):
+    """Get the EHR and summary"""
+    with open(
+        f"{RE_ID_EXAMPLES_ROOT}{task}/{hadm_id}-discharge-inputs.txt",
+        "r",
+    ) as f:
+        ehr = f.read()
+    with open(
+        f"{PSEUDO_TARGETS_ROOT}{task}/{hadm_id}-target.txt",
+        "r",
+    ) as f:
+        summary = f.read()
+    return ehr, summary
 
 
 if __name__ == "__main__":

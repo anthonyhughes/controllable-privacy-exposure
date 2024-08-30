@@ -1,5 +1,6 @@
 import json
 from constants import (
+    IN_CONTEXT_SUMMARY_TASK,
     MODELS,
     SUMMARY_TYPES,
 )
@@ -58,7 +59,10 @@ def create_average_pii_per_property(pii_property_counts, doc_count):
     """
     average_pii_per_property = {}
     for entity in pii_property_counts.keys():
-        average_pii_per_property[entity] = pii_property_counts[entity] / doc_count
+        if doc_count == 0:
+            average_pii_per_property[entity] = 0
+        else:
+            average_pii_per_property[entity] = pii_property_counts[entity] / doc_count
     return average_pii_per_property
 
 
@@ -88,9 +92,12 @@ def run_privacy_eval(hadm_ids, target_model):
         all_token_counts = []
         baseline_all_token_counts = []
         all_normalised_token_counts = []
+        icl_all_token_counts = []
         baseline_normalised_token_counts = []
+        icl_normalised_token_counts = []
         pii_property_counts = {}
         baseline_pii_property_counts = {}
+        icl_pii_property_counts = {}
         for hadm_id in hadm_ids:
             if result_file_is_present(task, hadm_id, target_model):
                 result = run_pii_check(hadm_id, task, target_model)
@@ -110,10 +117,20 @@ def run_privacy_eval(hadm_ids, target_model):
                 baseline_counts = fetch_total_pii_count(baseline_results)
                 baseline_all_token_counts.append(baseline_counts)
                 baseline_normalised_token_counts.append(baseline_counts / token_length)
+
+                icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
+                icl_results = run_pii_check(hadm_id, icl_task, target_model)
+                icl_pii_property_counts = update_pii_property_counts(
+                    icl_results, icl_pii_property_counts
+                )
+                icl_counts = fetch_total_pii_count(icl_results)
+                icl_all_token_counts.append(icl_counts)
+                icl_normalised_token_counts.append(icl_counts / token_length)
         doc_count = len(list(filter(lambda x: x > 0, all_token_counts)))
         baseline_doc_count = len(
             list(filter(lambda x: x > 0, baseline_all_token_counts))
         )
+        icl_doc_count = len(list(filter(lambda x: x > 0, icl_all_token_counts)))
         results[task] = {
             "exposed_docs_count": doc_count,
             "docs_count": len(hadm_ids),
@@ -139,6 +156,20 @@ def run_privacy_eval(hadm_ids, target_model):
                 baseline_pii_property_counts, baseline_doc_count
             ),
             "pii__document_percentage": baseline_doc_count / len(hadm_ids),
+        }
+        results[icl_task] = {
+            "exposed_docs_count": len(
+                list(filter(lambda x: x > 0, icl_all_token_counts))
+            ),
+            "docs_count": len(hadm_ids),
+            "exposed_tokens_count": sum(icl_all_token_counts),
+            "normalised_exposed_tokens_count": sum(icl_normalised_token_counts)
+            / len(icl_normalised_token_counts),
+            "exposed_pii_per_property": icl_pii_property_counts,
+            "average_exposed_pii_per_property_per_document": create_average_pii_per_property(
+                icl_pii_property_counts, icl_doc_count
+            ),
+            "pii__document_percentage": icl_doc_count / len(hadm_ids),
         }
     store_results(results, target_model, "privacy")
     store_results(raw_results, target_model, "raw_privacy")

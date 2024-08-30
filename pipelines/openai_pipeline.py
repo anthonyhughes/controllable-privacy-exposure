@@ -3,32 +3,18 @@ import time
 from openai import OpenAI
 from constants import (
     BASELINE_SUMMARY_TASK,
-    RE_ID_EXAMPLES_ROOT,
-    PSEUDO_TARGETS_ROOT,
     RESULTS_DIR,
     SUMMARY_TYPES,
-    TASK_SUFFIXES,
     PRIV_SUMMARY_TASK,
     IN_CONTEXT_SUMMARY_TASK,
 )
-from mimic.mimic_data import load_original_discharge_summaries
-from utils.dataset_utils import extract_hadm_ids, result_file_is_present
+from mimic.mimic_data import load_original_discharge_summaries, get_ehr_and_summary
+from utils.dataset_utils import (
+    extract_hadm_ids,
+    extract_icl_set_of_hadm_ids,
+    result_file_is_present,
+)
 from utils.prompts import insert_additional_examples, prompt_prefix_for_task
-
-
-def get_ehr_and_summary(task, hadm_id):
-    """Get the EHR and summary"""
-    with open(
-        f"{RE_ID_EXAMPLES_ROOT}{task}/{hadm_id}-discharge-inputs.txt",
-        "r",
-    ) as f:
-        ehr = f.read()
-    with open(
-        f"{PSEUDO_TARGETS_ROOT}{task}/{hadm_id}-target.txt",
-        "r",
-    ) as f:
-        summary = f.read()
-    return ehr, summary
 
 
 def inference(client, task, prompt, hadm_id, model):
@@ -67,9 +53,9 @@ def save_result(openai_result, task, hadm_id, model):
 
 def run(
     hadm_ids,
-    discharge_summaries,
     model="gpt-4o-mini",
     tasks_suffixes=None,
+    icl_hadm_ids=None,
 ):
     """Run the OpenAI pipeline"""
     start_time = time.time()
@@ -111,7 +97,7 @@ def run(
             ):
                 in_context_prompt = prompt_prefix_for_task[icl_task]
                 in_context_prompt = insert_additional_examples(
-                    in_context_prompt, discharge_summaries, k=1
+                    task, in_context_prompt, icl_hadm_ids
                 )
                 in_context_result = inference(
                     client, task, hadm_id=id, model=model, prompt=in_context_prompt
@@ -128,11 +114,14 @@ def run(
 if __name__ == "__main__":
     original_discharge_summaries = load_original_discharge_summaries()
     target_admission_ids = extract_hadm_ids(
-        original_discharge_summaries=original_discharge_summaries, n=100
+        original_discharge_summaries=original_discharge_summaries, n=10000
     )
+    # remove the last 5 admission ids
+    icl_hadm_ids = target_admission_ids[-1:]
+    target_admission_ids = target_admission_ids[:-5]
     run(
-        hadm_ids=target_admission_ids[0:1],
-        discharge_summaries=original_discharge_summaries,
+        hadm_ids=target_admission_ids[0:100],
         tasks_suffixes=[IN_CONTEXT_SUMMARY_TASK],
+        icl_hadm_ids=icl_hadm_ids,
     )
-    # run(hadm_ids=target_admission_ids[0:1], tasks_suffixes=TASK_SUFFIXES)
+    # run(hadm_ids=target_admission_ids, tasks_suffixes=TASK_SUFFIXES)

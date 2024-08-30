@@ -1,3 +1,4 @@
+import json
 import os
 from datasets import load_dataset
 from timeit import default_timer as timer
@@ -15,6 +16,7 @@ from constants import (
 
 ed_train_df = pd.read_csv(f"{TRAIN_DISCHARGE_ME}/edstays.csv")
 
+
 # load a huggingface dataset
 def load_cnn_dataset():
     """"""
@@ -30,7 +32,14 @@ def update_article_prefix(dataset, prefix):
 
 def extract_hadm_ids(original_discharge_summaries, n=100):
     """Extract the first n admission ids as a list"""
-    return list(original_discharge_summaries.head(n)["hadm_id"])
+    # take the first 4000 rows of hadm_df
+    hadm_df = original_discharge_summaries.head(n)
+    return list(hadm_df.head(n)["hadm_id"])
+
+
+def extract_icl_set_of_hadm_ids(original_discharge_summaries, n=5):
+    """Extract the last n admission ids as a list"""
+    return list(original_discharge_summaries.tail(n)["hadm_id"])
 
 
 def open_generated_summary(task, hadm_id, model):
@@ -42,6 +51,9 @@ def open_generated_summary(task, hadm_id, model):
         target_file = (
             f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary_task_summary.txt"
         )
+    elif "_in_context" in task and model == "gpt-4o-mini":
+        task = task.replace("_summary_task", "")
+        target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}-discharge-inputs.txt"
     elif "baseline" not in task and model == "gpt-4o-mini":
         target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}_{task}_summary.txt"
     else:
@@ -58,8 +70,20 @@ def open_target_summary(task, hadm_id):
     """
     if "baseline" in task:
         target_file = f"{RE_ID_TARGETS_ROOT}/{task}/{hadm_id}-target.txt"
+    elif "_in_context" in task:
+        task = task.replace("_in_context_summary_task", "")
+        target_file = f"{PSEUDO_TARGETS_ROOT}/{task}/{hadm_id}-target.txt"
     else:
-        target_file = f"{RE_ID_EXAMPLES_ROOT}/{task}/{hadm_id}-discharge-inputs.txt"
+        target_file = f"{PSEUDO_TARGETS_ROOT}/{task}/{hadm_id}-discharge-inputs.txt"
+    with open(target_file, "r") as f:
+        return f.read()
+
+
+def open_pseudonymized_summary(task, hadm_id):
+    """
+    Load the pseudonymized summary for a given hadm id
+    """
+    target_file = f"{PSEUDO_TARGETS_ROOT}/{task}/{hadm_id}-target.txt"
     with open(target_file, "r") as f:
         return f.read()
 
@@ -101,6 +125,28 @@ def result_file_is_present(task, hadm_id, target_model) -> bool:
             f"{RESULTS_DIR}/{target_model}/{task}/{hadm_id}-discharge-inputs.txt"
         )
         return os.path.exists(target_file)
+
+
+def open_legal_data():
+    """
+    Open the legal contracts data
+    """
+    with open("tldrlegal_v1.json", "r") as f:
+        data = json.load(f)
+
+        legal_data = {}
+
+        for uid, values in data.items():
+
+            legal_data[uid] = {
+                "uid": values["uid"],
+                "id": values["id"],
+                "dataset": "tldrlegal_v1",
+                "document": values["original_text"],
+                "target": values["reference_summary"],
+                "title": values["title"],
+            }
+    return legal_data
 
 
 if __name__ == "__main__":

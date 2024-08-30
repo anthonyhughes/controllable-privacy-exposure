@@ -7,6 +7,9 @@
 #                 However, you must remove any personally identifying information; such as names, ages, locations, race and dates.""",
 # }
 
+from utils.dataset_utils import open_pseudonymized_summary
+
+
 prompt_prefix_for_task = {
     "brief_hospital_course_in_context_summary_task": """
         Summarise the following document into a brief hospital course summary.
@@ -41,8 +44,12 @@ prompt_prefix_for_task = {
 }
 
 
-def insert_additional_examples(original_prompt, examples, k):
+def insert_additional_examples(task, original_prompt, icl_hadm_ids):
     """
     Insert additional examples into the prompt
-    """    
-    return original_prompt.replace("[incontext_examples]", "\n".join(examples))
+    """
+
+    target_examples = [
+        open_pseudonymized_summary(task, hadm_id) for hadm_id in icl_hadm_ids
+    ]
+    return original_prompt.replace("[incontext_examples]", "\n".join(target_examples))
