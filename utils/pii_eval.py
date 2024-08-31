@@ -1,15 +1,19 @@
+from datetime import datetime
 import json
 from constants import (
     IN_CONTEXT_SUMMARY_TASK,
     MODELS,
+    RESULTS_DIR,
     SUMMARY_TYPES,
 )
 
 from mimic.mimic_data import load_original_discharge_summaries
 from utils.dataset_utils import (
     extract_hadm_ids,
+    extract_hadm_ids_from_dir,
     open_generated_summary,
     result_file_is_present,
+    store_results,
 )
 from pydeidentify import Deidentifier
 
@@ -78,11 +82,12 @@ def print_as_latex_table(results, model):
         exposed_res = dict(sorted(exposed_res.items()))
         exposed_res["total"] = sum(exposed_res.values())
         exposed_res["latex"] = " & ".join([str(v) for v in exposed_res.values()])
-        with open(f"data/results/privacy_latex.txt", "a") as f:
+        with open(f"{RESULTS_DIR}/latex/privacy.txt", "a") as f:
+            f.write(f"{datetime.now()} \\\\ \n")
             f.write(f"{key}-{model} & {exposed_res['latex']} \\\\ \n")
 
 
-def run_privacy_eval(hadm_ids, target_model):
+def run_privacy_eval(target_model):
     """
     Run PII evaluation for all documents
     """
@@ -98,8 +103,10 @@ def run_privacy_eval(hadm_ids, target_model):
         pii_property_counts = {}
         baseline_pii_property_counts = {}
         icl_pii_property_counts = {}
+        hadm_ids = extract_hadm_ids_from_dir(target_model, task)
         for hadm_id in hadm_ids:
             if result_file_is_present(task, hadm_id, target_model):
+                # run privacy evaluation for privsumm
                 result = run_pii_check(hadm_id, task, target_model)
                 token_length = len(result.text.split())
                 pii_property_counts = update_pii_property_counts(
@@ -109,6 +116,7 @@ def run_privacy_eval(hadm_ids, target_model):
                 all_token_counts.append(counts)
                 all_normalised_token_counts.append(counts / token_length)
 
+                # run privacy evaluation for baseline
                 baseline_task = f"{task}_baseline"
                 baseline_results = run_pii_check(hadm_id, baseline_task, target_model)
                 baseline_pii_property_counts = update_pii_property_counts(
@@ -118,6 +126,7 @@ def run_privacy_eval(hadm_ids, target_model):
                 baseline_all_token_counts.append(baseline_counts)
                 baseline_normalised_token_counts.append(baseline_counts / token_length)
 
+                # run privacy evaluation for icl-privsumm
                 icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
                 icl_results = run_pii_check(hadm_id, icl_task, target_model)
                 icl_pii_property_counts = update_pii_property_counts(
@@ -174,12 +183,6 @@ def run_privacy_eval(hadm_ids, target_model):
     store_results(results, target_model, "privacy")
     store_results(raw_results, target_model, "raw_privacy")
     print_as_latex_table(results, target_model)
-
-
-def store_results(results, target_model, results_type):
-    """Store results"""
-    with open(f"data/results_{results_type}_{target_model}.json", "w") as f:
-        json.dump(results, f, indent=4)
 
 
 if __name__ == "__main__":

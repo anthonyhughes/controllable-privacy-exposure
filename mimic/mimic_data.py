@@ -115,7 +115,7 @@ def extract_sample_for_admission(
     print("Done.")
 
 
-def run():
+def run(with_extraction):
     print("Starting extraction of mimic data")
     for target_summary_type in SUMMARY_TYPES:
         original_discharge_summaries = load_original_discharge_summaries()
@@ -130,17 +130,18 @@ def run():
 
         # extract the first n admission ids as a list
         target_admission_ids = extract_hadm_ids(
-            original_discharge_summaries=original_discharge_summaries, n=10000
+            original_discharge_summaries=original_discharge_summaries, n=0
         )
-
-        for example_admission_id in target_admission_ids:
-            extract_sample_for_admission(
-                example_admission_id,
-                original_discharge_summaries,
-                radiology_summaries,
-                target_summaries,
-                target_summary_type,
-            )
+        
+        if with_extraction:
+            for example_admission_id in target_admission_ids:
+                extract_sample_for_admission(
+                    example_admission_id,
+                    original_discharge_summaries,
+                    radiology_summaries,
+                    target_summaries,
+                    target_summary_type,
+                )
     print("Done.")
     return target_admission_ids
 

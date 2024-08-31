@@ -1,7 +1,7 @@
 import json
 import os
 import re
-from constants import RE_ID_EXAMPLES_ROOT, SUMMARY_TYPES, RE_ID_TARGETS_ROOT
+from constants import BASELINE_SUMMARY_TASK, RE_ID_EXAMPLES_ROOT, SUMMARY_TYPES, RE_ID_TARGETS_ROOT
 from mimic.mimic_data import load_original_discharge_summaries
 from reidentifier.reidentify_utils import (
     fetch_file_names,
@@ -10,7 +10,7 @@ from reidentifier.reidentify_utils import (
     generate_random_unit_number,
     remove_extra_redactions,
 )
-from utils.dataset_utils import extract_hadm_ids
+from utils.dataset_utils import extract_hadm_ids, reference_file_is_present
 
 
 def fill_in_discharge_template(discharge_summary, profile):
@@ -241,9 +241,17 @@ def run_process(hadm_ids):
         for id in hadm_ids:
             print(f"Processing {target_summary_type} for {id}")
             filetype = "discharge-inputs"
+            
+            # skip if a reference file is already present
+            if reference_file_is_present(f"{target_summary_type}{BASELINE_SUMMARY_TASK}", id):
+                print(f"Skipping {id} as it has already been processed.")
+                continue
+
             profile = generate_random_profile(id)
             profiles.append(profile)
             data = reidentify_ehr_record(target_summary_type, filetype, id, profile)
+            
+            # create folder if it doesn't exist
             if not os.path.exists(f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}"):
                 os.makedirs(f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}")
             with open(
@@ -254,10 +262,13 @@ def run_process(hadm_ids):
             baseline_summary = reidentify_target_summary(
                 target_summary_type, filetype, id, profile
             )
+
+            # create folder if it doesn't exist
             if not os.path.exists(
                 f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline"
             ):
                 os.makedirs(f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline")
+
             with open(
                 f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline/{id}-target.txt",
                 "w",

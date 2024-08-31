@@ -3,6 +3,7 @@ EXAMPLES_ROOT = DATA_ROOT + "examples/"
 PSEUDO_TARGETS_ROOT = DATA_ROOT + "pseudonymized_targets/"
 RE_ID_TARGETS_ROOT = DATA_ROOT + "re_identified_targets"
 RE_ID_EXAMPLES_ROOT = DATA_ROOT + "re_identified_examples/"
+LEGAL_EXAMPLES_ROOT = DATA_ROOT + "legal_court/"
 DISCHARGE_ME_ROOT = (
     DATA_ROOT
     + "discharge-me-bionlp-acl24-shared-task-on-streamlining-discharge-documentation-1.3/"
@@ -32,7 +33,8 @@ EVAL_MODELS = [
     "llama-3-8b-Instruct-bnb-4bit",
     "claude-3-5-sonnet-20240620",
 ]
-BASELINE_SUMMARY_TASK = "_baseline_summary_task"
+BASELINE_SUMMARY_TASK = "_baseline"
 PRIV_SUMMARY_TASK = ""
-IN_CONTEXT_SUMMARY_TASK = "_in_context_summary_task"
+IN_CONTEXT_SUMMARY_TASK = "_in_context"
 TASK_SUFFIXES = [BASELINE_SUMMARY_TASK, PRIV_SUMMARY_TASK, IN_CONTEXT_SUMMARY_TASK]
+METRICS = ["rouge1", "rouge2", "rougeL", "bertscore"]
