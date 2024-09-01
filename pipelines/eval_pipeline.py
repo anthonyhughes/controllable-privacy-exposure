@@ -124,7 +124,7 @@ def run_utility_eval(target_model):
 
 if __name__ == "__main__":
     start = timer()
-    for target_model in EVAL_MODELS:
+    for target_model in EVAL_MODELS[0:1]:
         print(f"Running evaluation pipeline for model: {target_model}")
         run_utility_eval(target_model=target_model)
         run_privacy_eval(target_model=target_model)
