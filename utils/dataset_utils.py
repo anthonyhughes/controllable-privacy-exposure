@@ -1,5 +1,6 @@
 import json
 import os
+import random
 from datasets import load_dataset
 from timeit import default_timer as timer
 
@@ -7,6 +8,7 @@ import pandas as pd
 
 from constants import (
     BASELINE_SUMMARY_TASK,
+    ICL_EXAMPLES_ROOT,
     IN_CONTEXT_SUMMARY_TASK,
     LEGAL_EXAMPLES_ROOT,
     RE_ID_EXAMPLES_ROOT,
@@ -46,7 +48,10 @@ def extract_hadm_ids_from_dir(model, task):
     files = os.listdir(f"{RESULTS_DIR}/{model}/{task}")
     hadm_ids = []
     for file in files:
-        hadm_ids.append(file.split("-")[0].split("_")[0])
+        if file.startswith('.'):
+            continue
+        else:
+            hadm_ids.append(file.split("-")[0])
     return hadm_ids
 
 
@@ -126,6 +131,7 @@ def reference_file_is_present(task, hadm_id) -> bool:
         task = task.replace(f"{IN_CONTEXT_SUMMARY_TASK}", "")
         return os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{task}/{hadm_id}-target.txt")
 
+
 def open_legal_data():
     """
     Open the legal contracts data
@@ -152,3 +158,10 @@ def store_results(results, target_model, results_type):
     """Store results"""
     with open(f"{RESULTS_DIR}/{results_type}/{target_model}.json", "w") as f:
         json.dump(results, f, indent=4)
+
+
+def fetch_example(task):
+    files = os.listdir(f"{ICL_EXAMPLES_ROOT}/{task}")
+    random_file = random.choice(files)
+    with(open(f"{ICL_EXAMPLES_ROOT}/{task}/{random_file}", "r")) as f:
+        return f.read()

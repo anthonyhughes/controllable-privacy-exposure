@@ -165,4 +165,4 @@ data/
 openai_config.py
 .vscode/
 .DS_Store
-data.tar
+*.tar

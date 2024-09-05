@@ -1,5 +1,6 @@
 DATA_ROOT = "data/"
 EXAMPLES_ROOT = DATA_ROOT + "examples/"
+ICL_EXAMPLES_ROOT = DATA_ROOT + "icl_examples/"
 PSEUDO_TARGETS_ROOT = DATA_ROOT + "pseudonymized_targets/"
 RE_ID_TARGETS_ROOT = DATA_ROOT + "re_identified_targets"
 RE_ID_EXAMPLES_ROOT = DATA_ROOT + "re_identified_examples/"
@@ -32,6 +33,7 @@ EVAL_MODELS = [
     "mistral-7b-instruct-v0.3-bnb-4bit",
     "llama-3-8b-Instruct-bnb-4bit",
     "claude-3-5-sonnet-20240620",
+    "llama3.1:70b"
 ]
 BASELINE_SUMMARY_TASK = "_baseline"
 PRIV_SUMMARY_TASK = ""

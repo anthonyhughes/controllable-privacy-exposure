@@ -15,6 +15,7 @@ from utils.dataset_utils import (
 )
 from utils.pii_eval import run_privacy_eval, store_results
 from timeit import default_timer as timer
+import argparse
 
 bertscore = load("bertscore")
 rouge_eval = load("rouge")
@@ -123,8 +124,17 @@ def run_utility_eval(target_model):
 
 
 if __name__ == "__main__":
+    # Initialize parser
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-m", "--model",help="Choose a model for inference", default=EVAL_MODELS, choices=EVAL_MODELS)
+    args = parser.parse_args()
+
+    if args.model:
+        print(f"Target model is {args.model}")
+        models = [args.model]
+
     start = timer()
-    for target_model in EVAL_MODELS[0:1]:
+    for target_model in models:
         print(f"Running evaluation pipeline for model: {target_model}")
         run_utility_eval(target_model=target_model)
         run_privacy_eval(target_model=target_model)
