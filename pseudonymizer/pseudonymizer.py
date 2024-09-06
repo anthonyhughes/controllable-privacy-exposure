@@ -1,7 +1,15 @@
 import argparse
 import os
 import re
-from constants import PSEUDO_TARGETS_ROOT, PSUEDO_LIBS, SUMMARY_TYPES
+
+import spacy
+from constants import (
+    PSEUDO_TARGETS_ROOT,
+    PSUEDO_LIBS,
+    RE_ID_EXAMPLES_ROOT,
+    SUMMARY_TYPES,
+    RE_ID_TARGETS_ROOT,
+)
 from mimic.mimic_data import load_original_discharge_summaries
 from reidentifier.reidentify_utils import (
     fetch_file_names,
@@ -10,6 +18,7 @@ from reidentifier.reidentify_utils import (
     remove_extra_redactions,
 )
 from utils.dataset_utils import extract_hadm_ids, open_legal_data
+from pydeidentify import Deidentifier
 
 
 def fill_in_target_summary(discharge_summary):
@@ -234,7 +243,7 @@ def run_pseudonmizer_process(task, hadm_ids):
         contents = load_file(res[0])
         data = fill_in_target_summary(contents)
         data = remove_extra_redactions(data)
-        data =  remove_extra_piis(data)
+        data = remove_extra_piis(data)
         if not os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{task}"):
             os.makedirs(f"{PSEUDO_TARGETS_ROOT}/{task}")
         with open(
@@ -250,24 +259,116 @@ def run_all_pseudonmizer_processes(hadm_ids):
         run_pseudonmizer_process(target_summary_type, hadm_ids)
 
 
-def run_ls_pseudonmizer_processes():
-    print('Start psuedo process for legal court summaries')
+deidentification_dict = {
+    "GPE": "the location",
+    "DATE": "the date",
+    "LOC": "the location",
+    "NAME": "the person",
+    "ORG": "the organisation",
+    "FAC": "the location"
+}
+
+
+def deidentify_text(text, deidentification_dict):
+    """
+    Replace deidentified placeholders in the text with corresponding terms.
+
+    Parameters:
+    - text: The input text containing placeholders (e.g., 'GPE0', 'DATE0').
+    - deidentification_dict: A dictionary where keys are placeholders (e.g., 'GPE0', 'DATE0')
+                             and values are the specific terms (e.g., 'organization', 'date')
+                             to replace them with.
+
+    Returns:
+    - The deidentified text with placeholders replaced by specific terms.
+    """
+    # Iterate through the dictionary and replace placeholders in the text
+    for placeholder, replacement in deidentification_dict.items():
+        # Use regex to replace whole word occurrences of the placeholder
+        text = re.sub(rf"\b{placeholder}[0-9]\b", replacement, text)
+
+    return text
+
+
+def run_ls_pseudonmizer_processes(deidentifier, task="legal_court"):
+    """
+    Psuedonymize legal docs
+    """
+    print("Start psuedo process for legal court summaries")
     legal_data = open_legal_data()
-    print(len(legal_data.keys))
+    for i, key in enumerate(legal_data.keys()):
+        print(f"Started doc {i+1} of {len(legal_data.keys())}")
+        doc = legal_data[key]
+        target_summary = doc["target"]
+
+        scrubbed_text = deidentifier.deidentify(target_summary)
+
+        replaced_scrubbed_text = deidentify_text(
+            text=scrubbed_text.text, deidentification_dict=deidentification_dict
+        )
+
+        # Prebuild folder for main summaries (non-deidentified)
+        if not os.path.exists(f"{RE_ID_TARGETS_ROOT}/{task}"):
+            os.makedirs(f"{RE_ID_TARGETS_ROOT}/{task}")
+
+        # Store document per legal doc
+        with open(
+            f"{RE_ID_TARGETS_ROOT}/{task}/{key}-target.txt",
+            "w",
+        ) as f:
+            f.write(target_summary)
+
+        # Prebuild folder for main inputs
+        main_legal_doc = doc["document"]
+        if not os.path.exists(f"{RE_ID_EXAMPLES_ROOT}/{task}"):
+            os.makedirs(f"{RE_ID_EXAMPLES_ROOT}/{task}")
+
+        # Store document per legal doc
+        with open(
+            f"{RE_ID_EXAMPLES_ROOT}/{task}/{key}-target.txt",
+            "w",
+        ) as f:
+            f.write(main_legal_doc)
+
+        # Prebuild folder for psudeo summaries
+        if not os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{task}"):
+            os.makedirs(f"{PSEUDO_TARGETS_ROOT}/{task}")
+
+        # Store document per legal summary
+        with open(
+            f"{PSEUDO_TARGETS_ROOT}/{task}/{key}-target.txt",
+            "w",
+        ) as f:
+            f.write(replaced_scrubbed_text)
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-t", "--task",help="Choose a task for inference", default=SUMMARY_TYPES, choices=SUMMARY_TYPES)
-    parser.add_argument("-p", "--plib",help="Choose a lib for psuedonymization", default=PSUEDO_LIBS, choices=PSUEDO_LIBS)
+    parser.add_argument(
+        "-t",
+        "--task",
+        help="Choose a task for inference",
+        default=SUMMARY_TYPES,
+        choices=SUMMARY_TYPES,
+    )
+    parser.add_argument(
+        "-p",
+        "--plib",
+        help="Choose a lib for psuedonymization",
+        default=PSUEDO_LIBS,
+        choices=PSUEDO_LIBS,
+    )
     args = parser.parse_args()
 
     if args.task:
         print(f"Target task is {args.task}")
         task = args.task
-    
+
     if task == "legal_court":
         print("Starting legal court summary psuedonymization")
-        run_ls_pseudonmizer_processes()
+        spacy.load("en_core_web_trf")
+        deid = Deidentifier()
+        run_ls_pseudonmizer_processes(deidentifier=deid)
     else:
         original_discharge_summaries = load_original_discharge_summaries()
         hadm_ids = extract_hadm_ids(original_discharge_summaries)

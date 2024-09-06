@@ -23,13 +23,12 @@ from utils.prompts import prompt_prefix_for_task
 def inference(task, prompt, hadm_id, model):
     """Run the openai query"""
     ehr, _ = get_ehr_and_summary(task, hadm_id)
-    prompt = f"""### Instruction:
-                {prompt}
+    prompt = f"""### Instruction: {prompt}
 
-                ### Input:
-                {ehr}
+                ### Input:{ehr}
 
-                ### Response:"""
+                ### Response:
+    """
     response = ollama.generate(
         model=model,
         prompt=prompt,

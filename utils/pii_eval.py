@@ -1,6 +1,4 @@
 from datetime import datetime
-import json
-import os
 from constants import (
     IN_CONTEXT_SUMMARY_TASK,
     MODELS,
@@ -105,10 +103,12 @@ def run_privacy_eval(target_model):
         baseline_pii_property_counts = {}
         icl_pii_property_counts = {}
         hadm_ids = extract_hadm_ids_from_dir(target_model, task)
-        for i, hadm_id in enumerate(hadm_ids):            
+        for i, hadm_id in enumerate(hadm_ids):
             # run privacy evaluation for privsumm
             if result_file_is_present(task, hadm_id, target_model):
-                print(f"Running PII evaluation for task {task} on id {hadm_id} - {i+1}/{len(hadm_ids)}")
+                print(
+                    f"Running PII evaluation for task {task} on id {hadm_id} - {i+1}/{len(hadm_ids)}"
+                )
                 result = run_pii_check(hadm_id, task, target_model)
                 token_length = len(result.text.split())
                 pii_property_counts = update_pii_property_counts(
@@ -121,7 +121,9 @@ def run_privacy_eval(target_model):
             # run privacy evaluation for baseline
             baseline_task = f"{task}_baseline"
             if result_file_is_present(baseline_task, hadm_id, target_model):
-                print(f"Running PII evaluation for task {baseline_task} on id {hadm_id} - {i+1}/{len(hadm_ids)}")
+                print(
+                    f"Running PII evaluation for task {baseline_task} on id {hadm_id} - {i+1}/{len(hadm_ids)}"
+                )
                 baseline_results = run_pii_check(hadm_id, baseline_task, target_model)
                 baseline_pii_property_counts = update_pii_property_counts(
                     baseline_results, baseline_pii_property_counts
@@ -131,9 +133,11 @@ def run_privacy_eval(target_model):
                 baseline_normalised_token_counts.append(baseline_counts / token_length)
 
             # run privacy evaluation for icl-privsumm
-            icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"                
+            icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
             if result_file_is_present(icl_task, hadm_id, target_model):
-                print(f"Running PII evaluation for task {icl_task} on id {hadm_id} - {i+1}/{len(hadm_ids)}")
+                print(
+                    f"Running PII evaluation for task {icl_task} on id {hadm_id} - {i+1}/{len(hadm_ids)}"
+                )
                 icl_results = run_pii_check(hadm_id, icl_task, target_model)
                 icl_pii_property_counts = update_pii_property_counts(
                     icl_results, icl_pii_property_counts

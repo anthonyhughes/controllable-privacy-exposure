@@ -7,7 +7,6 @@ from timeit import default_timer as timer
 import pandas as pd
 
 from constants import (
-    BASELINE_SUMMARY_TASK,
     ICL_EXAMPLES_ROOT,
     IN_CONTEXT_SUMMARY_TASK,
     LEGAL_EXAMPLES_ROOT,
@@ -136,13 +135,11 @@ def open_legal_data():
     """
     Open the legal contracts data
     """
+    print('Loading legal docs')
     with open(f"{LEGAL_EXAMPLES_ROOT}tldrlegal_v1.json", "r") as f:
         data = json.load(f)
-
         legal_data = {}
-
         for uid, values in data.items():
-
             legal_data[uid] = {
                 "uid": values["uid"],
                 "id": values["id"],
@@ -154,14 +151,14 @@ def open_legal_data():
     return legal_data
 
 
-def store_results(results, target_model, results_type):
-    """Store results"""
-    with open(f"{RESULTS_DIR}/{results_type}/{target_model}.json", "w") as f:
-        json.dump(results, f, indent=4)
-
-
 def fetch_example(task):
     files = os.listdir(f"{ICL_EXAMPLES_ROOT}/{task}")
     random_file = random.choice(files)
     with(open(f"{ICL_EXAMPLES_ROOT}/{task}/{random_file}", "r")) as f:
         return f.read()
+    
+
+def store_results(results, target_model, results_type):
+    """Store results"""
+    with open(f"{RESULTS_DIR}/{results_type}/{target_model}.json", "w") as f:
+        json.dump(results, f, indent=4)
