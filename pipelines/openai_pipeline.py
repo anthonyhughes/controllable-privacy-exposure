@@ -18,6 +18,7 @@ from utils.dataset_utils import (
     open_legal_data,
     result_file_is_present,
 )
+from utils.inference import all_inference_tasks
 from utils.prompts import insert_additional_examples, prompt_prefix_for_task
 
 
@@ -58,54 +59,34 @@ def save_result(openai_result, task, hadm_id, model):
 def run(
     hadm_ids,
     model="gpt-4o-mini",
-    tasks_suffixes=None,
+    tasks_suffixes=None
 ):
-    """Run the OpenAI pipeline"""
     start_time = time.time()
-    print("Running the pipelines")
+    print("Running the openai pipeline")
+
     client = OpenAI(
         # This is the default and can be omitted
         api_key=os.environ.get("OPENAI_API_KEY"),
     )
+
     for task in SUMMARY_TYPES[2:]:
-        for id in hadm_ids:
-            print(f"Running pipeline for {task} on document {id}")
-            print("Starting inference")
-            # baseline
-            baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
-            if BASELINE_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
-                task, id, model
-            ):
-                baseline_prompt = prompt_prefix_for_task[baseline_task]
-                baseline_result = inference(
-                    client, task, hadm_id=id, model=model, prompt=baseline_prompt
-                )
-                save_result(baseline_result, baseline_task, hadm_id=id, model=model)
-            # privacy instruct task
-            if PRIV_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
-                task, id, model
-            ):
-                main_prompt = prompt_prefix_for_task[task]
-                pseudonymised_result = inference(
-                    client, task, hadm_id=id, model=model, prompt=main_prompt
-                )
-                save_result(pseudonymised_result, task, hadm_id=id, model=model)
-            # privacy instruct w/ ICL task
-            icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
-            if (
-                IN_CONTEXT_SUMMARY_TASK in tasks_suffixes
-                and not result_file_is_present(icl_task, id, model)
-            ):
-                in_context_prompt = prompt_prefix_for_task[icl_task]
-                icl_example = fetch_example(task)
-                in_context_prompt = in_context_prompt.replace(
-                    "[incontext_examples]", icl_example
-                )
-                in_context_result = inference(
-                    client, task, hadm_id=id, model=model, prompt=in_context_prompt
-                )
-                save_result(in_context_result, icl_task, hadm_id=id, model=model)
-            print("Pipeline completed")
+        for i, id in enumerate(hadm_ids):
+            print(
+                f"Running pipeline for {task} on document {id} - {i+1}/{len(hadm_ids)}"
+            )
+            if id in ["28664981", "21441082"]:
+                continue
+            all_inference_tasks(
+                id,
+                task,
+                prompt_prefix_for_task,
+                inference_fnc=inference,
+                client=client,
+                tasks_suffixes=tasks_suffixes,
+                model=model,
+                sleep=0,
+            )            
+            print(f"Pipeline completed - {id}")
     print("All pipelines completed")
     endtime = time.time() - start_time
     print(f"Time taken: {endtime}")

@@ -49,6 +49,22 @@
                 "--model", "gpt-4o-mini",
             ],
             "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "Claude Sonnet Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/claude_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--task", "legal_court",
+                "--model", "claude-3-5-sonnet-20240620",
+            ],
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }

@@ -5,8 +5,7 @@ from constants import (
     PRIV_SUMMARY_TASK,
     RESULTS_DIR,
 )
-from utils.dataset_utils import result_file_is_present
-from utils.prompts import insert_additional_examples
+from utils.dataset_utils import fetch_example, result_file_is_present
 import time
 
 
@@ -29,7 +28,7 @@ def all_inference_tasks(
     client,
     tasks_suffixes=[],
     model="gpt-4o-mini",
-    icl_hadm_ids=[],
+    sleep=0,
 ):
     print(f"Running pipeline for {task} on patient {id}")
     print("Starting inference")
@@ -43,8 +42,8 @@ def all_inference_tasks(
         baseline_result = inference_fnc(
             client, task, hadm_id=id, model=model, prompt=baseline_prompt
         )
-        save_result(baseline_result, f"{task}_baseline", hadm_id=id, model=model)
-        time.sleep(10)
+        save_result(baseline_result, baseline_task, hadm_id=id, model=model)
+        time.sleep(sleep)
     # privacy instruct task
     if PRIV_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
         task, id, model
@@ -55,7 +54,7 @@ def all_inference_tasks(
             client, task, hadm_id=id, model=model, prompt=main_prompt
         )
         save_result(pseudonymised_result, task, hadm_id=id, model=model)
-        time.sleep(10)
+        time.sleep(sleep)
     # privacy instruct w/ ICL task
     icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
     if IN_CONTEXT_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
@@ -63,11 +62,12 @@ def all_inference_tasks(
     ):
         print("Running private inference w\ ICL")
         in_context_prompt = prompt_prefix_for_task[icl_task]
-        in_context_prompt = insert_additional_examples(
-            task, in_context_prompt, icl_hadm_ids
+        icl_example = fetch_example(task)
+        in_context_prompt = in_context_prompt.replace(
+            "[incontext_examples]", icl_example
         )
         in_context_result = inference_fnc(
             client, task, hadm_id=id, model=model, prompt=in_context_prompt
         )
-        save_result(in_context_result, f"{task}_in_context", hadm_id=id, model=model)
-        time.sleep(10)
+        save_result(in_context_result, icl_task, hadm_id=id, model=model)
+        time.sleep(sleep)
