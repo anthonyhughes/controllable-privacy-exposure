@@ -12,9 +12,12 @@
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "env": {
-                "PYTHONPATH": "${workspaceFolder}"
+                "PYTHONPATH": "${cwd}"
             },
-            "envFile": "${workspaceFolder}/.env"
+            "args": [
+                "--task", "legal_court",
+                "--plib", "spacy"
+            ]
         }
     ]
 }

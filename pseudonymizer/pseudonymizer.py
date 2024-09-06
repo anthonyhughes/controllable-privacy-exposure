@@ -1,6 +1,7 @@
+import argparse
 import os
 import re
-from constants import PSEUDO_TARGETS_ROOT, SUMMARY_TYPES, EXAMPLE_ADMISSION_IDS
+from constants import PSEUDO_TARGETS_ROOT, PSUEDO_LIBS, SUMMARY_TYPES
 from mimic.mimic_data import load_original_discharge_summaries
 from reidentifier.reidentify_utils import (
     fetch_file_names,
@@ -8,7 +9,7 @@ from reidentifier.reidentify_utils import (
     remove_extra_piis,
     remove_extra_redactions,
 )
-from utils.dataset_utils import extract_hadm_ids
+from utils.dataset_utils import extract_hadm_ids, open_legal_data
 
 
 def fill_in_target_summary(discharge_summary):
@@ -249,7 +250,25 @@ def run_all_pseudonmizer_processes(hadm_ids):
         run_pseudonmizer_process(target_summary_type, hadm_ids)
 
 
+def run_ls_pseudonmizer_processes():
+    print('Start psuedo process for legal court summaries')
+    legal_data = open_legal_data()
+    print(len(legal_data.keys))
+
 if __name__ == "__main__":
-    original_discharge_summaries = load_original_discharge_summaries()
-    hadm_ids = extract_hadm_ids(original_discharge_summaries)
-    run_all_pseudonmizer_processes(hadm_ids)
+    parser = argparse.ArgumentParser()
+    parser.add_argument("-t", "--task",help="Choose a task for inference", default=SUMMARY_TYPES, choices=SUMMARY_TYPES)
+    parser.add_argument("-p", "--plib",help="Choose a lib for psuedonymization", default=PSUEDO_LIBS, choices=PSUEDO_LIBS)
+    args = parser.parse_args()
+
+    if args.task:
+        print(f"Target task is {args.task}")
+        task = args.task
+    
+    if task == "legal_court":
+        print("Starting legal court summary psuedonymization")
+        run_ls_pseudonmizer_processes()
+    else:
+        original_discharge_summaries = load_original_discharge_summaries()
+        hadm_ids = extract_hadm_ids(original_discharge_summaries)
+        run_all_pseudonmizer_processes(hadm_ids)

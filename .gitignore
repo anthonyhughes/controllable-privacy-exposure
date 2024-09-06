@@ -166,3 +166,5 @@ openai_config.py
 .vscode/
 .DS_Store
 *.tar
+*.out
+.vscode-server/

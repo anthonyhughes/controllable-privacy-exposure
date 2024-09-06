@@ -23,15 +23,13 @@ from utils.prompts import prompt_prefix_for_task
 def inference(task, prompt, hadm_id, model):
     """Run the openai query"""
     ehr, _ = get_ehr_and_summary(task, hadm_id)
-    prompt = f"""
-                ### Instruction:
+    prompt = f"""### Instruction:
                 {prompt}
 
                 ### Input:
                 {ehr}
 
-                ### Response:
-            """
+                ### Response:"""
     response = ollama.generate(
         model=model,
         prompt=prompt,
@@ -118,16 +116,20 @@ if __name__ == "__main__":
         print(f"Target task is {args.task}")
         task = args.task
         
-    original_discharge_summaries = load_original_discharge_summaries()
-    target_admission_ids = extract_hadm_ids(
-        original_discharge_summaries=original_discharge_summaries, n=0
-    )
-    # remove the last 5 admission ids
-    icl_hadm_ids = target_admission_ids[-1:]
-    target_admission_ids = extract_hadm_ids_from_dir('llama-3-8b-Instruct-bnb-4bit', 'brief_hospital_course')
-    run(
-        hadm_ids=target_admission_ids,
-        tasks_suffixes=TASK_SUFFIXES,
-        task=task,
-        model="llama3.1:70b"
-    )
+    if task == "legal_court":
+        print("Starting legal court inference")
+        pass
+    else:
+        original_discharge_summaries = load_original_discharge_summaries()
+        target_admission_ids = extract_hadm_ids(
+            original_discharge_summaries=original_discharge_summaries, n=0
+        )
+        # remove the last 5 admission ids
+        icl_hadm_ids = target_admission_ids[-1:]
+        target_admission_ids = extract_hadm_ids_from_dir('llama-3-8b-Instruct-bnb-4bit', 'brief_hospital_course')
+        run(
+            hadm_ids=target_admission_ids,
+            tasks_suffixes=TASK_SUFFIXES,
+            task=task,
+            model="llama3.1:70b"
+        )
