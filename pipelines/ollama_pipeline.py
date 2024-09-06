@@ -67,19 +67,17 @@ def run(
         if BASELINE_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
             task, id, model
         ):
-            print('Starting baseline')
+            print("Starting baseline")
             baseline_prompt = prompt_prefix_for_task[baseline_task]
             baseline_result = inference(
                 task, hadm_id=id, model=model, prompt=baseline_prompt
             )
-            save_result(
-                baseline_result, baseline_task, hadm_id=id, model=model
-            )
+            save_result(baseline_result, baseline_task, hadm_id=id, model=model)
         # privacy instruct task
         if PRIV_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
             task, id, model
         ):
-            print('Starting priv')
+            print("Starting priv")
             main_prompt = prompt_prefix_for_task[task]
             pseudonymised_result = inference(
                 task, hadm_id=id, model=model, prompt=main_prompt
@@ -87,47 +85,54 @@ def run(
             save_result(pseudonymised_result, task, hadm_id=id, model=model)
         # privacy instruct w/ ICL task
         icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
-        if (
-            IN_CONTEXT_SUMMARY_TASK in tasks_suffixes
-            and not result_file_is_present(icl_task, id, model)
+        if IN_CONTEXT_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
+            icl_task, id, model
         ):
-            print('Starting ICL')
+            print("Starting ICL")
             in_context_prompt = prompt_prefix_for_task[icl_task]
             icl_example = fetch_example(task)
-            in_context_prompt = in_context_prompt.replace("[incontext_examples]", icl_example)
+            in_context_prompt = in_context_prompt.replace(
+                "[incontext_examples]", icl_example
+            )
             in_context_result = inference(
                 task, hadm_id=id, model=model, prompt=in_context_prompt
             )
-            save_result(
-                in_context_result, icl_task, hadm_id=id, model=model
-            )
+            save_result(in_context_result, icl_task, hadm_id=id, model=model)
         print("Pipeline completed")
     print("All pipelines completed")
     endtime = time.time() - start_time
     print(f"Time taken: {endtime}")
 
+
 if __name__ == "__main__":
-        # Initialize parser
+    # Initialize parser
     parser = argparse.ArgumentParser()
-    parser.add_argument("-t", "--task",help="Choose a task for inference", default=SUMMARY_TYPES, choices=SUMMARY_TYPES)
-    parser.add_argument("-m", "--model",help="Choose a target model for inference", default=EVAL_MODELS, choices=EVAL_MODELS)
+    parser.add_argument(
+        "-t",
+        "--task",
+        help="Choose a task for inference",
+        default=SUMMARY_TYPES,
+        choices=SUMMARY_TYPES,
+    )
+    parser.add_argument(
+        "-m",
+        "--model",
+        help="Choose a target model for inference",
+        default=EVAL_MODELS,
+        choices=EVAL_MODELS,
+    )
     args = parser.parse_args()
 
     if args.task:
         print(f"Target task is {args.task}")
         task = args.task
-        
+
     if task == "legal_court":
         print("Starting legal court inference")
         legal_data = open_legal_data()
         # remove 5 for ICL
         ids = legal_data.keys()
-        run(
-            hadm_ids=ids,
-            tasks_suffixes=TASK_SUFFIXES,
-            task=task,
-            model="llama3.1:70b"
-        )
+        run(hadm_ids=ids, tasks_suffixes=TASK_SUFFIXES, task=task, model="llama3.1:70b")
     else:
         original_discharge_summaries = load_original_discharge_summaries()
         target_admission_ids = extract_hadm_ids(
@@ -135,10 +140,12 @@ if __name__ == "__main__":
         )
         # remove the last 5 admission ids
         icl_hadm_ids = target_admission_ids[-1:]
-        target_admission_ids = extract_hadm_ids_from_dir('llama-3-8b-Instruct-bnb-4bit', 'brief_hospital_course')
+        target_admission_ids = extract_hadm_ids_from_dir(
+            "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course"
+        )
         run(
             hadm_ids=target_admission_ids,
             tasks_suffixes=TASK_SUFFIXES,
             task=task,
-            model="llama3.1:70b"
+            model="llama3.1:70b",
         )

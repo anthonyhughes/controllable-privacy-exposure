@@ -33,6 +33,22 @@
                 "--task", "legal_court",
                 "--model", "llama3.1:70b",
             ]
+        },
+        {
+            "name": "OpenAI Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/openai_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--task", "legal_court",
+                "--model", "gpt-4o-mini",
+            ],
+            "envFile": "${workspaceFolder}/.env"
         }
     ]
 }
