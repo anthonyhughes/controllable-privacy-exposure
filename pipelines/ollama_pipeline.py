@@ -4,6 +4,7 @@ import time
 import ollama
 from constants import (
     BASELINE_SUMMARY_TASK,
+    EVAL_MODELS,
     RESULTS_DIR,
     SUMMARY_TYPES,
     PRIV_SUMMARY_TASK,
@@ -15,6 +16,7 @@ from utils.dataset_utils import (
     extract_hadm_ids,
     extract_hadm_ids_from_dir,
     fetch_example,
+    open_legal_data,
     result_file_is_present,
 )
 from utils.prompts import prompt_prefix_for_task
@@ -71,7 +73,7 @@ def run(
                 task, hadm_id=id, model=model, prompt=baseline_prompt
             )
             save_result(
-                baseline_result, f"{task}_baseline", hadm_id=id, model=model
+                baseline_result, baseline_task, hadm_id=id, model=model
             )
         # privacy instruct task
         if PRIV_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
@@ -97,18 +99,18 @@ def run(
                 task, hadm_id=id, model=model, prompt=in_context_prompt
             )
             save_result(
-                in_context_result, f"{task}_in_context", hadm_id=id, model=model
+                in_context_result, icl_task, hadm_id=id, model=model
             )
         print("Pipeline completed")
     print("All pipelines completed")
     endtime = time.time() - start_time
     print(f"Time taken: {endtime}")
 
-
 if __name__ == "__main__":
         # Initialize parser
     parser = argparse.ArgumentParser()
     parser.add_argument("-t", "--task",help="Choose a task for inference", default=SUMMARY_TYPES, choices=SUMMARY_TYPES)
+    parser.add_argument("-m", "--model",help="Choose a target model for inference", default=EVAL_MODELS, choices=EVAL_MODELS)
     args = parser.parse_args()
 
     if args.task:
@@ -117,7 +119,15 @@ if __name__ == "__main__":
         
     if task == "legal_court":
         print("Starting legal court inference")
-        pass
+        legal_data = open_legal_data()
+        # remove 5 for ICL
+        ids = legal_data.keys()
+        run(
+            hadm_ids=ids,
+            tasks_suffixes=TASK_SUFFIXES,
+            task=task,
+            model="llama3.1:70b"
+        )
     else:
         original_discharge_summaries = load_original_discharge_summaries()
         target_admission_ids = extract_hadm_ids(

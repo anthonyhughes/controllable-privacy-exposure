@@ -30,7 +30,8 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--task", "discharge_instructions",
+                "--task", "legal_court",
+                "--model", "llama3.1:70b",
             ]
         }
     ]
