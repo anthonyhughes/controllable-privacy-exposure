@@ -1,7 +1,4 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
@@ -20,10 +17,10 @@
             ]
         },
         {
-            "name": "Ollama Pipeline",
+            "name": "Legal - Ollama Pipeline",
             "type": "debugpy",
             "request": "launch",
-            "program": "${file}",
+            "program": "pipelines/ollama_pipeline.py",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "env": {
@@ -33,6 +30,21 @@
                 "--task", "legal_court",
                 "--model", "llama3.1:70b",
             ]
+        },
+        {
+            "name": "CNN - Ollama Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/ollama_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--task", "cnn",
+                "--model", "llama3.1:70b",
+            ],
         },
         {
             "name": "OpenAI Pipeline",

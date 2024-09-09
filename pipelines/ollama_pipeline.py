@@ -18,6 +18,7 @@ from utils.dataset_utils import (
     fetch_example,
     open_legal_data,
     result_file_is_present,
+    open_cnn_data
 )
 from utils.prompts import prompt_prefix_for_task
 
@@ -127,12 +128,21 @@ if __name__ == "__main__":
         print(f"Target task is {args.task}")
         task = args.task
 
+    if args.model:
+        print(f"Target model is {args.model}")
+        model = args.model
+
     if task == "legal_court":
         print("Starting legal court inference")
         legal_data = open_legal_data()
         # remove 5 for ICL
         ids = legal_data.keys()
-        run(hadm_ids=ids, tasks_suffixes=TASK_SUFFIXES, task=task, model="llama3.1:70b")
+        run(hadm_ids=ids, tasks_suffixes=TASK_SUFFIXES, task=task, model=model)
+    elif task == "cnn":
+        print("Starting CNN/DailyMail inference")
+        news_data = open_cnn_data()
+        ids = news_data.keys()
+        run(hadm_ids=ids, tasks_suffixes=TASK_SUFFIXES, task=task, model=model)
     else:
         original_discharge_summaries = load_original_discharge_summaries()
         target_admission_ids = extract_hadm_ids(

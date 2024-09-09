@@ -10,7 +10,7 @@ DISCHARGE_ME_ROOT = (
     + "discharge-me-bionlp-acl24-shared-task-on-streamlining-discharge-documentation-1.3/"
 )
 TRAIN_DISCHARGE_ME = DISCHARGE_ME_ROOT + "train/"
-SUMMARY_TYPES = ["brief_hospital_course", "discharge_instructions", "legal_court"]
+SUMMARY_TYPES = ["brief_hospital_course", "discharge_instructions", "legal_court", "cnn"]
 ALT_SUMMARY_TYPES = ["legal_court"]
 EXAMPLE_ADMISSION_IDS = [
     22343752,

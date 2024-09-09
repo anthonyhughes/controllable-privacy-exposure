@@ -148,6 +148,31 @@ def open_legal_data():
             }
     return legal_data
 
+def get_cnn_reference_summary(summac_datapoint: dict, CNNDM_test: dict) -> str:
+    """gets the target sumamry from the data"""
+
+    _, _, id = summac_datapoint['cnndm_id'].split('-')
+
+    return CNNDM_test[id]['highlights']
+
+def open_cnn_data():
+    """
+    Open the CNN/DailyMail data
+    """
+    print("Loading CNN docs")
+    cnn_dataset = load_cnn_dataset()
+    cnn_test = {v['id']: v for v in cnn_dataset['test']}
+
+    data = {}
+    for uid, values in cnn_test.items():
+        data[uid] = {
+            "id": values["id"],
+            "dataset": "cnn_dailmail",
+            "document": values["article"],
+            "target": values["highlights"],
+            }
+    return data
+
 
 def fetch_example(task):
     files = os.listdir(f"{ICL_EXAMPLES_ROOT}/{task}")
