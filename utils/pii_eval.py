@@ -86,13 +86,13 @@ def print_as_latex_table(results, model):
             f.write(f"{key}-{model} & {exposed_res['latex']} \\\\ \n")
 
 
-def run_privacy_eval(target_model):
+def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
     """
     Run PII evaluation for all documents
     """
     results = {}
     raw_results = {}
-    for task in SUMMARY_TYPES:
+    for task in tasks:
         all_token_counts = []
         baseline_all_token_counts = []
         all_normalised_token_counts = []
@@ -191,7 +191,6 @@ def run_privacy_eval(target_model):
             "pii__document_percentage": icl_doc_count / len(hadm_ids),
         }
     store_results(results, target_model, "privacy")
-    # store_results(raw_results, target_model, "raw_privacy")
     print_as_latex_table(results, target_model)
 
 

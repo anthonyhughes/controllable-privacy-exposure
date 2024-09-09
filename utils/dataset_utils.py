@@ -47,7 +47,7 @@ def extract_hadm_ids_from_dir(model, task):
     files = os.listdir(f"{RESULTS_DIR}/{model}/{task}")
     hadm_ids = []
     for file in files:
-        if file.startswith('.'):
+        if file.startswith("."):
             continue
         else:
             hadm_ids.append(file.split("-")[0])
@@ -114,9 +114,7 @@ def result_file_is_present(task, hadm_id, target_model) -> bool:
     """
     Check if the result file is present
     """
-    target_file = (
-        f"{RESULTS_DIR}/{target_model}/{task}/{hadm_id}-discharge-inputs.txt"
-    )
+    target_file = f"{RESULTS_DIR}/{target_model}/{task}/{hadm_id}-discharge-inputs.txt"
     return os.path.exists(target_file)
 
 
@@ -135,7 +133,7 @@ def open_legal_data():
     """
     Open the legal contracts data
     """
-    print('Loading legal docs')
+    print("Loading legal docs")
     with open(f"{LEGAL_EXAMPLES_ROOT}tldrlegal_v1.json", "r") as f:
         data = json.load(f)
         legal_data = {}
@@ -154,11 +152,13 @@ def open_legal_data():
 def fetch_example(task):
     files = os.listdir(f"{ICL_EXAMPLES_ROOT}/{task}")
     random_file = random.choice(files)
-    with(open(f"{ICL_EXAMPLES_ROOT}/{task}/{random_file}", "r")) as f:
+    with open(f"{ICL_EXAMPLES_ROOT}/{task}/{random_file}", "r") as f:
         return f.read()
-    
+
 
 def store_results(results, target_model, results_type):
     """Store results"""
+    if os.path.exists(f"{RESULTS_DIR}/{results_type}") == False:
+        os.makedirs(f"{RESULTS_DIR}/{results_type}")
     with open(f"{RESULTS_DIR}/{results_type}/{target_model}.json", "w") as f:
         json.dump(results, f, indent=4)

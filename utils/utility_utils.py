@@ -1,12 +1,15 @@
+from datetime import datetime
+import json
+import os
 from constants import (
     BASELINE_SUMMARY_TASK,
     IN_CONTEXT_SUMMARY_TASK,
     METRICS,
+    RESULTS_DIR,
     SUMMARY_TYPES,
 )
 from evaluate import load
 
-from pipelines.eval_pipeline import run_eval_for_document
 from utils.dataset_utils import (
     extract_hadm_ids_from_dir,
     open_generated_summary,
@@ -19,30 +22,47 @@ bertscore = load("bertscore")
 rouge_eval = load("rouge")
 
 
-def calculate_averages(results):
+def print_results_to_latex(target_model, task):
+    with open(f"{RESULTS_DIR}/{task}_utility/{target_model}.json") as f:
+        json_data = json.load(f)
+
+    for key, metrics in json_data.items():
+        metrics_str = " & ".join(f"{metrics[metric]:.2f}" for metric in metrics)
+
+        with open(f"{RESULTS_DIR}/latex/utility.txt", "a") as f:
+            f.write(f"{datetime.now()} \\\\ \n")
+            f.write(f"{key}-{target_model} & {metrics_str} \\\\ \n")
+
+
+def calculate_averages(results, task):
     """
     Calculate the average scores for the evaluation results
     """
-    baseline_tasks = [f"{task}{BASELINE_SUMMARY_TASK}" for task in SUMMARY_TYPES]
-    icl_tasks = [f"{task}{IN_CONTEXT_SUMMARY_TASK}" for task in SUMMARY_TYPES]
-    avg_scores = {
-        SUMMARY_TYPES[0]: {},
-        SUMMARY_TYPES[1]: {},
-        baseline_tasks[0]: {},
-        baseline_tasks[1]: {},
-        icl_tasks[0]: {},
-        icl_tasks[1]: {},
-    }
-    for task in avg_scores.keys():
-        print(f"Calculating average scores for task: {task}")
+    avg_scores = {}
+
+    baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
+    icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
+
+    tasks = [task, baseline_task, icl_task]
+
+    # Add these tasks to the avg_scores dictionary
+    avg_scores[baseline_task] = {}
+    avg_scores[icl_task] = {}
+    avg_scores[task] = {}
+
+    for task in tasks:
         for metric in METRICS:
+            print(
+                f"Calculating average scores for each task {task} per metric {metric}"
+            )
             avg_scores[task][metric] = 0
             doc_count = 0
             for id in results.keys():
                 if task in results[id] and metric in results[id][task]:
                     avg_scores[task][metric] += results[id][task][metric]
                     doc_count += 1
-            avg_scores[task][metric] /= doc_count
+            if doc_count > 0:
+                avg_scores[task][metric] /= doc_count
     return avg_scores
 
 
@@ -80,13 +100,13 @@ def update_results_for_task(results, task, hadm_id, target_model):
     return results
 
 
-def run_utility_eval(target_model):
+def run_utility_eval(target_model, tasks=SUMMARY_TYPES):
     """
     Get the scores for utility
     """
     print("Running the utility evaluation pipeline")
     results = {}
-    for task in SUMMARY_TYPES:
+    for task in tasks:
         baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
         print(f"Running evaluation for task: {baseline_task} and model: {target_model}")
         hadm_ids = extract_hadm_ids_from_dir(target_model, baseline_task)
@@ -116,6 +136,7 @@ def run_utility_eval(target_model):
             print(f"Running evaluation for document: {hadm_id}")
             update_results_for_task(results, icl_task, hadm_id, target_model)
 
-    store_results(results, target_model, "raw_utility")
-    avg_results = calculate_averages(results)
-    store_results(avg_results, target_model, "utility")
+        store_results(results, target_model, f"{task}_raw_utility")
+        avg_results = calculate_averages(results, task=task)
+        store_results(avg_results, target_model, f"{task}_utility")
+        print_results_to_latex(target_model, task=task)
