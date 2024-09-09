@@ -9,7 +9,7 @@ from constants import (
     TASK_SUFFIXES,
 )
 from mimic.mimic_data import load_original_discharge_summaries, get_ehr_and_summary
-from utils.dataset_utils import extract_hadm_ids, open_legal_data
+from utils.dataset_utils import extract_hadm_ids, extract_hadm_ids_from_dir, open_legal_data
 from utils.inference import all_inference_tasks
 from utils.prompts import prompt_prefix_for_task
 
@@ -41,7 +41,8 @@ def inference(client, task, prompt, hadm_id, model):
 def run(
     hadm_ids,
     model="claude-3-5-sonnet-20240620",
-    tasks_suffixes=None
+    tasks_suffixes=None,
+    tasks=[]
 ):
     print("Running the claude pipeline")
 
@@ -49,13 +50,11 @@ def run(
         api_key=os.environ.get("ANTHROPIC_API_KEY"),
     )
 
-    for task in SUMMARY_TYPES[2:]:
+    for task in tasks:
         for i, id in enumerate(hadm_ids):
             print(
                 f"Running pipeline for {task} on document {id} - {i+1}/{len(hadm_ids)}"
             )
-            if id in ["28664981", "21441082"]:
-                continue
             all_inference_tasks(
                 id,
                 task,
@@ -105,17 +104,14 @@ if __name__ == "__main__":
             model=args.model
         )
     else:
-        original_discharge_summaries = load_original_discharge_summaries()
-        target_admission_ids = extract_hadm_ids(
-            original_discharge_summaries=original_discharge_summaries, n=10000
+        target_admission_ids = extract_hadm_ids_from_dir(
+            "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course"
         )
-        icl_hadm_ids = target_admission_ids[-1:]
-        target_admission_ids = target_admission_ids[:-5]
         run(
-            hadm_ids=target_admission_ids[0:100],
+            hadm_ids=target_admission_ids,
             model="claude-3-5-sonnet-20240620",
             tasks_suffixes=TASK_SUFFIXES,
-            icl_hadm_ids=icl_hadm_ids
+            tasks=[task]
         )
     endtime = time.time() - start_time
     print(f"Time taken: {endtime}")

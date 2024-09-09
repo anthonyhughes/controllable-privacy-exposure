@@ -61,7 +61,7 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--task", "legal_court",
+                "--task", "discharge_instructions",
                 "--model", "claude-3-5-sonnet-20240620",
             ],
             "envFile": "${workspaceFolder}/.env"
