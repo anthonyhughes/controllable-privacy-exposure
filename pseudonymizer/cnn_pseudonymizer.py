@@ -16,8 +16,9 @@ def run_cnn_pseudonmizer_processes(deidentifier, task="cnn"):
     """
     print("Start psuedo process for legal court summaries")
     cnn_data = open_cnn_data()
-    icl_examples = []
-    for i, key in enumerate(cnn_data.keys()):
+    ids = list(cnn_data.keys())
+    icl_example_ids = ids[-5:]
+    for i, key in enumerate(ids):
         print(f"Started doc {i+1} of {len(cnn_data.keys())}")
         doc = cnn_data[key]
         target_summary = doc["target"]
@@ -28,14 +29,14 @@ def run_cnn_pseudonmizer_processes(deidentifier, task="cnn"):
             text=scrubbed_text.text, deidentification_dict=DEIDENTIFICATION_DICT
         )
 
-        if key not in icl_examples:
+        if key not in icl_example_ids:
             # Prebuild folder for main summaries (non-deidentified)
-            if not os.path.exists(f"{RE_ID_TARGETS_ROOT}/{task}"):
-                os.makedirs(f"{RE_ID_TARGETS_ROOT}/{task}")
+            if not os.path.exists(f"{RE_ID_TARGETS_ROOT}/{task}_baseline"):
+                os.makedirs(f"{RE_ID_TARGETS_ROOT}/{task}_baseline")
 
             # Store document per legal doc
             with open(
-                f"{RE_ID_TARGETS_ROOT}/{task}/{key}-target.txt",
+                f"{RE_ID_TARGETS_ROOT}/{task}_baseline/{key}-target.txt",
                 "w",
             ) as f:
                 f.write(target_summary)
