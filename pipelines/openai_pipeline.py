@@ -14,6 +14,7 @@ from constants import (
 from mimic.mimic_data import load_original_discharge_summaries, get_ehr_and_summary
 from utils.dataset_utils import (
     extract_hadm_ids,
+    extract_hadm_ids_from_dir,
     fetch_example,
     open_legal_data,
     result_file_is_present,
@@ -59,7 +60,8 @@ def save_result(openai_result, task, hadm_id, model):
 def run(
     hadm_ids,
     model="gpt-4o-mini",
-    tasks_suffixes=None
+    tasks=SUMMARY_TYPES,
+    task_suffixes=TASK_SUFFIXES
 ):
     start_time = time.time()
     print("Running the openai pipeline")
@@ -69,7 +71,7 @@ def run(
         api_key=os.environ.get("OPENAI_API_KEY"),
     )
 
-    for task in SUMMARY_TYPES[2:]:
+    for task in tasks:
         for i, id in enumerate(hadm_ids):
             print(
                 f"Running pipeline for {task} on document {id} - {i+1}/{len(hadm_ids)}"
@@ -82,9 +84,9 @@ def run(
                 prompt_prefix_for_task,
                 inference_fnc=inference,
                 client=client,
-                tasks_suffixes=tasks_suffixes,
+                tasks_suffixes=task_suffixes,
                 model=model,
-                sleep=0,
+                sleep=5,
             )            
             print(f"Pipeline completed - {id}")
     print("All pipelines completed")
@@ -122,15 +124,10 @@ if __name__ == "__main__":
         ids = legal_data.keys()
         run(hadm_ids=ids, tasks_suffixes=TASK_SUFFIXES, model=args.model)
     else:
-        original_discharge_summaries = load_original_discharge_summaries()
-        target_admission_ids = extract_hadm_ids(
-            original_discharge_summaries=original_discharge_summaries, n=10000
+        target_admission_ids = extract_hadm_ids_from_dir(
+            "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course"
         )
-        # remove the last 5 admission ids
-        icl_hadm_ids = target_admission_ids[-1:]
-        target_admission_ids = target_admission_ids[:-5]
         run(
-            hadm_ids=target_admission_ids[0:100],
-            tasks_suffixes=[IN_CONTEXT_SUMMARY_TASK],
-            icl_hadm_ids=icl_hadm_ids,
+            hadm_ids=target_admission_ids,
+            tasks=[task],
         )
