@@ -2,6 +2,17 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Stats",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/stats_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            }
+        },
+        {
             "name": "Psuedo",
             "type": "debugpy",
             "request": "launch",
