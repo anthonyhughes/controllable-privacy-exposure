@@ -77,8 +77,7 @@ prompt_prefix_for_task = {
     """,
     "cnn_baseline": """
         Summarise this document:\n
-    """,
-    
+    """,   
 }
 
 

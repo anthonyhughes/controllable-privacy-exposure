@@ -42,3 +42,12 @@ IN_CONTEXT_SUMMARY_TASK = "_in_context"
 TASK_SUFFIXES = [BASELINE_SUMMARY_TASK, PRIV_SUMMARY_TASK, IN_CONTEXT_SUMMARY_TASK]
 METRICS = ["rouge1", "rouge2", "rougeL", "bertscore"]
 PSUEDO_LIBS = ["spacy", "flair", "bert-deid"]
+DEIDENTIFICATION_DICT = {
+    "GPE": "the location",
+    "DATE": "the date",
+    "LOC": "the location",
+    "NAME": "the person",
+    "PERSON": "A person",
+    "ORG": "the organisation",
+    "FAC": "the location"
+}
