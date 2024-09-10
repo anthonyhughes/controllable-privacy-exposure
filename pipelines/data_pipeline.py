@@ -1,6 +1,6 @@
 from mimic.mimic_data import run
 from reidentifier.re_identifier import run_process
-from pseudonymizer.pseudonymizer import run_all_pseudonmizer_processes
+from pseudonymizer.pseudonymize import run_all_pseudonmizer_processes
 from utils.dataset_utils import extract_hadm_ids_from_dir
 
 if __name__ == "__main__":

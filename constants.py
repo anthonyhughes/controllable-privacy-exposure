@@ -10,7 +10,7 @@ DISCHARGE_ME_ROOT = (
     + "discharge-me-bionlp-acl24-shared-task-on-streamlining-discharge-documentation-1.3/"
 )
 TRAIN_DISCHARGE_ME = DISCHARGE_ME_ROOT + "train/"
-SUMMARY_TYPES = ["brief_hospital_course", "discharge_instructions", "legal_court"]
+SUMMARY_TYPES = ["brief_hospital_course", "discharge_instructions", "legal_court", "cnn"]
 ALT_SUMMARY_TYPES = ["legal_court"]
 EXAMPLE_ADMISSION_IDS = [
     22343752,
@@ -42,3 +42,12 @@ IN_CONTEXT_SUMMARY_TASK = "_in_context"
 TASK_SUFFIXES = [BASELINE_SUMMARY_TASK, PRIV_SUMMARY_TASK, IN_CONTEXT_SUMMARY_TASK]
 METRICS = ["rouge1", "rouge2", "rougeL", "bertscore"]
 PSUEDO_LIBS = ["spacy", "flair", "bert-deid"]
+DEIDENTIFICATION_DICT = {
+    "GPE": "the location",
+    "DATE": "the date",
+    "LOC": "the location",
+    "NAME": "the person",
+    "PERSON": "A person",
+    "ORG": "the organisation",
+    "FAC": "the location"
+}

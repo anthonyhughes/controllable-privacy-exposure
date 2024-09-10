@@ -32,6 +32,13 @@ prompt_prefix_for_task = {
         [incontext_examples]
         Summarise this document:\n
     """,
+    "cnn_in_context": """
+        Summarise the document.
+        However, you must not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.
+        These are example summaries:
+        [incontext_examples]
+        Summarise this document:\n
+    """,
     "brief_hospital_course": """
         Summarise the document into a brief hospital course summary.
         However, you must not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.
@@ -40,6 +47,12 @@ prompt_prefix_for_task = {
     """,
     "discharge_instructions": """
         Summarise the document into a discharge letter for the patient.
+        However, you must not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.
+        Do not mask or placeholder the identifying information, but replace it with information linguistically similar.
+        Summarise this document:\n
+    """,
+    "cnn": """
+        Summarise the document.
         However, you must not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.
         Do not mask or placeholder the identifying information, but replace it with information linguistically similar.
         Summarise this document:\n
@@ -62,7 +75,9 @@ prompt_prefix_for_task = {
         Summarise the document into plain english.
         Summarise this document:\n
     """,
-    
+    "cnn_baseline": """
+        Summarise this document:\n
+    """,   
 }
 
 
