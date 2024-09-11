@@ -3,24 +3,19 @@ import os
 import time
 from openai import OpenAI
 from constants import (
-    BASELINE_SUMMARY_TASK,
     EVAL_MODELS,
     RESULTS_DIR,
     SUMMARY_TYPES,
-    PRIV_SUMMARY_TASK,
-    IN_CONTEXT_SUMMARY_TASK,
     TASK_SUFFIXES,
 )
-from mimic.mimic_data import load_original_discharge_summaries, get_ehr_and_summary
+from mimic.mimic_data import get_ehr_and_summary
 from utils.dataset_utils import (
-    extract_hadm_ids,
     extract_hadm_ids_from_dir,
-    fetch_example,
+    open_cnn_data,    
     open_legal_data,
-    result_file_is_present,
 )
 from utils.inference import all_inference_tasks
-from utils.prompts import insert_additional_examples, prompt_prefix_for_task
+from utils.prompts import prompt_prefix_for_task
 
 
 def inference(client, task, prompt, hadm_id, model):
@@ -122,7 +117,13 @@ if __name__ == "__main__":
         legal_data = open_legal_data()
         # remove 5 for ICL
         ids = legal_data.keys()
-        run(hadm_ids=ids, tasks_suffixes=TASK_SUFFIXES, model=args.model)
+        run(hadm_ids=ids, tasks=[task], model=args.model)
+    elif task == "cnn":
+        print("Starting CNN inference")
+        news_data = open_cnn_data()
+        # remove 5 for ICL
+        ids = news_data.keys()
+        run(hadm_ids=ids, tasks=[task], model=args.model)
     else:
         target_admission_ids = extract_hadm_ids_from_dir(
             "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course"
@@ -131,3 +132,5 @@ if __name__ == "__main__":
             hadm_ids=target_admission_ids,
             tasks=[task],
         )
+
+{'role': 'user', 'content': '\n                ### Instruction:\n                \n        Summarise the document.\n  ...                ### Response:\n            '}
