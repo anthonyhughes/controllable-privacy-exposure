@@ -132,5 +132,3 @@ if __name__ == "__main__":
             hadm_ids=target_admission_ids,
             tasks=[task],
         )
-
-{'role': 'user', 'content': '\n                ### Instruction:\n                \n        Summarise the document.\n  ...                ### Response:\n            '}
