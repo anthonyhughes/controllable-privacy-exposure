@@ -122,7 +122,7 @@
                 "--task", "cnn",
                 "--model", "gpt-4o-mini",
                 "--flag", "retrieve",
-                "--file_id", "file-tcXxgKojpDq39J9Xfu5kYntb"
+                "--file_id", "file-KL7Z47i30GtMDNAmrrr8jX07"
             ],
             "envFile": "${workspaceFolder}/.env"
         },        

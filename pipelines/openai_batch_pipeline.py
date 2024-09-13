@@ -244,13 +244,26 @@ if __name__ == "__main__":
         batch_job = client.batches.retrieve(job_id)
         print(batch_job)
     elif flag == "retrieve":
-        client = OpenAI(
-            api_key=os.environ.get("OPENAI_API_KEY"),
-        )
-        file_id = args.file_id
-        result = client.files.content(file_id).content
+        # client = OpenAI(
+            # api_key=os.environ.get("OPENAI_API_KEY"),
+        # )
+        # file_id = args.file_id
+        # result = client.files.content(file_id).content
         result_file_name = f"{RESULTS_DIR}/{model}/openai_batch_results.jsonl"
 
-        with open(result_file_name, 'wb') as file:
-            file.write(result)
+        with open(result_file_name, 'r') as file:
+            lines = file.readlines()
+            for line in lines:
+                line_json = json.loads(line)
+                id = line_json['custom_id']
+                print(f"Document {id}")
+                cid_data = id.split('_')
+                file_id = cid_data.pop()
+                task = "_".join(cid_data)
+                target_out_file = f"{RESULTS_DIR}/{model}/{task}/{file_id}-discharge-inputs.txt"
+                if not os.path.exists(f"{RESULTS_DIR}/{model}/{task}"):
+                    os.makedirs(f"{RESULTS_DIR}/{model}/{task}")
+                print(f"Output location {target_out_file}")
+                with open(target_out_file, 'w') as f:
+                    f.write(line_json['response']['body']['choices'][0]['message']['content'])
 
