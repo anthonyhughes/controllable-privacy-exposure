@@ -4,12 +4,11 @@ from anthropic import Anthropic
 import time
 from constants import (
     EVAL_MODELS,
-    RESULTS_DIR,
     SUMMARY_TYPES,
     TASK_SUFFIXES,
 )
-from mimic.mimic_data import load_original_discharge_summaries, get_ehr_and_summary
-from utils.dataset_utils import extract_hadm_ids, extract_hadm_ids_from_dir, open_legal_data
+from mimic.mimic_data import get_ehr_and_summary
+from utils.dataset_utils import extract_hadm_ids_from_dir, open_legal_data
 from utils.inference import all_inference_tasks
 from utils.prompts import prompt_prefix_for_task
 
@@ -63,8 +62,8 @@ def run(
                 client=client,
                 tasks_suffixes=tasks_suffixes,
                 model=model,
-                sleep=15,
-            )            
+                sleep=20,
+            )
             print(f"Pipeline completed - {id}")
     print("All pipelines completed")
 

@@ -68,7 +68,7 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--task", "legal_court",
+                "--task", "cnn",
                 "--model", "gpt-4o-mini",
             ],
             "envFile": "${workspaceFolder}/.env"
@@ -84,7 +84,7 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--task", "discharge_instructions",
+                "--task", "brief_hospital_course",
                 "--model", "claude-3-5-sonnet-20240620",
             ],
             "envFile": "${workspaceFolder}/.env"
