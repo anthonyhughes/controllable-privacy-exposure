@@ -74,6 +74,59 @@
             "envFile": "${workspaceFolder}/.env"
         },
         {
+            "name": "OpenAI Batch Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/openai_batch_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--task", "cnn",
+                "--model", "gpt-4o-mini",
+                "--flag", "batch"
+            ],
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "OpenAI Check Batch Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/openai_batch_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--task", "cnn",
+                "--model", "gpt-4o-mini",
+                "--flag", "check",
+                "--job_id", "batch_sHXvLMMfnk98xZjW4Ae7I5DG"
+            ],
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "OpenAI Retrieve Batch Results Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/openai_batch_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--task", "cnn",
+                "--model", "gpt-4o-mini",
+                "--flag", "retrieve",
+                "--file_id", "file-tcXxgKojpDq39J9Xfu5kYntb"
+            ],
+            "envFile": "${workspaceFolder}/.env"
+        },        
+        {
             "name": "Claude Sonnet Pipeline",
             "type": "debugpy",
             "request": "launch",
