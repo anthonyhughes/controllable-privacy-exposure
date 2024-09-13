@@ -25,6 +25,7 @@ EXAMPLE_ADMISSION_IDS = [
     20910785,
 ]
 RESULTS_DIR = DATA_ROOT + "results"
+BATCH_JOBS_DIR = DATA_ROOT + "batch_jobs"
 MODELS = [
     "gpt-4o-mini",
     "mistral-instruct-7b",
@@ -37,6 +38,7 @@ EVAL_MODELS = [
     "llama3.1:70b"
 ]
 BASELINE_SUMMARY_TASK = "_baseline"
+BATCH_FLAGS = ["batch", "check", "retrieve"]
 PRIV_SUMMARY_TASK = ""
 IN_CONTEXT_SUMMARY_TASK = "_in_context"
 TASK_SUFFIXES = [BASELINE_SUMMARY_TASK, PRIV_SUMMARY_TASK, IN_CONTEXT_SUMMARY_TASK]
