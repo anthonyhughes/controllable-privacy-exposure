@@ -153,8 +153,8 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--tasks", "brief_hospital_course",
-                "--model", "llama3.1:70b",
+                "--tasks", "all",
+                "--model", "llama-3-8b-Instruct-bnb-4bit",
             ],
         }
     ]
