@@ -8,7 +8,11 @@ from constants import (
     TASK_SUFFIXES,
 )
 from mimic.mimic_data import get_ehr_and_summary
-from utils.dataset_utils import extract_hadm_ids_from_dir, open_legal_data
+from utils.dataset_utils import (
+    extract_hadm_ids_from_dir,
+    open_cnn_data,
+    open_legal_data,
+)
 from utils.inference import all_inference_tasks
 from utils.prompts import prompt_prefix_for_task
 
@@ -37,12 +41,7 @@ def inference(client, task, prompt, hadm_id, model):
     return summary[0].text
 
 
-def run(
-    hadm_ids,
-    model="claude-3-5-sonnet-20240620",
-    tasks_suffixes=None,
-    tasks=[]
-):
+def run(hadm_ids, model="claude-3-5-sonnet-20240620", tasks_suffixes=None, tasks=[]):
     print("Running the claude pipeline")
 
     client = Anthropic(
@@ -70,7 +69,7 @@ def run(
 
 if __name__ == "__main__":
     start_time = time.time()
-        # Initialize parser
+    # Initialize parser
     parser = argparse.ArgumentParser()
     parser.add_argument(
         "-t",
@@ -97,10 +96,17 @@ if __name__ == "__main__":
         legal_data = open_legal_data()
         # remove 5 for ICL
         ids = legal_data.keys()
+        run(hadm_ids=ids, tasks_suffixes=TASK_SUFFIXES, model=args.model)
+    elif task == "cnn":
+        print("Starting CNN inference")
+        news_data = open_cnn_data()
+        # remove 5 for ICL
+        ids = news_data.keys()
         run(
-            hadm_ids=ids, 
+            hadm_ids=ids,
+            model=args.model,
             tasks_suffixes=TASK_SUFFIXES,
-            model=args.model
+            tasks=[task],
         )
     else:
         target_admission_ids = extract_hadm_ids_from_dir(
@@ -110,7 +116,7 @@ if __name__ == "__main__":
             hadm_ids=target_admission_ids,
             model="claude-3-5-sonnet-20240620",
             tasks_suffixes=TASK_SUFFIXES,
-            tasks=[task]
+            tasks=[task],
         )
     endtime = time.time() - start_time
     print(f"Time taken: {endtime}")
