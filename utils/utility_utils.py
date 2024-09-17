@@ -5,7 +5,7 @@ from constants import (
     BASELINE_SUMMARY_TASK,
     IN_CONTEXT_SUMMARY_TASK,
     METRICS,
-    RESULTS_DIR,
+    UTILITY_RESULTS_DIR,
     SUMMARY_TYPES,
 )
 from evaluate import load
@@ -15,21 +15,21 @@ from utils.dataset_utils import (
     open_generated_summary,
     open_target_summary,
     reference_file_is_present,
+    store_utility_results,
 )
-from utils.dataset_utils import store_results
 
 bertscore = load("bertscore")
 rouge_eval = load("rouge")
 
 
 def print_results_to_latex(target_model, task):
-    with open(f"{RESULTS_DIR}/{task}_utility/{target_model}.json") as f:
+    with open(f"{UTILITY_RESULTS_DIR}/{task}_utility/{target_model}.json") as f:
         json_data = json.load(f)
 
     for key, metrics in json_data.items():
         metrics_str = " & ".join(f"{metrics[metric]:.2f}" for metric in metrics)
 
-        with open(f"{RESULTS_DIR}/latex/utility.txt", "a") as f:
+        with open(f"{UTILITY_RESULTS_DIR}/latex/utility.txt", "a") as f:
             f.write(f"{datetime.now()} \\\\ \n")
             f.write(f"{key}-{target_model} & {metrics_str} \\\\ \n")
 
@@ -136,7 +136,7 @@ def run_utility_eval(target_model, tasks=SUMMARY_TYPES):
             print(f"Running evaluation for document: {hadm_id}")
             update_results_for_task(results, icl_task, hadm_id, target_model)
 
-        store_results(results, target_model, f"{task}_raw_utility")
+        store_utility_results(results, target_model, f"{task}_raw_utility")
         avg_results = calculate_averages(results, task=task)
-        store_results(avg_results, target_model, f"{task}_utility")
-        print_results_to_latex(target_model, task=task)
+        store_utility_results(avg_results, target_model, f"{task}_utility")
+        # print_results_to_latex(target_model, task=task)

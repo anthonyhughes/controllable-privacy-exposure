@@ -156,6 +156,38 @@
                 "--tasks", "all",
                 "--model", "llama-3-8b-Instruct-bnb-4bit",
             ],
+        },
+        {
+            "name": "Privacy Eval Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/eval_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--tasks", "cnn",
+                "--model", "llama-3-8b-Instruct-bnb-4bit",
+                "--eval_type", "privacy"
+            ],
+        },
+        {
+            "name": "Reidentif Eval Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/eval_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--tasks", "cnn",
+                "--model", "gpt-4o-mini",
+                "--eval_type", "reidentification"
+            ],
         }
     ]
 }

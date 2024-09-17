@@ -2,7 +2,6 @@ import json
 import os
 import random
 from datasets import load_dataset
-from timeit import default_timer as timer
 
 import pandas as pd
 
@@ -16,9 +15,9 @@ from constants import (
     SUMMARY_TYPES,
     TRAIN_DISCHARGE_ME,
     RE_ID_TARGETS_ROOT,
+    UTILITY_RESULTS_DIR,
+    PRIVACY_RESULTS_DIR,
 )
-
-ed_train_df = pd.read_csv(f"{TRAIN_DISCHARGE_ME}/edstays.csv")
 
 
 def load_cnn_dataset():
@@ -95,6 +94,7 @@ def open_pseudonymized_summary(task, hadm_id):
 def fetch_admission_info(hadm_id):
     """Fetch admission info"""
     print(f"Admission info for {hadm_id}")
+    ed_train_df = pd.read_csv(f"{TRAIN_DISCHARGE_ME}/edstays.csv")
     edstay = ed_train_df[ed_train_df["hadm_id"] == str(hadm_id)]
     return edstay
 
@@ -148,12 +148,14 @@ def open_legal_data():
             }
     return legal_data
 
+
 def get_cnn_reference_summary(summac_datapoint: dict, CNNDM_test: dict) -> str:
     """gets the target sumamry from the data"""
 
-    _, _, id = summac_datapoint['cnndm_id'].split('-')
+    _, _, id = summac_datapoint["cnndm_id"].split("-")
 
-    return CNNDM_test[id]['highlights']
+    return CNNDM_test[id]["highlights"]
+
 
 def open_cnn_data():
     """
@@ -161,7 +163,7 @@ def open_cnn_data():
     """
     print("Loading CNN docs")
     cnn_dataset = load_cnn_dataset()
-    cnn_test = {v['id']: v for v in cnn_dataset['test']}
+    cnn_test = {v["id"]: v for v in cnn_dataset["test"]}
 
     data = {}
     for uid, values in cnn_test.items():
@@ -170,7 +172,7 @@ def open_cnn_data():
             "dataset": "cnn_dailmail",
             "document": values["article"],
             "target": values["highlights"],
-            }
+        }
     return data
 
 
@@ -181,9 +183,17 @@ def fetch_example(task):
         return f.read()
 
 
-def store_results(results, target_model, results_type):
+def store_utility_results(results, target_model, results_type):
     """Store results"""
-    if os.path.exists(f"{RESULTS_DIR}/{results_type}") == False:
-        os.makedirs(f"{RESULTS_DIR}/{results_type}")
-    with open(f"{RESULTS_DIR}/{results_type}/{target_model}.json", "w") as f:
+    if os.path.exists(f"{UTILITY_RESULTS_DIR}/{results_type}") == False:
+        os.makedirs(f"{UTILITY_RESULTS_DIR}/{results_type}")
+    with open(f"{UTILITY_RESULTS_DIR}/{results_type}/{target_model}.json", "w") as f:
+        json.dump(results, f, indent=4)
+
+
+def store_privacy_results(results, target_model, results_type):
+    """Store results"""
+    if os.path.exists(f"{PRIVACY_RESULTS_DIR}/{results_type}") == False:
+        os.makedirs(f"{PRIVACY_RESULTS_DIR}/{results_type}")
+    with open(f"{PRIVACY_RESULTS_DIR}/{results_type}/{target_model}.json", "w") as f:
         json.dump(results, f, indent=4)

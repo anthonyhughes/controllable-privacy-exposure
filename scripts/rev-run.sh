@@ -1,4 +1,0 @@
-PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/ollama_pipeline.py -t brief_hospital_course & > bhc.log
-PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/ollama_pipeline.py -t discharge_instructions & > di.log
-PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/claude_pipeline.py -t brief_hospital_course -m claude-3-5-sonnet-20240620 &
-PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/claude_pipeline.py -t cnn -m claude-3-5-sonnet-20240620 &

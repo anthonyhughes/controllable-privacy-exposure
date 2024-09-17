@@ -25,6 +25,8 @@ EXAMPLE_ADMISSION_IDS = [
     20910785,
 ]
 RESULTS_DIR = DATA_ROOT + "results"
+UTILITY_RESULTS_DIR = DATA_ROOT + "utility_results"
+PRIVACY_RESULTS_DIR = DATA_ROOT + "privacy_results"
 BATCH_JOBS_DIR = DATA_ROOT + "batch_jobs"
 MODELS = [
     "gpt-4o-mini",
@@ -37,6 +39,7 @@ EVAL_MODELS = [
     "claude-3-5-sonnet-20240620",
     "llama3.1:70b"
 ]
+EVAL_TYPES = ["utility", "privacy", "reidentification", "all"]
 BASELINE_SUMMARY_TASK = "_baseline"
 BATCH_FLAGS = ["batch", "check", "retrieve"]
 PRIV_SUMMARY_TASK = ""

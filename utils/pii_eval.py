@@ -1,8 +1,10 @@
 from datetime import datetime
+import os
 from constants import (
+    BASELINE_SUMMARY_TASK,
     IN_CONTEXT_SUMMARY_TASK,
     MODELS,
-    RESULTS_DIR,
+    PRIVACY_RESULTS_DIR,
     SUMMARY_TYPES,
 )
 
@@ -12,7 +14,7 @@ from utils.dataset_utils import (
     extract_hadm_ids_from_dir,
     open_generated_summary,
     result_file_is_present,
-    store_results,
+    store_privacy_results,
 )
 from pydeidentify import Deidentifier
 
@@ -81,9 +83,26 @@ def print_as_latex_table(results, model):
         exposed_res = dict(sorted(exposed_res.items()))
         exposed_res["total"] = sum(exposed_res.values())
         exposed_res["latex"] = " & ".join([str(v) for v in exposed_res.values()])
-        with open(f"{RESULTS_DIR}/latex/privacy.txt", "a") as f:
+        if os.path.exists(f"{PRIVACY_RESULTS_DIR}/latex") == False:
+            os.makedirs(f"{PRIVACY_RESULTS_DIR}/latex")
+        with open(f"{PRIVACY_RESULTS_DIR}/latex/privacy.txt", "a") as f:
             f.write(f"{datetime.now()} \\\\ \n")
             f.write(f"{key}-{model} & {exposed_res['latex']} \\\\ \n")
+
+
+def update_raw_results(raw_results, result, task, hadm_id):
+    if task not in raw_results:
+        raw_results[task] = {}
+    raw_results[task].update(
+        {
+            hadm_id: {
+                "sanitized_encodings": result.encode_mapping,
+                "sanitized_text": result.text,
+                "counts": result.counts,
+            }
+        },
+    )
+    return raw_results
 
 
 def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
@@ -109,22 +128,28 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
                 print(
                     f"Running PII evaluation for task {task} on id {hadm_id} - {i+1}/{len(hadm_ids)}"
                 )
-                result = run_pii_check(hadm_id, task, target_model)
-                token_length = len(result.text.split())
-                pii_property_counts = update_pii_property_counts(
-                    result, pii_property_counts
+                priv_result = run_pii_check(hadm_id, task, target_model)
+                raw_results = update_raw_results(
+                    raw_results, priv_result, task, hadm_id
                 )
-                counts = fetch_total_pii_count(result)
+                token_length = len(priv_result.text.split())
+                pii_property_counts = update_pii_property_counts(
+                    priv_result, pii_property_counts
+                )
+                counts = fetch_total_pii_count(priv_result)
                 all_token_counts.append(counts)
                 all_normalised_token_counts.append(counts / token_length)
 
             # run privacy evaluation for baseline
-            baseline_task = f"{task}_baseline"
+            baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
             if result_file_is_present(baseline_task, hadm_id, target_model):
                 print(
                     f"Running PII evaluation for task {baseline_task} on id {hadm_id} - {i+1}/{len(hadm_ids)}"
                 )
                 baseline_results = run_pii_check(hadm_id, baseline_task, target_model)
+                raw_results = update_raw_results(
+                    raw_results, baseline_results, baseline_task, hadm_id
+                )
                 baseline_pii_property_counts = update_pii_property_counts(
                     baseline_results, baseline_pii_property_counts
                 )
@@ -139,17 +164,27 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
                     f"Running PII evaluation for task {icl_task} on id {hadm_id} - {i+1}/{len(hadm_ids)}"
                 )
                 icl_results = run_pii_check(hadm_id, icl_task, target_model)
+                raw_results = update_raw_results(
+                    raw_results, icl_results, baseline_task, hadm_id
+                )
                 icl_pii_property_counts = update_pii_property_counts(
                     icl_results, icl_pii_property_counts
                 )
                 icl_counts = fetch_total_pii_count(icl_results)
                 icl_all_token_counts.append(icl_counts)
                 icl_normalised_token_counts.append(icl_counts / token_length)
+
+        # Take account of all docs with a leaked token
         doc_count = len(list(filter(lambda x: x > 0, all_token_counts)))
+
+        # Take account of all docs with a leaked token in the baseline summaries
         baseline_doc_count = len(
             list(filter(lambda x: x > 0, baseline_all_token_counts))
         )
+
+        # Take account of all docs with a leaked token in the ICL
         icl_doc_count = len(list(filter(lambda x: x > 0, icl_all_token_counts)))
+
         results[task] = {
             "exposed_docs_count": doc_count,
             "docs_count": len(hadm_ids),
@@ -190,7 +225,8 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
             ),
             "pii__document_percentage": icl_doc_count / len(hadm_ids),
         }
-    store_results(results, target_model, "privacy")
+    store_privacy_results(results, target_model, f"{task}_privacy")
+    store_privacy_results(raw_results, target_model, f"{task}_raw_privacy")
     print_as_latex_table(results, target_model)
 
 
