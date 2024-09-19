@@ -143,6 +143,23 @@
             "envFile": "${workspaceFolder}/.env"
         },
         {
+            "name": "Unsloth Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/unsloth_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}",
+                "CUDA_VISIBLE_DEVICES": "1"
+            },
+            "args": [
+                "--task", "legal_court",
+                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+            ],
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
             "name": "Eval Pipeline",
             "type": "debugpy",
             "request": "launch",

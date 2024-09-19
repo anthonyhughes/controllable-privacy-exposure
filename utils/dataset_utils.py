@@ -197,3 +197,20 @@ def store_privacy_results(results, target_model, results_type):
         os.makedirs(f"{PRIVACY_RESULTS_DIR}/{results_type}")
     with open(f"{PRIVACY_RESULTS_DIR}/{results_type}/{target_model}.json", "w") as f:
         json.dump(results, f, indent=4)
+
+
+def read_file(filename):
+    if not os.path.exists(filename):
+        print(f"File {filename} does not exist")
+        return None
+    try:
+        with open(filename, "r") as f:
+            return f.read()
+    except:
+        print(f"Error reading file {filename}")
+        return None
+
+
+def write_to_file(filename, text):
+    with open(filename, "w") as f:
+        f.write(text)

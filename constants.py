@@ -38,6 +38,7 @@ EVAL_MODELS = [
     "mistral-7b-instruct-v0.3-bnb-4bit",
     "llama-3-8b-Instruct-bnb-4bit",
     "claude-3-5-sonnet-20240620",
+    "Meta-Llama-3.1-70B-Instruct-bnb-4bit"
     # "llama3.1:70b"
 ]
 EVAL_TYPES = ["utility", "privacy", "reidentification", "all"]
