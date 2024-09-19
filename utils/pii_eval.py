@@ -165,7 +165,7 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
                 )
                 icl_results = run_pii_check(hadm_id, icl_task, target_model)
                 raw_results = update_raw_results(
-                    raw_results, icl_results, baseline_task, hadm_id
+                    raw_results, icl_results, icl_task, hadm_id
                 )
                 icl_pii_property_counts = update_pii_property_counts(
                     icl_results, icl_pii_property_counts

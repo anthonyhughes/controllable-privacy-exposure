@@ -184,8 +184,8 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--tasks", "cnn",
-                "--model", "gpt-4o-mini",
+                "--tasks", "all",
+                "--model", "all",
                 "--eval_type", "reidentification"
             ],
         }

@@ -5,6 +5,7 @@ PSEUDO_TARGETS_ROOT = DATA_ROOT + "pseudonymized_targets/"
 RE_ID_TARGETS_ROOT = DATA_ROOT + "re_identified_targets"
 RE_ID_EXAMPLES_ROOT = DATA_ROOT + "re_identified_examples/"
 LEGAL_EXAMPLES_ROOT = EXAMPLES_ROOT + "legal_court/"
+PSEUDO_PROFILES_LOCATION = f"{DATA_ROOT}/pseudo-profiles.json"
 DISCHARGE_ME_ROOT = (
     DATA_ROOT
     + "discharge-me-bionlp-acl24-shared-task-on-streamlining-discharge-documentation-1.3/"
@@ -37,7 +38,7 @@ EVAL_MODELS = [
     "mistral-7b-instruct-v0.3-bnb-4bit",
     "llama-3-8b-Instruct-bnb-4bit",
     "claude-3-5-sonnet-20240620",
-    "llama3.1:70b"
+    # "llama3.1:70b"
 ]
 EVAL_TYPES = ["utility", "privacy", "reidentification", "all"]
 BASELINE_SUMMARY_TASK = "_baseline"

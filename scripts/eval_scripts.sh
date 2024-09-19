@@ -29,8 +29,14 @@ PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/
 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t legal_court -m mistral-7b-instruct-v0.3-bnb-4bit -e utility &
 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t legal_court -m claude-3-5-sonnet-20240620 -e utility &
 
-# Eval Pipelines cnn
+# Eval Privacy Pipelines - CNN
 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t cnn -m gpt-4o-mini -e privacy &
 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t cnn -m llama-3-8b-Instruct-bnb-4bit -e privacy &
 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t cnn -m mistral-7b-instruct-v0.3-bnb-4bit -e privacy &
 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t cnn -m claude-3-5-sonnet-20240620 -e privacy &
+
+# Eval Privacy Pipelines - Discharge Summaries
+PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t discharge_instructions -m gpt-4o-mini -e privacy &
+PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t discharge_instructions -m llama-3-8b-Instruct-bnb-4bit -e privacy &
+PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t discharge_instructions -m mistral-7b-instruct-v0.3-bnb-4bit -e privacy &
+PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t discharge_instructions -m claude-3-5-sonnet-20240620 -e privacy &
