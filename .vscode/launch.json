@@ -160,7 +160,7 @@
             "envFile": "${workspaceFolder}/.env"
         },
         {
-            "name": "Eval Pipeline",
+            "name": "Utility Eval Pipeline",
             "type": "debugpy",
             "request": "launch",
             "program": "pipelines/eval_pipeline.py",
@@ -170,8 +170,12 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--tasks", "all",
-                "--model", "llama-3-8b-Instruct-bnb-4bit",
+                // "--tasks", "all",
+                // "--tasks", "legal_court",
+                "--tasks", "cnn",
+                // "--model", "llama-3-8b-Instruct-bnb-4bit",
+                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+                "--eval_type", "utility"
             ],
         },
         {

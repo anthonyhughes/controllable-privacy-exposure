@@ -41,16 +41,16 @@ def extract_hadm_ids(original_discharge_summaries, n=100):
     return list(hadm_df["hadm_id"])
 
 
-def extract_hadm_ids_from_dir(model, task):
+def extract_hadm_ids_from_dir(model, task, variation):
     """Extract the hadm ids from the results directory"""
-    files = os.listdir(f"{RESULTS_DIR}/{model}/{task}")
+    files = os.listdir(f"{RESULTS_DIR}/{model}/{variation}/{task}")
     hadm_ids = []
     for file in files:
         if file.startswith("."):
             continue
         else:
             hadm_ids.append(file.split("-")[0])
-    return hadm_ids
+    return hadm_ids[0:10]
 
 
 def extract_icl_set_of_hadm_ids(original_discharge_summaries, n=5):
@@ -58,11 +58,11 @@ def extract_icl_set_of_hadm_ids(original_discharge_summaries, n=5):
     return list(original_discharge_summaries.tail(n)["hadm_id"])
 
 
-def open_generated_summary(task, hadm_id, model):
+def open_generated_summary(task, hadm_id, model, variation):
     """
     Load the generated summary for a document
     """
-    target_file = f"{RESULTS_DIR}/{model}/{task}/{hadm_id}-discharge-inputs.txt"
+    target_file = f"{RESULTS_DIR}/{model}/{variation}/{task}/{hadm_id}-discharge-inputs.txt"
     with open(target_file, "r") as f:
         return f.read()
 
