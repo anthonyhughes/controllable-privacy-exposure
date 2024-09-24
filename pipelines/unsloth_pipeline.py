@@ -3,7 +3,7 @@
 import argparse
 from unsloth import FastLanguageModel
 from constants import EVAL_MODELS, SUMMARY_TYPES, RE_ID_EXAMPLES_ROOT, RESULTS_DIR
-from utils.dataset_utils import fetch_example, open_cnn_data, open_legal_data, read_file, write_to_file
+from utils.dataset_utils import extract_hadm_ids_from_dir, fetch_example, open_cnn_data, open_legal_data, read_file, write_to_file
 from utils.prompt_variations import (
     instruction_prompt,
     variations,
@@ -126,6 +126,10 @@ def main():
         cnn_data = open_cnn_data()
         hadm_ids = sorted(list(cnn_data.keys()))
         hadm_ids = hadm_ids[0:-5]
+    else:
+        hadm_ids = extract_hadm_ids_from_dir(
+            "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course"
+        )
     run_all_inference(target_model=args.model, hadm_ids=hadm_ids, summary_type=args.task)
     print("Inference complete")
 
