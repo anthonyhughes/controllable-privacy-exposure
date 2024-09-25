@@ -84,7 +84,7 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--task", "cnn",
+                "--task", "brief_hospital_course",
                 "--model", "gpt-4o-mini",
                 "--flag", "batch"
             ],
@@ -101,10 +101,10 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--task", "cnn",
+                "--task", "legal_court",
                 "--model", "gpt-4o-mini",
                 "--flag", "check",
-                "--job_id", "batch_sHXvLMMfnk98xZjW4Ae7I5DG"
+                "--job_id", "batch_66f3c1d376cc819082ac066bde4619b6"
             ],
             "envFile": "${workspaceFolder}/.env"
         },
@@ -122,7 +122,9 @@
                 "--task", "cnn",
                 "--model", "gpt-4o-mini",
                 "--flag", "retrieve",
-                "--file_id", "file-KL7Z47i30GtMDNAmrrr8jX07"
+                // "--file_id", "file-KL7Z47i30GtMDNAmrrr8jX07",
+                "--file_id", "file-9kkVbY6SwNR2lpSgxWqHfEPi"
+
             ],
             "envFile": "${workspaceFolder}/.env"
         },        

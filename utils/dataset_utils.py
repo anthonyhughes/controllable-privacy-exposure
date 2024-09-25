@@ -50,7 +50,7 @@ def extract_hadm_ids_from_dir(model, task, variation):
             continue
         else:
             hadm_ids.append(file.split("-")[0])
-    return hadm_ids[0:10]
+    return hadm_ids
 
 
 def extract_icl_set_of_hadm_ids(original_discharge_summaries, n=5):
@@ -62,7 +62,9 @@ def open_generated_summary(task, hadm_id, model, variation):
     """
     Load the generated summary for a document
     """
-    target_file = f"{RESULTS_DIR}/{model}/{variation}/{task}/{hadm_id}-discharge-inputs.txt"
+    target_file = (
+        f"{RESULTS_DIR}/{model}/{variation}/{task}/{hadm_id}-discharge-inputs.txt"
+    )
     with open(target_file, "r") as f:
         return f.read()
 
@@ -110,11 +112,11 @@ def run_packaging_for_colab():
         target_pckg.add(f"{PSEUDO_TARGETS_ROOT}/{SUMMARY_TYPES[1]}")
 
 
-def result_file_is_present(task, hadm_id, target_model) -> bool:
+def result_file_is_present(task, hadm_id, target_model, variation_name) -> bool:
     """
     Check if the result file is present
     """
-    target_file = f"{RESULTS_DIR}/{target_model}/{task}/{hadm_id}-discharge-inputs.txt"
+    target_file = f"{RESULTS_DIR}/{target_model}/{variation_name}/{task}/{hadm_id}-discharge-inputs.txt"
     return os.path.exists(target_file)
 
 

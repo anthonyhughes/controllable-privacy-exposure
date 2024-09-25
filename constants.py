@@ -28,6 +28,7 @@ EXAMPLE_ADMISSION_IDS = [
 RESULTS_DIR = DATA_ROOT + "results"
 UTILITY_RESULTS_DIR = DATA_ROOT + "utility_results"
 PRIVACY_RESULTS_DIR = DATA_ROOT + "privacy_results"
+BATCH_RESULTS_DIR = DATA_ROOT + "batch_results"
 BATCH_JOBS_DIR = DATA_ROOT + "batch_jobs"
 MODELS = [
     "gpt-4o-mini",

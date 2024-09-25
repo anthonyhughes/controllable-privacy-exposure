@@ -6,6 +6,7 @@ from openai import OpenAI
 from constants import (
     BASELINE_SUMMARY_TASK,
     BATCH_JOBS_DIR,
+    BATCH_RESULTS_DIR,
     EVAL_MODELS,
     IN_CONTEXT_SUMMARY_TASK,
     PRIV_SUMMARY_TASK,
@@ -22,8 +23,7 @@ from utils.dataset_utils import (
     open_legal_data,
     result_file_is_present,
 )
-from utils.prompts import prompt_prefix_for_task
-
+from utils.prompt_variations import variations
 
 def build_prompt_for_task(
     task,
@@ -63,55 +63,57 @@ def build_all_variations_for_task(
     model="gpt-4o-mini",
     cdatetime="now",
 ):
-    print("Updating batch job for {task} on document {id}")
+    print(f"Updating batch job for {task} on document {id}")
     # baseline
-    baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
-    if BASELINE_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
-        task, id, model
-    ):
-        print("Adding baseline task to batch")
-        baseline_prompt = prompt_prefix_for_task[baseline_task]
-        baseline_prompt = build_prompt_for_task(task, baseline_prompt, id)
-        baseline_job = marshall_prompt_into_openai_object(
-            baseline_prompt, model, f"{baseline_task}_{id}"
-        )
-        append_result_to_batch_job(baseline_job, model, cdatetime)
-    else:
-        print(f"Skipping document {id} on task {task}")
+    for prompt_prefix_for_task in variations:
+        v_name = prompt_prefix_for_task["name"]
+        print(f'Running inference for summary type : {task} and variation: {v_name} on model: {model}')
+        baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
+        if BASELINE_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
+            task, id, model, v_name
+        ):
+            print("Adding baseline task to batch")
+            baseline_prompt = prompt_prefix_for_task[baseline_task]
+            baseline_prompt = build_prompt_for_task(task, baseline_prompt, id)
+            baseline_job = marshall_prompt_into_openai_object(
+                baseline_prompt, model, f"{v_name}_{baseline_task}_{id}"
+            )
+            append_result_to_batch_job(baseline_job, model, cdatetime)
+        else:
+            print(f"Skipping document {id} on task {task}")
 
-    # privacy instruct task
-    if PRIV_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
-        task, id, model
-    ):
-        print("Adding private task to batch")
-        main_prompt = prompt_prefix_for_task[task]
-        main_prompt = build_prompt_for_task(task, main_prompt, id)
-        main_job = marshall_prompt_into_openai_object(
-            main_prompt, model, f"{task}_{id}"
-        )
-        append_result_to_batch_job(main_job, model, cdatetime)
-    else:
-        print(f"Skipping document {id} on task {task}")
+        # privacy instruct task
+        if PRIV_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
+            task, id, model, v_name
+        ):
+            print("Adding private task to batch")
+            main_prompt = prompt_prefix_for_task[task]
+            main_prompt = build_prompt_for_task(task, main_prompt, id)
+            main_job = marshall_prompt_into_openai_object(
+                main_prompt, model, f"{v_name}_{task}_{id}"
+            )
+            append_result_to_batch_job(main_job, model, cdatetime)
+        else:
+            print(f"Skipping document {id} on task {task}")
 
-        # save_result_to_batch(pseudonymised_result, task, hadm_id=id, model=model)
-    # privacy instruct w/ ICL task
-    icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
-    if IN_CONTEXT_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
-        icl_task, id, model
-    ):
-        print("Adding one-shot private task to batch")
-        in_context_prompt = prompt_prefix_for_task[icl_task]
-        icl_example = fetch_example(task)
-        in_context_prompt = in_context_prompt.replace(
-            "[incontext_examples]", icl_example
-        )
-        in_context_prompt = build_prompt_for_task(task, in_context_prompt, id)
-        baseline_job = marshall_prompt_into_openai_object(
-            in_context_prompt, model, f"{icl_task}_{id}"
-        )
-        append_result_to_batch_job(baseline_job, model, cdatetime)
-    else:
-        print(f"Skipping document {id} on task {task}")
+        # privacy instruct w/ ICL task
+        icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
+        if IN_CONTEXT_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
+            icl_task, id, model, v_name
+        ):
+            print("Adding one-shot private task to batch")
+            in_context_prompt = prompt_prefix_for_task[icl_task]
+            icl_example = fetch_example(task)
+            in_context_prompt = in_context_prompt.replace(
+                "[incontext_examples]", icl_example
+            )
+            in_context_prompt = build_prompt_for_task(task, in_context_prompt, id)
+            baseline_job = marshall_prompt_into_openai_object(
+                in_context_prompt, model, f"{v_name}_{icl_task}_{id}"
+            )
+            append_result_to_batch_job(baseline_job, model, cdatetime)
+        else:
+            print(f"Skipping document {id} on task {task}")
 
 
 def append_result_to_batch_job(openai_job, model, cdatetime):
@@ -222,7 +224,8 @@ if __name__ == "__main__":
             print("Starting legal court inference")
             legal_data = open_legal_data()
             # remove 5 for ICL
-            ids = legal_data.keys()
+            ids = list(legal_data.keys())
+            ids = ids[:-5]
             run(hadm_ids=ids, tasks=[task], model=args.model)
         elif task == "cnn":
             print("Starting CNN inference")
@@ -233,7 +236,7 @@ if __name__ == "__main__":
             run(hadm_ids=ids, tasks=[task], model=args.model)
         else:
             target_admission_ids = extract_hadm_ids_from_dir(
-                "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course"
+                "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course", "variation_1"
             )
             run(hadm_ids=target_admission_ids, tasks=[task], model=args.model)
     elif flag == "check":
@@ -243,13 +246,18 @@ if __name__ == "__main__":
         job_id = args.job_id
         batch_job = client.batches.retrieve(job_id)
         print(batch_job)
+        # all_batch_jobs = client.batches.list(limit=10)
+        # print(all_batch_jobs)
     elif flag == "retrieve":
-        # client = OpenAI(
-            # api_key=os.environ.get("OPENAI_API_KEY"),
-        # )
-        # file_id = args.file_id
+        client = OpenAI(
+            api_key=os.environ.get("OPENAI_API_KEY"),
+        )
+        file_id = args.file_id
         # result = client.files.content(file_id).content
-        result_file_name = f"{RESULTS_DIR}/{model}/openai_batch_results.jsonl"
+        result_file_name = f"{BATCH_RESULTS_DIR}/{model}_{file_id}_openai_batch_results.jsonl"
+
+        # with(open(result_file_name, 'wb')) as f:
+        #      f.write(result)
 
         with open(result_file_name, 'r') as file:
             lines = file.readlines()
@@ -259,11 +267,11 @@ if __name__ == "__main__":
                 print(f"Document {id}")
                 cid_data = id.split('_')
                 file_id = cid_data.pop()
+                variation = f"{cid_data.pop(0)}_{cid_data.pop(0)}"
                 task = "_".join(cid_data)
-                target_out_file = f"{RESULTS_DIR}/{model}/{task}/{file_id}-discharge-inputs.txt"
-                if not os.path.exists(f"{RESULTS_DIR}/{model}/{task}"):
-                    os.makedirs(f"{RESULTS_DIR}/{model}/{task}")
+                target_out_file = f"{RESULTS_DIR}/{model}/{variation}/{task}/{file_id}-discharge-inputs.txt"
+                if not os.path.exists(f"{RESULTS_DIR}/{model}/{variation}/{task}"):
+                    os.makedirs(f"{RESULTS_DIR}/{model}/{variation}/{task}")
                 print(f"Output location {target_out_file}")
                 with open(target_out_file, 'w') as f:
                     f.write(line_json['response']['body']['choices'][0]['message']['content'])
-
