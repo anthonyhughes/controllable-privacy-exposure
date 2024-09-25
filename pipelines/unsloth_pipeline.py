@@ -128,7 +128,7 @@ def main():
         hadm_ids = hadm_ids[0:-5]
     else:
         hadm_ids = extract_hadm_ids_from_dir(
-            "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course"
+            "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course", "variation_1"
         )
     run_all_inference(target_model=args.model, hadm_ids=hadm_ids, summary_type=args.task)
     print("Inference complete")
