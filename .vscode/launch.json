@@ -104,7 +104,7 @@
                 "--task", "legal_court",
                 "--model", "gpt-4o-mini",
                 "--flag", "check",
-                "--job_id", "batch_66f3c1d376cc819082ac066bde4619b6"
+                "--job_id", "batch_eXh6l7GfKVM6n31ngih9flKg"
             ],
             "envFile": "${workspaceFolder}/.env"
         },
@@ -157,7 +157,7 @@
             },
             "args": [
                 "--task", "legal_court",
-                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+                "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
             ],
             "envFile": "${workspaceFolder}/.env"
         },

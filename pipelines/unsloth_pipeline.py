@@ -2,11 +2,12 @@
 # pip install "unsloth[cu121-torch240] @ git+https://github.com/unslothai/unsloth.git"
 import argparse
 from unsloth import FastLanguageModel
-from constants import EVAL_MODELS, SUMMARY_TYPES, RE_ID_EXAMPLES_ROOT, RESULTS_DIR
-from utils.dataset_utils import extract_hadm_ids_from_dir, fetch_example, open_cnn_data, open_legal_data, read_file, write_to_file
+from constants import BASELINE_SUMMARY_TASK, EVAL_MODELS, IN_CONTEXT_SUMMARY_TASK, SANI_SUMM_SUMMARY_TASK, SUMMARY_TYPES, RE_ID_EXAMPLES_ROOT, RESULTS_DIR
+from utils.dataset_utils import extract_hadm_ids_from_dir, fetch_example, open_cnn_data, open_legal_data, read_file, write_to_file, create_missing_output_folders
 from utils.prompt_variations import (
     instruction_prompt,
     variations,
+    sanitize_prompt
 )
 import os
 
@@ -36,6 +37,8 @@ def run_inference(instruction, input, model, tokenizer):
     outputs = model.generate(**inputs, max_new_tokens=2048, use_cache=True)
     result = tokenizer.batch_decode(outputs)
     trimmed_res = result[0].split("### Response:")[1].strip()
+    if "### Explanation" in trimmed_res:
+        trimmed_res = trimmed_res.split("### Explanation")[0].strip()
     return trimmed_res
 
 
@@ -47,26 +50,26 @@ def run_all_inference(target_model, hadm_ids, summary_type):
         print(f'Running inference for summary type : {summary_type} and variation: {v_name} on model: {target_model}')
         # for both a baseline summary and an instructed to be pseudo summary
         instruction_main = prompt_prefix_for_task[summary_type]
-        instruction_baseline = prompt_prefix_for_task[f"{summary_type}_baseline"]
-        instruction_icl = prompt_prefix_for_task[f"{summary_type}_in_context"]
+        instruction_baseline = prompt_prefix_for_task[f"{summary_type}{BASELINE_SUMMARY_TASK}"]
+        instruction_icl = prompt_prefix_for_task[f"{summary_type}{IN_CONTEXT_SUMMARY_TASK}"]
+        instruction_sani_summ = prompt_prefix_for_task[f"{summary_type}{SANI_SUMM_SUMMARY_TASK}"]
         print(f"Running inference for {len(hadm_ids)} identities")
         for i, id in enumerate(hadm_ids):
             print(f"Running inference for file {i+1}/{len(hadm_ids)}")
-            print(f"Running inference for mode {target_model} and variation {v_name}")
+            print(f"Running inference for model {target_model}, task {summary_type} and variation {v_name}")
             # Set ins
             input_filename = f"{RE_ID_EXAMPLES_ROOT}/{summary_type}/{id}-discharge-inputs.txt"
             # Set outs
             output_filename = f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}/{id}-discharge-inputs.txt"
-            baseline_output_file = f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}_baseline/{id}-discharge-inputs.txt"
-            icl_output_file = f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}_in_context/{id}-discharge-inputs.txt"
+            baseline_output_file = f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}{BASELINE_SUMMARY_TASK}/{id}-discharge-inputs.txt"
+            icl_output_file = f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}{IN_CONTEXT_SUMMARY_TASK}/{id}-discharge-inputs.txt"
+            sani_summ_output_file = f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}{SANI_SUMM_SUMMARY_TASK}/{id}-discharge-inputs.txt"
+
+            # extra file for the sanitized document
+            sani_summ_sanitized_output_file = f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}_sanitized/{id}-discharge-inputs.txt"
 
             # Creating results dir
-            if os.path.exists(output_filename) is False: # SNAG - always hits this because the output file will not exist
-                print(f"File {input_filename} does not exist")
-                print("Creating the results folder")
-                os.makedirs(f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}", exist_ok=True)
-                os.makedirs(f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}_baseline", exist_ok=True)
-                os.makedirs(f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}_in_context", exist_ok=True)
+            create_missing_output_folders(target_model, v_name, summary_type)
 
             print(f"Starting inference for {id}")
             file_input = read_file(input_filename)
@@ -94,6 +97,15 @@ def run_all_inference(target_model, hadm_ids, summary_type):
                 icl_trimmed_res = run_inference(instruction_icl, file_input, model, tokenizer)
                 # write baseline output
                 write_to_file(icl_output_file, icl_trimmed_res)
+
+            if file_input is not None and os.path.exists(sani_summ_output_file) is False:
+                print('SaniSumm - Sani')
+                # add an in-context example
+                sanitized_document = run_inference(sanitize_prompt, file_input, model, tokenizer)
+                write_to_file(sani_summ_sanitized_output_file, sanitized_document)
+                print('SaniSumm - Summ')
+                sani_summ_trimmed_res = run_inference(instruction_sani_summ, sanitized_document, model, tokenizer)
+                write_to_file(sani_summ_output_file, sani_summ_trimmed_res)        
             print(f"ID complete {id}")
 
 
