@@ -190,8 +190,9 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--tasks", "cnn",
-                "--model", "llama-3-8b-Instruct-bnb-4bit",
+                "--tasks", "legal_court",
+                // "--model", "llama-3-8b-Instruct-bnb-4bit",
+                "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
                 "--eval_type", "privacy"
             ],
         },
