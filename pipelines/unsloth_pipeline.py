@@ -89,7 +89,7 @@ def run_all_inference(target_model, hadm_ids, summary_type):
                 # write baseline output
                 write_to_file(baseline_output_file, baseline_trimmed_res)
 
-            if file_input is not None and os.path.exists(icl_output_file) is False:
+            if file_input is not None and os.path.exists(icl_output_file) is False and id not in ["24186608"]:
                 print('ICL')
                 # get a baseline (non-pseduo summary)
                 # add an in-context example
