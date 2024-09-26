@@ -128,6 +128,7 @@ def open_target_summary(task, hadm_id):
         target_file = f"{RE_ID_TARGETS_ROOT}/{task}/{hadm_id}-target.txt"
     else:
         task = task.replace(f"{IN_CONTEXT_SUMMARY_TASK}", "")
+        task = task.replace(f"{SANI_SUMM_SUMMARY_TASK}", "")
         target_file = f"{PSEUDO_TARGETS_ROOT}/{task}/{hadm_id}-target.txt"
 
     with open(target_file, "r") as f:
@@ -178,6 +179,7 @@ def reference_file_is_present(task, hadm_id) -> bool:
         return os.path.exists(f"{RE_ID_TARGETS_ROOT}/{task}/{hadm_id}-target.txt")
     else:
         task = task.replace(f"{IN_CONTEXT_SUMMARY_TASK}", "")
+        task = task.replace(f"{SANI_SUMM_SUMMARY_TASK}", "")
         return os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{task}/{hadm_id}-target.txt")
 
 

@@ -253,11 +253,11 @@ if __name__ == "__main__":
             api_key=os.environ.get("OPENAI_API_KEY"),
         )
         file_id = args.file_id
-        # result = client.files.content(file_id).content
+        result = client.files.content(file_id).content
         result_file_name = f"{BATCH_RESULTS_DIR}/{model}_{file_id}_openai_batch_results.jsonl"
 
-        # with(open(result_file_name, 'wb')) as f:
-        #      f.write(result)
+        with(open(result_file_name, 'wb')) as f:
+             f.write(result)
 
         with open(result_file_name, 'r') as file:
             lines = file.readlines()
