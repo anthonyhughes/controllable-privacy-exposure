@@ -100,7 +100,6 @@ def run_all_inference(target_model, hadm_ids, summary_type):
 
             if file_input is not None and os.path.exists(sani_summ_output_file) is False:
                 print('SaniSumm - Sani')
-                # add an in-context example
                 sanitized_document = run_inference(sanitize_prompt, file_input, model, tokenizer)
                 write_to_file(sani_summ_sanitized_output_file, sanitized_document)
                 print('SaniSumm - Summ')
