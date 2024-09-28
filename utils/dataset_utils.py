@@ -93,6 +93,9 @@ def extract_hadm_ids(original_discharge_summaries, n=100):
 
 def extract_hadm_ids_from_dir(model, task, variation):
     """Extract the hadm ids from the results directory"""
+    if os.path.exists(f"{RESULTS_DIR}/{model}/{variation}/{task}") is False:
+        return []
+    
     files = os.listdir(f"{RESULTS_DIR}/{model}/{variation}/{task}")
     hadm_ids = []
     for file in files:
