@@ -6,18 +6,68 @@ from datasets import load_dataset
 import pandas as pd
 
 from constants import (
+    BASELINE_SUMMARY_TASK,
     ICL_EXAMPLES_ROOT,
     IN_CONTEXT_SUMMARY_TASK,
     LEGAL_EXAMPLES_ROOT,
     RE_ID_EXAMPLES_ROOT,
     RESULTS_DIR,
     PSEUDO_TARGETS_ROOT,
+    SANI_SUMM_SUMMARY_TASK,
     SUMMARY_TYPES,
     TRAIN_DISCHARGE_ME,
     RE_ID_TARGETS_ROOT,
     UTILITY_RESULTS_DIR,
     PRIVACY_RESULTS_DIR,
 )
+
+
+def create_missing_output_folders(target_model, v_name, summary_type):
+    if os.path.exists(f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}") is False:
+        print("Creating a results folder")
+        os.makedirs(
+            f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}", exist_ok=True
+        )
+
+    if (
+        os.path.exists(
+            f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}{BASELINE_SUMMARY_TASK}"
+        )
+        is False
+    ):
+        print("Creating the results folder")
+        os.makedirs(
+            f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}{BASELINE_SUMMARY_TASK}",
+            exist_ok=True,
+        )
+
+    if (
+        os.path.exists(
+            f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}{IN_CONTEXT_SUMMARY_TASK}"
+        )
+        is False
+    ):
+        print("Creating the results folder")
+        os.makedirs(
+            f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}{IN_CONTEXT_SUMMARY_TASK}",
+            exist_ok=True,
+        )
+
+    if (
+        os.path.exists(
+            f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}{SANI_SUMM_SUMMARY_TASK}"
+        )
+        is False
+    ):
+        print("Creating the results folder")
+        os.makedirs(
+            f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}{SANI_SUMM_SUMMARY_TASK}",
+            exist_ok=True,
+        )
+        os.makedirs(
+            f"{RESULTS_DIR}/{target_model}/{v_name}/{summary_type}_sanitized",
+            exist_ok=True,
+        )
 
 
 def load_cnn_dataset():
@@ -78,6 +128,7 @@ def open_target_summary(task, hadm_id):
         target_file = f"{RE_ID_TARGETS_ROOT}/{task}/{hadm_id}-target.txt"
     else:
         task = task.replace(f"{IN_CONTEXT_SUMMARY_TASK}", "")
+        task = task.replace(f"{SANI_SUMM_SUMMARY_TASK}", "")
         target_file = f"{PSEUDO_TARGETS_ROOT}/{task}/{hadm_id}-target.txt"
 
     with open(target_file, "r") as f:
@@ -128,6 +179,7 @@ def reference_file_is_present(task, hadm_id) -> bool:
         return os.path.exists(f"{RE_ID_TARGETS_ROOT}/{task}/{hadm_id}-target.txt")
     else:
         task = task.replace(f"{IN_CONTEXT_SUMMARY_TASK}", "")
+        task = task.replace(f"{SANI_SUMM_SUMMARY_TASK}", "")
         return os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{task}/{hadm_id}-target.txt")
 
 

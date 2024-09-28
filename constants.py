@@ -43,11 +43,16 @@ EVAL_MODELS = [
     # "llama3.1:70b"
 ]
 EVAL_TYPES = ["utility", "privacy", "reidentification", "all"]
+BATCH_FLAGS = ["batch", "check", "retrieve", "cancel"]
+
+# TASKS
 BASELINE_SUMMARY_TASK = "_baseline"
-BATCH_FLAGS = ["batch", "check", "retrieve"]
 PRIV_SUMMARY_TASK = ""
 IN_CONTEXT_SUMMARY_TASK = "_in_context"
-TASK_SUFFIXES = [BASELINE_SUMMARY_TASK, PRIV_SUMMARY_TASK, IN_CONTEXT_SUMMARY_TASK]
+SANI_SUMM_SUMMARY_TASK = "_sani_summ"
+SANITIZE_TASK = "_sanitized"
+TASK_SUFFIXES = [BASELINE_SUMMARY_TASK, PRIV_SUMMARY_TASK, IN_CONTEXT_SUMMARY_TASK, SANI_SUMM_SUMMARY_TASK, SANITIZE_TASK]
+
 METRICS = ["rouge1", "rouge2", "rougeL", "bertscore"]
 PSUEDO_LIBS = ["spacy", "flair", "bert-deid"]
 DEIDENTIFICATION_DICT = {

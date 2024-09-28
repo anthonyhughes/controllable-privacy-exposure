@@ -11,6 +11,8 @@ from constants import (
     IN_CONTEXT_SUMMARY_TASK,
     PRIV_SUMMARY_TASK,
     RESULTS_DIR,
+    SANI_SUMM_SUMMARY_TASK,
+    SANITIZE_TASK,
     SUMMARY_TYPES,
     TASK_SUFFIXES,
     BATCH_FLAGS,
@@ -20,10 +22,28 @@ from utils.dataset_utils import (
     extract_hadm_ids_from_dir,
     fetch_example,
     open_cnn_data,
+    open_generated_summary,
     open_legal_data,
     result_file_is_present,
 )
-from utils.prompt_variations import variations
+from utils.prompt_variations import variations, sanitize_prompt
+
+def build_instruction_prompt_with_document(
+    instruction,
+    document,
+):
+    return {
+        "role": "user",
+        "content": f"""
+                ### Instruction:
+                {instruction}
+
+                ### Input:
+                {document}
+
+                ### Response:
+            """,
+    }
 
 def build_prompt_for_task(
     task,
@@ -67,7 +87,9 @@ def build_all_variations_for_task(
     # baseline
     for prompt_prefix_for_task in variations:
         v_name = prompt_prefix_for_task["name"]
-        print(f'Running inference for summary type : {task} and variation: {v_name} on model: {model}')
+        print(
+            f"Running inference for summary type : {task} and variation: {v_name} on model: {model}"
+        )
         baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
         if BASELINE_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
             task, id, model, v_name
@@ -80,7 +102,7 @@ def build_all_variations_for_task(
             )
             append_result_to_batch_job(baseline_job, model, cdatetime)
         else:
-            print(f"Skipping document {id} on task {task}")
+            print(f"Skipping document {id} on task {baseline_task}")
 
         # privacy instruct task
         if PRIV_SUMMARY_TASK in tasks_suffixes and not result_file_is_present(
@@ -108,10 +130,46 @@ def build_all_variations_for_task(
                 "[incontext_examples]", icl_example
             )
             in_context_prompt = build_prompt_for_task(task, in_context_prompt, id)
-            baseline_job = marshall_prompt_into_openai_object(
+            icl_job = marshall_prompt_into_openai_object(
                 in_context_prompt, model, f"{v_name}_{icl_task}_{id}"
             )
-            append_result_to_batch_job(baseline_job, model, cdatetime)
+            append_result_to_batch_job(icl_job, model, cdatetime)
+        else:
+            print(f"Skipping document {id} on task {icl_task}")
+
+        # sanitize
+        sani_task = f"{task}{SANITIZE_TASK}"
+        # if sanitisation has not been ran
+        if SANITIZE_TASK in tasks_suffixes and not result_file_is_present(
+            sani_task, id, model, v_name
+        ):
+            print("Adding sani task to batch")            
+            sani_prompt = build_prompt_for_task(task, sanitize_prompt, id)
+            job_to_store = marshall_prompt_into_openai_object(
+                sani_prompt, model, f"{v_name}_{sani_task}_{id}"
+            )
+            append_result_to_batch_job(job_to_store, model, cdatetime)
+        else:
+            print(f"Skipping document {id} on task {sani_task}")
+
+        # now summarize
+        sani_summ_task = f"{task}{SANI_SUMM_SUMMARY_TASK}"
+        # check summary not available and sanitized doc is available
+        if (
+            SANI_SUMM_SUMMARY_TASK in tasks_suffixes
+            and not result_file_is_present(sani_summ_task, id, model, v_name)
+            and result_file_is_present(sani_task, id, model, v_name)
+        ):
+            print("Adding sani summ task to batch")
+            sanitized_doc = open_generated_summary(
+                task=sani_task, hadm_id=id, model=model, variation=v_name
+            )
+            sani_summ_prompt = prompt_prefix_for_task[sani_summ_task]
+            sani_summ_prompt = build_instruction_prompt_with_document(sani_summ_prompt, sanitized_doc)
+            job_to_store = marshall_prompt_into_openai_object(
+                sani_summ_prompt, model, f"{v_name}_{sani_summ_task}_{id}"
+            )            
+            append_result_to_batch_job(job_to_store, model, cdatetime)
         else:
             print(f"Skipping document {id} on task {task}")
 
@@ -195,16 +253,8 @@ if __name__ == "__main__":
         default=BATCH_FLAGS[0],
         choices=BATCH_FLAGS,
     )
-    parser.add_argument(
-        "-j",
-        "--job_id",
-        help="Choose a job identifier to check upon"
-    )
-    parser.add_argument(
-        "-fi",
-        "--file_id",
-        help="Choose an output file identifier"
-    )
+    parser.add_argument("-j", "--job_id", help="Choose a job identifier to check upon")
+    parser.add_argument("-fi", "--file_id", help="Choose an output file identifier")
     args = parser.parse_args()
 
     if args.task:
@@ -246,26 +296,37 @@ if __name__ == "__main__":
         job_id = args.job_id
         batch_job = client.batches.retrieve(job_id)
         print(batch_job)
-        # all_batch_jobs = client.batches.list(limit=10)
+        # all_batch_jobs = client.batches.list(limit=4)
         # print(all_batch_jobs)
+    elif flag == "cancel":
+        client = OpenAI(
+            api_key=os.environ.get("OPENAI_API_KEY"),
+        )
+        job_id = args.job_id
+        batch_job = client.batches.cancel(job_id)
+        print(batch_job)
+        all_batch_jobs = client.batches.list(limit=4)
+        print(all_batch_jobs)
     elif flag == "retrieve":
         client = OpenAI(
             api_key=os.environ.get("OPENAI_API_KEY"),
         )
         file_id = args.file_id
-        # result = client.files.content(file_id).content
-        result_file_name = f"{BATCH_RESULTS_DIR}/{model}_{file_id}_openai_batch_results.jsonl"
+        result = client.files.content(file_id).content
+        result_file_name = (
+            f"{BATCH_RESULTS_DIR}/{model}_{file_id}_openai_batch_results.jsonl"
+        )
 
-        # with(open(result_file_name, 'wb')) as f:
-        #      f.write(result)
+        with open(result_file_name, "wb") as f:
+            f.write(result)
 
-        with open(result_file_name, 'r') as file:
+        with open(result_file_name, "r") as file:
             lines = file.readlines()
             for line in lines:
                 line_json = json.loads(line)
-                id = line_json['custom_id']
+                id = line_json["custom_id"]
                 print(f"Document {id}")
-                cid_data = id.split('_')
+                cid_data = id.split("_")
                 file_id = cid_data.pop()
                 variation = f"{cid_data.pop(0)}_{cid_data.pop(0)}"
                 task = "_".join(cid_data)
@@ -273,5 +334,9 @@ if __name__ == "__main__":
                 if not os.path.exists(f"{RESULTS_DIR}/{model}/{variation}/{task}"):
                     os.makedirs(f"{RESULTS_DIR}/{model}/{variation}/{task}")
                 print(f"Output location {target_out_file}")
-                with open(target_out_file, 'w') as f:
-                    f.write(line_json['response']['body']['choices'][0]['message']['content'])
+                with open(target_out_file, "w") as f:
+                    f.write(
+                        line_json["response"]["body"]["choices"][0]["message"][
+                            "content"
+                        ]
+                    )

@@ -84,6 +84,9 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
+                // "--task", "legal_court",
+                // "--task", "cnn",
+                // "--task", "discharge_instructions",
                 "--task", "brief_hospital_course",
                 "--model", "gpt-4o-mini",
                 "--flag", "batch"
@@ -104,7 +107,25 @@
                 "--task", "legal_court",
                 "--model", "gpt-4o-mini",
                 "--flag", "check",
-                "--job_id", "batch_66f3c1d376cc819082ac066bde4619b6"
+                "--job_id", "batch_66f69f4c9d748190aa798ad9c60b2be9"
+            ],
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "OpenAI Cancel Batch Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/openai_batch_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--task", "legal_court",
+                "--model", "gpt-4o-mini",
+                "--flag", "cancel",
+                "--job_id", "batch_66f693e83b7881909e632b7c81f5ad97"
             ],
             "envFile": "${workspaceFolder}/.env"
         },
@@ -122,9 +143,7 @@
                 "--task", "cnn",
                 "--model", "gpt-4o-mini",
                 "--flag", "retrieve",
-                // "--file_id", "file-KL7Z47i30GtMDNAmrrr8jX07",
-                "--file_id", "file-9kkVbY6SwNR2lpSgxWqHfEPi"
-
+                "--file_id", "file-wPRjmlZ5YfwzZvserABumhbP"
             ],
             "envFile": "${workspaceFolder}/.env"
         },        
@@ -157,7 +176,7 @@
             },
             "args": [
                 "--task", "legal_court",
-                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+                "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
             ],
             "envFile": "${workspaceFolder}/.env"
         },
@@ -172,11 +191,13 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                // "--tasks", "all",
+                "--tasks", "all",
                 // "--tasks", "legal_court",
-                "--tasks", "cnn",
+                // "--tasks", "cnn",
                 // "--model", "llama-3-8b-Instruct-bnb-4bit",
-                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+                "--model", "gpt-4o-mini",
+                // "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+                // "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
                 "--eval_type", "utility"
             ],
         },
@@ -191,8 +212,9 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--tasks", "cnn",
-                "--model", "llama-3-8b-Instruct-bnb-4bit",
+                "--tasks", "legal_court",
+                // "--model", "llama-3-8b-Instruct-bnb-4bit",
+                "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
                 "--eval_type", "privacy"
             ],
         },

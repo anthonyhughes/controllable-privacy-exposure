@@ -5,6 +5,7 @@ from constants import (
     BASELINE_SUMMARY_TASK,
     IN_CONTEXT_SUMMARY_TASK,
     METRICS,
+    SANI_SUMM_SUMMARY_TASK,
     UTILITY_RESULTS_DIR,
     SUMMARY_TYPES,
 )
@@ -47,13 +48,15 @@ def calculate_average_per_variation(results, task, variation):
 
     baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
     icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
+    sani_summ_task = f"{task}{SANI_SUMM_SUMMARY_TASK}"
 
-    tasks = [task, baseline_task, icl_task]
+    tasks = [task, baseline_task, icl_task, sani_summ_task]
 
     # Add these tasks to the avg_scores dictionary
     avg_scores[baseline_task] = {}
     avg_scores[icl_task] = {}
     avg_scores[task] = {}
+    avg_scores[sani_summ_task] = {}
 
     for task in tasks:
         for metric in METRICS:
@@ -173,6 +176,18 @@ def run_utility_eval(target_model, tasks=SUMMARY_TYPES):
                 )
                 print(f"Running evaluation for document: {hadm_id}")
                 update_results_for_task(results, icl_task, hadm_id, target_model, variation)
+
+            sani_summ_task = f"{task}{SANI_SUMM_SUMMARY_TASK}"
+            print(f"Running evaluation for task: {sani_summ_task} and model: {target_model}")
+            hadm_ids = extract_hadm_ids_from_dir(target_model, sani_summ_task, variation)
+            for i, hadm_id in enumerate(hadm_ids):
+                print(f"Completed: {i+1}/{len(hadm_ids)}")
+                print(
+                    f"Running evaluation for {sani_summ_task}, model: {target_model}, document: {hadm_id}, variation: {variation}"
+                )
+                print(f"Running evaluation for document: {hadm_id}")
+                update_results_for_task(results, sani_summ_task, hadm_id, target_model, variation)
+
             
             # Store the averages per variant
             avg_results_for_variant = calculate_average_per_variation(results, task=task, variation=variation)        
