@@ -177,7 +177,6 @@ def run_utility_eval(target_model, tasks=SUMMARY_TYPES):
                 print(f"Running evaluation for document: {hadm_id}")
                 update_results_for_task(results, icl_task, hadm_id, target_model, variation)
 
-
             sani_summ_task = f"{task}{SANI_SUMM_SUMMARY_TASK}"
             print(f"Running evaluation for task: {sani_summ_task} and model: {target_model}")
             hadm_ids = extract_hadm_ids_from_dir(target_model, sani_summ_task, variation)

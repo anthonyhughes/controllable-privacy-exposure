@@ -108,8 +108,6 @@
                 "--model", "gpt-4o-mini",
                 "--flag", "check",
                 "--job_id", "batch_66f69f4c9d748190aa798ad9c60b2be9"
-                // "--job_id", "batch_66f69f6d2d1881908f532df585731e65"
-                // "--job_id", "batch_66f69fa2c6b081908ed939d760f85118"
             ],
             "envFile": "${workspaceFolder}/.env"
         },
@@ -145,7 +143,7 @@
                 "--task", "cnn",
                 "--model", "gpt-4o-mini",
                 "--flag", "retrieve",
-                "--file_id", "file-8V5it2VhoFPHrNuQC7PwXQkU"
+                "--file_id", "file-wPRjmlZ5YfwzZvserABumhbP"
             ],
             "envFile": "${workspaceFolder}/.env"
         },        
@@ -193,12 +191,13 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                // "--tasks", "all",
-                "--tasks", "legal_court",
+                "--tasks", "all",
+                // "--tasks", "legal_court",
                 // "--tasks", "cnn",
                 // "--model", "llama-3-8b-Instruct-bnb-4bit",
+                "--model", "gpt-4o-mini",
                 // "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
-                "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
+                // "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
                 "--eval_type", "utility"
             ],
         },
