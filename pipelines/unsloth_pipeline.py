@@ -65,7 +65,9 @@ def is_excluded_id(id):
         "24695226",
         "21540678",
         "24862430",
-        "27206728"
+        "27206728",
+        "21457143",
+        "24147617"
     ]
 
 
@@ -139,21 +141,25 @@ def run_all_inference(target_model, hadm_ids, summary_type):
                 # write baseline output
                 write_to_file(baseline_output_file, baseline_trimmed_res)
 
-            if (
-                file_input is not None
-                and os.path.exists(icl_output_file) is False
-            ):
-                print("ICL")
-                # get a baseline (non-pseduo summary)
-                # add an in-context example
-                instruction_icl = instruction_icl.replace(
-                    "[incontext_examples]", f"{fetch_example(summary_type)}"
-                )
-                icl_trimmed_res = run_inference(
-                    instruction_icl, file_input, model, tokenizer
-                )
-                # write baseline output
-                write_to_file(icl_output_file, icl_trimmed_res)
+            try:
+                if (
+                    file_input is not None
+                    and os.path.exists(icl_output_file) is False
+                ):
+                    print("ICL")
+                    # get a baseline (non-pseduo summary)
+                    # add an in-context example
+                    instruction_icl = instruction_icl.replace(
+                        "[incontext_examples]", f"{fetch_example(summary_type)}"
+                    )
+                    icl_trimmed_res = run_inference(
+                        instruction_icl, file_input, model, tokenizer
+                    )
+                    # write baseline output
+                    write_to_file(icl_output_file, icl_trimmed_res)
+            except Exception as e:
+                print(f'ERROR SKIPPING ICL!! {id}')
+                print(e)
 
             if (
                 file_input is not None
