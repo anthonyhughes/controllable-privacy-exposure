@@ -57,7 +57,7 @@ if __name__ == "__main__":
         if args.eval_type in ["privacy" , "all"]:
             run_privacy_eval(target_model=target_model, tasks=tasks)
         if args.eval_type in ["reidentification", "all"]:            
-            run_reidentification_eval(target_model=target_model, tasks=tasks)
+            run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1')
         end_m = timer() - start
         print(f"Model time to complete in secs: {end_m}")
     end = timer() - start
