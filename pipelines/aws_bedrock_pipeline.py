@@ -223,26 +223,7 @@ def create_batch(hadm_ids, model, tasks=SUMMARY_TYPES, start_time="now"):
 
 
 def run_batch_job():
-    boto3 = {}
-    bedrock = boto3.client(service_name="bedrock")
-    inputDataConfig = {
-        "s3InputDataConfig": {
-            "s3Uri": "s3://info-leak-experiments/inputs/claude-3-5-sonnet-20240620-v1:0.jsonl"
-        }
-    }
-    outputDataConfig = {
-        "s3OutputDataConfig": {"s3Uri": "s3://info-leak-experiments/outputs/"}
-    }
-    response = bedrock.create_model_invocation_job(
-        roleArn="arn:aws:iam::123456789012:role/MyBatchInferenceRole",
-        modelId="anthropic.claude-3-haiku-20240307-v1:0",
-        jobName="my-batch-job",
-        inputDataConfig=inputDataConfig,
-        outputDataConfig=outputDataConfig,
-    )
-
-    jobArn = response.get("jobArn")
-    print(jobArn)
+    pass
 
 
 if __name__ == "__main__":
@@ -324,6 +305,4 @@ if __name__ == "__main__":
                     os.makedirs(f"{RESULTS_DIR}/{model}/{variation}/{task}")
                 print(f"Output location {target_out_file}")
                 with open(target_out_file, "w") as f:
-                    f.write(
-                        line_json["modelOutput"]["content"][0]["text"]
-                    )
+                    f.write(line_json["modelOutput"]["content"][0]["text"])
