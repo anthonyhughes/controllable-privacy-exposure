@@ -13,51 +13,6 @@
             }
         },
         {
-            "name": "Psuedo",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "pseudonymizer/pseudonymize.py",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${cwd}"
-            },
-            "args": [
-                "--task", "cnn",
-                "--plib", "spacy"
-            ]
-        },
-        {
-            "name": "Legal - Ollama Pipeline",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "pipelines/ollama_pipeline.py",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${cwd}"
-            },
-            "args": [
-                "--task", "legal_court",
-                "--model", "llama3.1:70b",
-            ]
-        },
-        {
-            "name": "CNN - Ollama Pipeline",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "pipelines/ollama_pipeline.py",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${cwd}"
-            },
-            "args": [
-                "--task", "cnn",
-                "--model", "llama3.1:70b",
-            ],
-        },
-        {
             "name": "OpenAI Pipeline",
             "type": "debugpy",
             "request": "launch",
@@ -148,17 +103,37 @@
             "envFile": "${workspaceFolder}/.env"
         },        
         {
-            "name": "Claude Sonnet Pipeline",
+            "name": "Claude Sonnet Batch Pipeline",
             "type": "debugpy",
             "request": "launch",
-            "program": "pipelines/claude_pipeline.py",
+            "program": "pipelines/aws_bedrock_pipeline.py",
             "console": "integratedTerminal",
             "cwd": "${workspaceFolder}",
             "env": {
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--task", "cnn",
+                "--file_id", "tpm",
+                "--flag", "create-batch",
+                "--task", "brief_hospital_course",
+                "--model", "claude-3-5-sonnet-20240620",
+            ],
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "name": "Claude Sonnet Retrieve Batch Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/aws_bedrock_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--file_id", "claude-3-5-sonnet-20240620-1727786543.6500282.jsonl",
+                "--flag", "retrieve",
+                "--task", "discharge_instructions",
                 "--model", "claude-3-5-sonnet-20240620",
             ],
             "envFile": "${workspaceFolder}/.env"
@@ -197,8 +172,8 @@
 
                 // "--model", "llama-3-8b-Instruct-bnb-4bit",
                 // "--model", "gpt-4o-mini",
-                // "--model", "mistral-7b-instruct-v0.3-bnb-4bit",                
-                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+                "--model", "mistral-7b-instruct-v0.3-bnb-4bit",                
+                // "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
                 
                 "--eval_type", "utility"
             ],

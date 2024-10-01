@@ -6,6 +6,7 @@ from constants import (
     BASELINE_SUMMARY_TASK,
     EVAL_MODELS,
     IN_CONTEXT_SUMMARY_TASK,
+    MAX_TOKENS,
     SANI_SUMM_SUMMARY_TASK,
     SUMMARY_TYPES,
     RE_ID_EXAMPLES_ROOT,
@@ -27,7 +28,7 @@ import os
 def get_model(target_model):
     model, tokenizer = FastLanguageModel.from_pretrained(
         model_name="unsloth/" + target_model,
-        max_seq_length=2048,
+        max_seq_length=MAX_TOKENS,
         dtype=None,
         load_in_4bit=True,
     )
@@ -67,7 +68,9 @@ def is_excluded_id(id):
         "24862430",
         "27206728",
         "21457143",
-        "24147617"
+        "24147617",
+        "23417083",
+        "24173031"
     ]
 
 

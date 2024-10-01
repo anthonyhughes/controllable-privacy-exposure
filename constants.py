@@ -43,7 +43,7 @@ EVAL_MODELS = [
     # "llama3.1:70b"
 ]
 EVAL_TYPES = ["utility", "privacy", "reidentification", "all"]
-BATCH_FLAGS = ["batch", "check", "retrieve", "cancel"]
+BATCH_FLAGS = ["batch", "check", "retrieve", "cancel", "create-batch"]
 
 # TASKS
 BASELINE_SUMMARY_TASK = "_baseline"
@@ -64,3 +64,4 @@ DEIDENTIFICATION_DICT = {
     "ORG": "the organisation",
     "FAC": "the location"
 }
+MAX_TOKENS = 2048
