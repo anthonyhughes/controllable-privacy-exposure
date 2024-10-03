@@ -6,6 +6,7 @@ from constants import (
     IN_CONTEXT_SUMMARY_TASK,
     METRICS,
     SANI_SUMM_SUMMARY_TASK,
+    TASK_SUFFIXES,
     UTILITY_RESULTS_DIR,
     SUMMARY_TYPES,
 )
@@ -65,13 +66,14 @@ def calculate_average_per_variation(results, task, variation):
             )
             avg_scores[task][metric] = 0
             doc_count = 0
-            results_variant = results[variation]
-            for id in results_variant.keys():
-                if task in results_variant[id] and metric in results_variant[id][task]:
-                    avg_scores[task][metric] += results_variant[id][task][metric]
-                    doc_count += 1
-            if doc_count > 0:
-                avg_scores[task][metric] /= doc_count
+            if variation in results:
+                results_variant = results[variation]
+                for id in results_variant.keys():
+                    if task in results_variant[id] and metric in results_variant[id][task]:
+                        avg_scores[task][metric] += results_variant[id][task][metric]
+                        doc_count += 1
+                if doc_count > 0:
+                    avg_scores[task][metric] /= doc_count
     return avg_scores
 
 
@@ -135,7 +137,7 @@ def update_results_for_task(results, task, hadm_id, target_model, variation):
     return results
 
 
-def run_utility_eval(target_model, tasks=SUMMARY_TYPES):
+def run_utility_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES):
     """
     Get the scores for utility
     """
@@ -148,46 +150,49 @@ def run_utility_eval(target_model, tasks=SUMMARY_TYPES):
             baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
             print(f"Running evaluation for task: {baseline_task} and model: {target_model}")
             hadm_ids = extract_hadm_ids_from_dir(target_model, baseline_task, variation)
-            for i, hadm_id in enumerate(hadm_ids):
-                print(f"Completed: {i+1}/{len(hadm_ids)}")
-                print(
-                    f"Running evaluation for {baseline_task}, model: {target_model}, document: {hadm_id}, variation: {variation}"
-                )
-                print(f"Running evaluation for document: {hadm_id}")
-                update_results_for_task(results, baseline_task, hadm_id, target_model, variation)
+            if BASELINE_SUMMARY_TASK in sub_tasks:
+                for i, hadm_id in enumerate(hadm_ids):
+                    print(f"Completed: {i+1}/{len(hadm_ids)}")
+                    print(
+                        f"Running evaluation for {baseline_task}, model: {target_model}, document: {hadm_id}, variation: {variation}"
+                    )
+                    print(f"Running evaluation for document: {hadm_id}")
+                    update_results_for_task(results, baseline_task, hadm_id, target_model, variation)
+            
+            if "" in sub_tasks:
+                print(f"Running evaluation for task: {task} and model: {target_model}")
+                hadm_ids = extract_hadm_ids_from_dir(target_model, task, variation)
+                for i, hadm_id in enumerate(hadm_ids):
+                    print(f"Completed: {i+1}/{len(hadm_ids)}")
+                    print(
+                        f"Running evaluation for {task}, {target_model}, document: {hadm_id}, variation: {variation}"
+                    )
+                    print(f"Running evaluation for document: {hadm_id}")
+                    update_results_for_task(results, task, hadm_id, target_model, variation)
+            
+            if IN_CONTEXT_SUMMARY_TASK in sub_tasks:
+                icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
+                print(f"Running evaluation for task: {icl_task} and model: {target_model}")
+                hadm_ids = extract_hadm_ids_from_dir(target_model, icl_task, variation)
+                for i, hadm_id in enumerate(hadm_ids):
+                    print(f"Completed: {i+1}/{len(hadm_ids)}")
+                    print(
+                        f"Running evaluation for {icl_task}, {target_model}, document: {hadm_id}, variation: {variation}"
+                    )
+                    print(f"Running evaluation for document: {hadm_id}")
+                    update_results_for_task(results, icl_task, hadm_id, target_model, variation)
 
-            print(f"Running evaluation for task: {task} and model: {target_model}")
-            hadm_ids = extract_hadm_ids_from_dir(target_model, task, variation)
-            for i, hadm_id in enumerate(hadm_ids):
-                print(f"Completed: {i+1}/{len(hadm_ids)}")
-                print(
-                    f"Running evaluation for {task}, {target_model}, document: {hadm_id}, variation: {variation}"
-                )
-                print(f"Running evaluation for document: {hadm_id}")
-                update_results_for_task(results, task, hadm_id, target_model, variation)
-
-            icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
-            print(f"Running evaluation for task: {icl_task} and model: {target_model}")
-            hadm_ids = extract_hadm_ids_from_dir(target_model, icl_task, variation)
-            for i, hadm_id in enumerate(hadm_ids):
-                print(f"Completed: {i+1}/{len(hadm_ids)}")
-                print(
-                    f"Running evaluation for {icl_task}, {target_model}, document: {hadm_id}, variation: {variation}"
-                )
-                print(f"Running evaluation for document: {hadm_id}")
-                update_results_for_task(results, icl_task, hadm_id, target_model, variation)
-
-            sani_summ_task = f"{task}{SANI_SUMM_SUMMARY_TASK}"
-            print(f"Running evaluation for task: {sani_summ_task} and model: {target_model}")
-            hadm_ids = extract_hadm_ids_from_dir(target_model, sani_summ_task, variation)
-            for i, hadm_id in enumerate(hadm_ids):
-                print(f"Completed: {i+1}/{len(hadm_ids)}")
-                print(
-                    f"Running evaluation for {sani_summ_task}, model: {target_model}, document: {hadm_id}, variation: {variation}"
-                )
-                print(f"Running evaluation for document: {hadm_id}")
-                update_results_for_task(results, sani_summ_task, hadm_id, target_model, variation)
-
+            if SANI_SUMM_SUMMARY_TASK in sub_tasks:
+                sani_summ_task = f"{task}{SANI_SUMM_SUMMARY_TASK}"
+                print(f"Running evaluation for task: {sani_summ_task} and model: {target_model}")
+                hadm_ids = extract_hadm_ids_from_dir(target_model, sani_summ_task, variation)
+                for i, hadm_id in enumerate(hadm_ids):
+                    print(f"Completed: {i+1}/{len(hadm_ids)}")
+                    print(
+                        f"Running evaluation for {sani_summ_task}, model: {target_model}, document: {hadm_id}, variation: {variation}"
+                    )
+                    print(f"Running evaluation for document: {hadm_id}")
+                    update_results_for_task(results, sani_summ_task, hadm_id, target_model, variation)
             
             # Store the averages per variant
             avg_results_for_variant = calculate_average_per_variation(results, task=task, variation=variation)        

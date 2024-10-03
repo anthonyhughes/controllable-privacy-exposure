@@ -2,6 +2,7 @@ from constants import (
     EVAL_MODELS,
     EVAL_TYPES,
     SUMMARY_TYPES,
+    TASK_SUFFIXES,
 )
 from evaluate import load
 from timeit import default_timer as timer
@@ -19,7 +20,7 @@ if __name__ == "__main__":
     # Initialize parser
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        "-m", "--model", help="Choose a model for inference", default=EVAL_MODELS
+        "-m", "--model", help="Choose a model for evaluation", default=EVAL_MODELS
     )
     all_types = SUMMARY_TYPES + ["all"]
     parser.add_argument(
@@ -28,6 +29,14 @@ if __name__ == "__main__":
         help="Choose a model for inference",
         default=SUMMARY_TYPES,
         choices=all_types,
+    )
+    all_sub_tasks = TASK_SUFFIXES + ["all"]
+    parser.add_argument(
+        "-st",
+        "--sub_tasks",
+        help="Choose a sub task for evaluation",
+        default=all_sub_tasks,
+        choices=all_sub_tasks,
     )
     parser.add_argument(
         "-e",
@@ -48,16 +57,30 @@ if __name__ == "__main__":
         else:
             tasks = [args.tasks]
 
+    if args.sub_tasks:
+        print(f"Target model is {args.sub_tasks}")
+        if args.sub_tasks == "all":
+            sub_tasks = TASK_SUFFIXES
+        else:
+            sub_tasks = [args.sub_tasks]
+
+    if args.tasks:
+        print(f"Target model is {args.tasks}")
+        if args.tasks == "all":
+            tasks = SUMMARY_TYPES
+        else:
+            tasks = [args.tasks]
+
     start = timer()
     for target_model in [models]:
         print(f"Running evaluation pipeline for model: {target_model}")
         print(f"Running eval modes: {args.eval_type}")
         if args.eval_type in ["utility" , "all"]:
-            run_utility_eval(target_model=target_model, tasks=tasks)
+            run_utility_eval(target_model=target_model, tasks=tasks, sub_tasks=sub_tasks)
         if args.eval_type in ["privacy" , "all"]:
-            run_privacy_eval(target_model=target_model, tasks=tasks)
+            run_privacy_eval(target_model=target_model, tasks=tasks, sub_tasks=sub_tasks)
         if args.eval_type in ["reidentification", "all"]:            
-            run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1')
+            run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1', sub_tasks=sub_tasks)
         end_m = timer() - start
         print(f"Model time to complete in secs: {end_m}")
     end = timer() - start
