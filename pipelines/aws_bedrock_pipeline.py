@@ -2,12 +2,10 @@ import argparse
 import json
 import os
 import time
-from openai import OpenAI
 from constants import (
     BASELINE_SUMMARY_TASK,
     BATCH_JOBS_DIR,
     BATCH_RESULTS_DIR,
-    EVAL_MODELS,
     IN_CONTEXT_SUMMARY_TASK,
     PRIV_SUMMARY_TASK,
     RESULTS_DIR,
@@ -19,10 +17,10 @@ from constants import (
     MAX_TOKENS,
 )
 from mimic.mimic_data import get_ehr_and_summary
+from utils import formatters
 from utils.dataset_utils import (
     extract_hadm_ids_from_dir,
     fetch_example,
-    open_cnn_data,
     open_generated_summary,
     open_legal_data,
     result_file_is_present,
@@ -74,7 +72,46 @@ def build_prompt_for_task(
     return prompt
 
 
-def marshall_prompt_into_openai_object(message, model, job_id):
+def build_prompt_for_task(
+    task,
+    prompt,
+    hadm_id,
+):
+    ehr, _ = get_ehr_and_summary(task, hadm_id)
+    prompt = {
+        "role": "user",
+        "content": [
+            {
+                "type": "text",
+                "text": f"""
+                    ### Instruction:
+                    {prompt}
+
+                    ### Input:
+                    {ehr}
+
+                    ### Response:
+            """,
+            }
+        ],
+    }
+    return prompt
+
+
+def marshall_prompt_into_llama_object(message, job_id):
+    object = {
+        "recordId": job_id,
+        "modelInput": {
+            "prompt": formatters.convert_to_llama_chat_template(
+                message["content"]
+            ),
+            "max_gen_len": MAX_TOKENS,
+        },
+    }
+    return object
+
+
+def marshall_prompt_into_bedrock_object(message, job_id):
     object = {
         "recordId": job_id,
         "modelInput": {
@@ -107,9 +144,14 @@ def build_all_variations_for_task(
             print("Adding baseline task to batch")
             baseline_prompt = prompt_prefix_for_task[baseline_task]
             baseline_prompt = build_prompt_for_task(task, baseline_prompt, id)
-            baseline_job = marshall_prompt_into_openai_object(
-                baseline_prompt, model, f"{v_name}_{baseline_task}_{id}"
-            )
+            if "claude" in model:
+                baseline_job = marshall_prompt_into_bedrock_object(
+                    baseline_prompt, f"{v_name}_{baseline_task}_{id}"
+                )
+            elif "llama" in model or "Llama" in model:
+                baseline_job = marshall_prompt_into_llama_object(
+                    baseline_prompt, f"{v_name}_{baseline_task}_{id}"
+                )
             append_result_to_batch_job(baseline_job, model, cdatetime)
         else:
             print(f"Skipping document {id} on task {baseline_task}")
@@ -121,9 +163,14 @@ def build_all_variations_for_task(
             print("Adding private task to batch")
             main_prompt = prompt_prefix_for_task[task]
             main_prompt = build_prompt_for_task(task, main_prompt, id)
-            main_job = marshall_prompt_into_openai_object(
-                main_prompt, model, f"{v_name}_{task}_{id}"
-            )
+            if "claude" in model:
+                main_job = marshall_prompt_into_bedrock_object(
+                    main_prompt, f"{v_name}_{task}_{id}"
+                )
+            elif "llama" in model or "Llama" in model:
+                main_job = marshall_prompt_into_llama_object(
+                    main_prompt, f"{v_name}_{task}_{id}"
+                )
             append_result_to_batch_job(main_job, model, cdatetime)
         else:
             print(f"Skipping document {id} on task {task}")
@@ -140,9 +187,14 @@ def build_all_variations_for_task(
                 "[incontext_examples]", icl_example
             )
             in_context_prompt = build_prompt_for_task(task, in_context_prompt, id)
-            icl_job = marshall_prompt_into_openai_object(
-                in_context_prompt, model, f"{v_name}_{icl_task}_{id}"
-            )
+            if "claude" in model:
+                icl_job = marshall_prompt_into_bedrock_object(
+                    in_context_prompt, f"{v_name}_{icl_task}_{id}"
+                )
+            elif "llama" in model or "Llama" in model:
+                icl_job = marshall_prompt_into_llama_object(
+                    in_context_prompt, f"{v_name}_{icl_task}_{id}"
+                )
             append_result_to_batch_job(icl_job, model, cdatetime)
         else:
             print(f"Skipping document {id} on task {icl_task}")
@@ -157,10 +209,15 @@ def build_all_variations_for_task(
         ):
             print("Adding sani task to batch")
             sani_prompt = build_prompt_for_task(task, sanitize_prompt, id)
-            job_to_store = marshall_prompt_into_openai_object(
-                sani_prompt, model, f"{v_name}_{sani_task}_{id}"
-            )
-            append_result_to_batch_job(job_to_store, model, cdatetime)
+            if "claude" in model:
+                sani_job = marshall_prompt_into_bedrock_object(
+                    sani_prompt, f"{v_name}_{sani_task}_{id}"
+                )
+            elif "llama" in model or "Llama" in model:
+                sani_job = marshall_prompt_into_llama_object(
+                    sani_prompt, f"{v_name}_{sani_task}_{id}"
+                )
+            append_result_to_batch_job(sani_job, model, cdatetime)
         else:
             print(f"Skipping document {id} on task {sani_task}")
 
@@ -180,10 +237,15 @@ def build_all_variations_for_task(
             sani_summ_prompt = build_instruction_prompt_with_document(
                 sani_summ_prompt, sanitized_doc
             )
-            job_to_store = marshall_prompt_into_openai_object(
-                sani_summ_prompt, model, f"{v_name}_{sani_summ_task}_{id}"
-            )
-            append_result_to_batch_job(job_to_store, model, cdatetime)
+            if "claude" in model:
+                sani_summ_job = marshall_prompt_into_bedrock_object(
+                    sani_summ_prompt, f"{v_name}_{sani_summ_task}_{id}"
+                )
+            elif "llama" in model or "Llama" in model:
+                sani_summ_job = marshall_prompt_into_llama_object(
+                    sani_summ_prompt, f"{v_name}_{sani_summ_task}_{id}"
+                )
+            append_result_to_batch_job(sani_summ_job, model, cdatetime)
         else:
             print(f"Skipping document {id} on task {task}")
 
@@ -241,7 +303,11 @@ if __name__ == "__main__":
         "--model",
         help="Choose a target model for inference",
         default="claude-3-5-sonnet-20240620",
-        choices=["claude-3-5-sonnet-20240620"],
+        choices=[
+            "claude-3-5-sonnet-20240620",
+            "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+            "llama-3-8b-Instruct-bnb-4bit",
+        ],
     )
     parser.add_argument(
         "-f",
@@ -276,18 +342,15 @@ if __name__ == "__main__":
             create_batch(hadm_ids=ids, tasks=[task], model=args.model)
         elif task == "cnn":
             print("Starting CNN inference")
-            news_data = open_cnn_data()
-            # remove 5 for ICL
-            ids = list(news_data.keys())
-            ids = ids[:-5]
+            ids = extract_hadm_ids_from_dir(
+                "llama-3-8b-Instruct-bnb-4bit", task, "variation_1"
+            )
             create_batch(hadm_ids=ids, tasks=[task], model=args.model)
         else:
             target_admission_ids = extract_hadm_ids_from_dir(
-                "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course", "variation_1"
+                "llama-3-8b-Instruct-bnb-4bit", task, "variation_1"
             )
-            create_batch(
-                hadm_ids=target_admission_ids[0:200], tasks=[task], model=args.model
-            )
+            create_batch(hadm_ids=target_admission_ids, tasks=[task], model=args.model)
     elif flag == "retrieve":
         file_id = args.file_id
         with open(f"{BATCH_RESULTS_DIR}/{file_id}", "r") as file:
@@ -304,5 +367,9 @@ if __name__ == "__main__":
                 if not os.path.exists(f"{RESULTS_DIR}/{model}/{variation}/{task}"):
                     os.makedirs(f"{RESULTS_DIR}/{model}/{variation}/{task}")
                 print(f"Output location {target_out_file}")
-                with open(target_out_file, "w") as f:
-                    f.write(line_json["modelOutput"]["content"][0]["text"])
+                if "Llama" in model:
+                    with open(target_out_file, "w") as f:
+                        f.write(line_json["modelOutput"]["generation"])
+                else:
+                    with open(target_out_file, "w") as f:
+                        f.write(line_json["modelOutput"]["content"][0]["text"])

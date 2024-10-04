@@ -7,6 +7,7 @@ from constants import (
     PRIVACY_RESULTS_DIR,
     SANI_SUMM_SUMMARY_TASK,
     SUMMARY_TYPES,
+    TASK_SUFFIXES,
 )
 
 from mimic.mimic_data import load_original_discharge_summaries
@@ -143,10 +144,48 @@ def populate_missing_props(results, task, variation):
         results[task][variation] = {}
     return results
 
-def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
+
+def update_results_for_task(
+    results,
+    task,
+    variation,
+    leaked_doc_count,
+    hadm_ids,
+    token_counts,
+    normalised_token_counts,
+    pii_property_counts,
+):
+    """
+    Update the results for a task
+    """
+    try:
+        avg_normalised_token_counts = sum(normalised_token_counts) / len(normalised_token_counts),
+    except ZeroDivisionError:
+        avg_normalised_token_counts = 0
+
+    try:
+        avg_document_percentage = leaked_doc_count / len(hadm_ids)
+    except ZeroDivisionError:
+        avg_document_percentage = 0
+
+    results[task][variation] = {
+        "exposed_docs_count": leaked_doc_count,
+        "docs_count": len(hadm_ids),
+        "exposed_tokens_count": sum(token_counts),
+        "normalised_exposed_tokens_count": avg_normalised_token_counts,
+        "exposed_pii_per_property": pii_property_counts,
+        "average_exposed_pii_per_property_per_document": create_average_pii_per_property(
+            pii_property_counts, leaked_doc_count
+        ),
+        "pii_document_percentage": avg_document_percentage,
+    }
+    return results
+
+
+def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES):
     """
     Run PII evaluation for all documents
-    """    
+    """
     results = {}
     raw_results = {}
     for task in tasks:
@@ -170,7 +209,9 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
             hadm_ids = extract_hadm_ids_from_dir(target_model, task, variation)
             for i, hadm_id in enumerate(hadm_ids):
                 # run privacy evaluation for privsumm
-                if result_file_is_present(task, hadm_id, target_model, variation):
+                if "" in sub_tasks and result_file_is_present(
+                    task, hadm_id, target_model, variation
+                ):
                     print(
                         f"Running PII evaluation for model, {target_model}, task {task}, variation {variation}, on id {hadm_id} - {i+1}/{len(hadm_ids)}"
                     )
@@ -178,17 +219,18 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
                     raw_results = update_raw_results(
                         raw_results, priv_result, task, hadm_id, variation
                     )
-                    token_length = len(priv_result.text.split())
                     pii_property_counts = update_pii_property_counts(
                         priv_result, pii_property_counts
                     )
                     counts = fetch_total_pii_count(priv_result)
                     all_token_counts.append(counts)
-                    all_normalised_token_counts.append(counts / token_length)
+
+                    priv_token_length = len(priv_result.text.split())
+                    all_normalised_token_counts.append(counts / priv_token_length)
 
                 # run privacy evaluation for baseline
                 baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
-                if result_file_is_present(
+                if BASELINE_SUMMARY_TASK in sub_tasks and result_file_is_present(
                     baseline_task, hadm_id, target_model, variation
                 ):
                     print(
@@ -205,13 +247,17 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
                     )
                     baseline_counts = fetch_total_pii_count(baseline_results)
                     baseline_all_token_counts.append(baseline_counts)
+
+                    baseline_token_length = len(baseline_results.text.split())
                     baseline_normalised_token_counts.append(
-                        baseline_counts / token_length
+                        baseline_counts / baseline_token_length
                     )
 
                 # run privacy evaluation for icl-privsumm
                 icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
-                if result_file_is_present(icl_task, hadm_id, target_model, variation):
+                if IN_CONTEXT_SUMMARY_TASK in sub_tasks and result_file_is_present(
+                    icl_task, hadm_id, target_model, variation
+                ):
                     print(
                         f"Running PII evaluation for task {icl_task}, variation {variation}, on id {hadm_id} - {i+1}/{len(hadm_ids)}"
                     )
@@ -226,13 +272,17 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
                     )
                     icl_counts = fetch_total_pii_count(icl_results)
                     icl_all_token_counts.append(icl_counts)
-                    icl_normalised_token_counts.append(icl_counts / token_length)
+
+                    icl_token_length = len(icl_results.text.split())
+                    icl_normalised_token_counts.append(icl_counts / icl_token_length)
 
                 sani_summ_task = f"{task}{SANI_SUMM_SUMMARY_TASK}"
                 print(
                     f"Running PII evaluation for task {sani_summ_task}, variation {variation}, on id {hadm_id} - {i+1}/{len(hadm_ids)}"
                 )
-                if result_file_is_present(sani_summ_task, hadm_id, target_model, variation):
+                if SANI_SUMM_SUMMARY_TASK in sub_tasks and result_file_is_present(
+                    sani_summ_task, hadm_id, target_model, variation
+                ):
                     print(
                         f"Running PII evaluation for task {sani_summ_task}, variation {variation}, on id {hadm_id} - {i+1}/{len(hadm_ids)}"
                     )
@@ -240,14 +290,27 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
                         hadm_id, sani_summ_task, target_model, variation
                     )
                     raw_results = update_raw_results(
-                        raw_results, sani_summ_results, sani_summ_task, hadm_id, variation
+                        raw_results,
+                        sani_summ_results,
+                        sani_summ_task,
+                        hadm_id,
+                        variation,
                     )
                     sani_summ_pii_property_counts = update_pii_property_counts(
                         sani_summ_results, sani_summ_pii_property_counts
                     )
                     sani_summ_counts = fetch_total_pii_count(sani_summ_results)
                     sani_summ_all_token_counts.append(sani_summ_counts)
-                    sani_summ_normalised_token_counts.append(sani_summ_counts / token_length)
+
+                    sani_summ_token_length = len(sani_summ_results.text.split())
+                    try:
+                        nrom_res = sani_summ_counts / sani_summ_token_length
+                    except ZeroDivisionError:
+                        nrom_res = 0
+                    
+                    sani_summ_normalised_token_counts.append(
+                        nrom_res
+                    )
 
             # Take account of all docs with a leaked token
             doc_count = len(list(filter(lambda x: x > 0, all_token_counts)))
@@ -264,71 +327,61 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES):
                 list(filter(lambda x: x > 0, sani_summ_all_token_counts))
             )
 
-            results = populate_missing_props(results, baseline_task, variation=variation)
-            results = populate_missing_props(results, task, variation=variation)
-            results = populate_missing_props(results, icl_task, variation=variation)
-            results = populate_missing_props(results, sani_summ_task, variation=variation)
-
-            results[task][variation] = {
-                "exposed_docs_count": doc_count,
-                "docs_count": len(hadm_ids),
-                "exposed_tokens_count": sum(all_token_counts),
-                "normalised_exposed_tokens_count": sum(all_normalised_token_counts)
-                / len(all_normalised_token_counts),
-                "exposed_pii_per_property": pii_property_counts,
-                "average_exposed_pii_per_property_per_document": create_average_pii_per_property(
-                    pii_property_counts, doc_count
-                ),
-                "pii__document_percentage": doc_count / len(hadm_ids),
-            }
-            results[baseline_task][variation] = {
-                "exposed_docs_count": len(
-                    list(filter(lambda x: x > 0, baseline_all_token_counts))
-                ),
-                "docs_count": len(hadm_ids),
-                "exposed_tokens_count": sum(baseline_all_token_counts),
-                "normalised_exposed_tokens_count": sum(baseline_normalised_token_counts)
-                / len(baseline_normalised_token_counts),
-                "exposed_pii_per_property": baseline_pii_property_counts,
-                "average_exposed_pii_per_property_per_document": create_average_pii_per_property(
-                    baseline_pii_property_counts, baseline_doc_count
-                ),
-                "pii__document_percentage": baseline_doc_count / len(hadm_ids),
-            }
-            results[icl_task][variation] = {
-                "exposed_docs_count": len(
-                    list(filter(lambda x: x > 0, icl_all_token_counts))
-                ),
-                "docs_count": len(hadm_ids),
-                "exposed_tokens_count": sum(icl_all_token_counts),
-                "normalised_exposed_tokens_count": sum(icl_normalised_token_counts)
-                / len(icl_normalised_token_counts),
-                "exposed_pii_per_property": icl_pii_property_counts,
-                "average_exposed_pii_per_property_per_document": create_average_pii_per_property(
-                    icl_pii_property_counts, icl_doc_count
-                ),
-                "pii__document_percentage": icl_doc_count / len(hadm_ids),
-            }
-            results[sani_summ_task][variation] = {
-                "exposed_docs_count": len(
-                    list(filter(lambda x: x > 0, sani_summ_all_token_counts))
-                ),
-                "docs_count": len(hadm_ids),
-                "exposed_tokens_count": sum(sani_summ_all_token_counts),
-                "normalised_exposed_tokens_count": 0 if len(sani_summ_normalised_token_counts) == 0 else sum(
-                    sani_summ_normalised_token_counts
+            for sub_task in sub_tasks:
+                full_sub_task = f"{task}{sub_task}"
+                results = populate_missing_props(
+                    results, full_sub_task, variation=variation
                 )
-                / len(sani_summ_normalised_token_counts),
-                "exposed_pii_per_property": sani_summ_pii_property_counts,
-                "average_exposed_pii_per_property_per_document": create_average_pii_per_property(
-                    sani_summ_pii_property_counts, icl_doc_count
-                ),
-                "pii__document_percentage": sani_summ_doc_count / len(hadm_ids),
-            }
-    store_privacy_results(raw_results, target_model, f"final_raw_privacy")
-    store_privacy_results(results, target_model, f"final_privacy")    
-    print("Done")
 
+            if "" in sub_tasks:
+                results = update_results_for_task(
+                    results,
+                    task,
+                    variation,
+                    doc_count,
+                    hadm_ids,
+                    all_token_counts,
+                    all_normalised_token_counts,
+                    pii_property_counts,
+                )
+            if BASELINE_SUMMARY_TASK in sub_tasks:
+                results = update_results_for_task(
+                    results,
+                    baseline_task,
+                    variation,
+                    baseline_doc_count,
+                    hadm_ids,
+                    baseline_all_token_counts,
+                    baseline_normalised_token_counts,
+                    baseline_pii_property_counts,
+                )
+            if IN_CONTEXT_SUMMARY_TASK in sub_tasks:
+                results = update_results_for_task(
+                    results,
+                    icl_task,
+                    variation,
+                    icl_doc_count,
+                    hadm_ids,
+                    icl_all_token_counts,
+                    icl_normalised_token_counts,
+                    icl_pii_property_counts,
+                )
+            if SANI_SUMM_SUMMARY_TASK in sub_tasks:
+                results = update_results_for_task(
+                    results,
+                    sani_summ_task,
+                    variation,
+                    sani_summ_doc_count,
+                    hadm_ids,
+                    sani_summ_all_token_counts,
+                    sani_summ_normalised_token_counts,
+                    sani_summ_pii_property_counts,
+                )
+
+    store_privacy_results(raw_results, target_model, f"final_raw_privacy")
+    store_privacy_results(results, target_model, f"final_privacy")
+    print("Done Task")
+    print("Done")
 
 if __name__ == "__main__":
     original_discharge_summaries = load_original_discharge_summaries()

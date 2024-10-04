@@ -250,9 +250,10 @@ def store_utility_results(results, target_model, results_type):
 
 def store_privacy_results(results, target_model, results_type):
     """Store results"""
+    cdatetime = pd.Timestamp.now().strftime("%Y-%m-%d-%H-%M-%S")
     if os.path.exists(f"{PRIVACY_RESULTS_DIR}/{results_type}") == False:
         os.makedirs(f"{PRIVACY_RESULTS_DIR}/{results_type}")
-    with open(f"{PRIVACY_RESULTS_DIR}/{results_type}/{target_model}.json", "w") as f:
+    with open(f"{PRIVACY_RESULTS_DIR}/{results_type}/{target_model}-{cdatetime}.json", "w") as f:
         json.dump(results, f, indent=4)
 
 

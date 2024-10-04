@@ -130,8 +130,9 @@
             "args": [
                 "--file_id", "tpm",
                 "--flag", "create-batch",
-                "--task", "brief_hospital_course",
-                "--model", "claude-3-5-sonnet-20240620",
+                "--task", "discharge_instructions",
+                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+                // "--model", "llama-3-8b-Instruct-bnb-4bit",
             ],
             "envFile": "${workspaceFolder}/.env"
         },
@@ -146,10 +147,10 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--file_id", "claude-3-5-sonnet-20240620-1727787423.983934.jsonl.out",
+                "--file_id", "Meta-Llama-3.1-70B-Instruct-bnb-4bit-1727966447.187993.jsonl.out",
                 "--flag", "retrieve",
                 "--task", "discharge_instructions",
-                "--model", "claude-3-5-sonnet-20240620",
+                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
             ],
             "envFile": "${workspaceFolder}/.env"
         },
@@ -207,8 +208,9 @@
             "args": [
                 // "--model", "llama-3-8b-Instruct-bnb-4bit",
                 // "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
-                "--tasks", "all",
-                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+                "--tasks", "cnn",
+                "--sub_tasks", "_sani_summ",
+                "--model", "claude-3-5-sonnet-20240620",
                 "--eval_type", "privacy"
             ],
         },
