@@ -11,7 +11,9 @@ DISCHARGE_ME_ROOT = (
     + "discharge-me-bionlp-acl24-shared-task-on-streamlining-discharge-documentation-1.3/"
 )
 TRAIN_DISCHARGE_ME = DISCHARGE_ME_ROOT + "train/"
-SUMMARY_TYPES = ["brief_hospital_course", "discharge_instructions", "legal_court", "cnn"]
+BRIEF_HOSPITAL_COURSE = "brief_hospital_course"
+DISCHARGE_INSTRUCTIONS = "discharge_instructions"
+SUMMARY_TYPES = [BRIEF_HOSPITAL_COURSE, DISCHARGE_INSTRUCTIONS, "legal_court", "cnn"]
 ALT_SUMMARY_TYPES = ["legal_court"]
 EXAMPLE_ADMISSION_IDS = [
     22343752,
@@ -28,6 +30,7 @@ EXAMPLE_ADMISSION_IDS = [
 RESULTS_DIR = DATA_ROOT + "results"
 UTILITY_RESULTS_DIR = DATA_ROOT + "utility_results"
 PRIVACY_RESULTS_DIR = DATA_ROOT + "privacy_results"
+FINAL_RAW_PRIVACY_RESULTS_DIR  = PRIVACY_RESULTS_DIR + "/final_raw_privacy"
 BATCH_RESULTS_DIR = DATA_ROOT + "batch_results"
 BATCH_JOBS_DIR = DATA_ROOT + "batch_jobs"
 MODELS = [

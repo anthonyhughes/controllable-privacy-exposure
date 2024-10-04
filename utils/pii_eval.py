@@ -133,7 +133,11 @@ def update_overall_pii_results(
         )
         sani_summ_counts = fetch_total_pii_count(sani_summ_results)
         all_token_counts.append(sani_summ_counts)
-        normalised_token_counts.append(sani_summ_counts / token_length)
+        try:
+            ntc = sani_summ_counts / token_length
+        except ZeroDivisionError:
+            ntc = 0
+        normalised_token_counts.append(ntc)
         return pii_property_counts, all_token_counts, normalised_token_counts
 
 

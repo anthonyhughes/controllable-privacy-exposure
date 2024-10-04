@@ -10,6 +10,7 @@ import argparse
 
 from utils.pii_eval import run_privacy_eval
 from utils.reid_eval import run_reidentification_eval
+from utils.reid_eval_v2 import run_reidentification_eval_v2
 from utils.utility_utils import run_utility_eval
 
 bertscore = load("bertscore")
@@ -51,25 +52,18 @@ if __name__ == "__main__":
     models = args.model
 
     if args.tasks:
-        print(f"Target model is {args.tasks}")
+        print(f"Target task is {args.tasks}")
         if args.tasks == "all":
             tasks = SUMMARY_TYPES
         else:
             tasks = [args.tasks]
 
     if args.sub_tasks:
-        print(f"Target model is {args.sub_tasks}")
+        print(f"Target sub task is {args.sub_tasks}")
         if args.sub_tasks == "all":
             sub_tasks = TASK_SUFFIXES
         else:
             sub_tasks = [args.sub_tasks]
-
-    if args.tasks:
-        print(f"Target model is {args.tasks}")
-        if args.tasks == "all":
-            tasks = SUMMARY_TYPES
-        else:
-            tasks = [args.tasks]
 
     start = timer()
     for target_model in [models]:
@@ -80,7 +74,8 @@ if __name__ == "__main__":
         if args.eval_type in ["privacy" , "all"]:
             run_privacy_eval(target_model=target_model, tasks=tasks, sub_tasks=sub_tasks)
         if args.eval_type in ["reidentification", "all"]:            
-            run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1', sub_tasks=sub_tasks)
+            # run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1', sub_tasks=sub_tasks)            
+            run_reidentification_eval_v2(target_privacy_file="mistral-7b-instruct-v0.3-bnb-4bit-2024-10-03-20-56-01.json")
         end_m = timer() - start
         print(f"Model time to complete in secs: {end_m}")
     end = timer() - start

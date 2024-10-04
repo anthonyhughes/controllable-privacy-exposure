@@ -147,7 +147,7 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--file_id", "Meta-Llama-3.1-70B-Instruct-bnb-4bit-1727966447.187993.jsonl.out",
+                "--file_id", "Meta-Llama-3.1-70B-Instruct-bnb-4bit-1728032671.196179.jsonl.out",
                 "--flag", "retrieve",
                 "--task", "discharge_instructions",
                 "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
@@ -227,7 +227,8 @@
             "args": [
                 "--tasks", "all",
                 "--model", "all",
-                "--eval_type", "reidentification"
+                "--eval_type", "reidentification",
+                "--sub_tasks", "_sani_summ",
             ],
         }
     ]

@@ -1,5 +1,6 @@
 import json
 from os import walk
+import os
 from constants import (
     IN_CONTEXT_SUMMARY_TASK,
     PSEUDO_PROFILES_LOCATION,
@@ -62,20 +63,30 @@ def identify_an_individual(task, profile, model, variation):
             print("Re-identification possible")
             print(pi_value)
             print(pi_prop)
-            return True    
+            return True
     return False
 
+
 def update_task_results(identified_persons, model, task):
-    found_profs = [person for person in identified_persons[model][task]["results"] if person is True]
+    found_profs = [
+        person
+        for person in identified_persons[model][task]["results"]
+        if person is True
+    ]
     identified_persons[model][task]["identifiable"] = len(found_profs)
-    identified_persons[model][task]["documents"] = len(identified_persons[model][task]["results"])
+    identified_persons[model][task]["documents"] = len(
+        identified_persons[model][task]["results"]
+    )
     try:
-        identified_persons[model][task]["ratio"] = len(found_profs) / len(identified_persons[model][task]["results"])
+        identified_persons[model][task]["ratio"] = len(found_profs) / len(
+            identified_persons[model][task]["results"]
+        )
     except ZeroDivisionError:
         identified_persons[model][task]["ratio"] = 0
     return identified_persons
 
-def run_reidentification_eval(target_model, tasks, variation):
+
+def run_reidentification_eval(target_model, tasks, variation, sub_tasks=[]):
     """
     Run the redentification eval
     """
@@ -84,9 +95,8 @@ def run_reidentification_eval(target_model, tasks, variation):
     models = EVAL_MODELS if target_model == "all" else [target_model]
     identified_persons = {}
     for model in models:
-        subset_tasks = tasks[0:2]
-        identified_persons[model] = {}        
-        for task in subset_tasks:
+        identified_persons[model] = {}
+        for task in tasks:
             identified_persons[model][task] = {}
             identified_persons[model][task]["results"] = []
 
@@ -126,7 +136,6 @@ def run_reidentification_eval(target_model, tasks, variation):
                     print("File not found")
                     identified_persons[model][icl_task]["results"].append(False)
                     continue
-                    
 
                 print(
                     f"Running reidentification for model: {model}, variation: {variation} and task: {ss_task}"
@@ -140,12 +149,17 @@ def run_reidentification_eval(target_model, tasks, variation):
 
     print("Taking count")
     for model in models:
-        for task in subset_tasks:
-            identified_persons= update_task_results(identified_persons, model, task)            
-            identified_persons = update_task_results(identified_persons, model, icl_task)
+        for task in sub_tasks:
+            identified_persons = update_task_results(identified_persons, model, task)
+            identified_persons = update_task_results(
+                identified_persons, model, icl_task
+            )
             identified_persons = update_task_results(identified_persons, model, ss_task)
 
     print("Writing results")
+    if not os.path.exists(f"{DATA_ROOT}/re_identification_results/"):
+        os.makedirs(f"{DATA_ROOT}/re_identification_results/")
+
     write_to_file(
         f"{DATA_ROOT}/re_identification_results/results.json",
         json.dumps(identified_persons, indent=4),
