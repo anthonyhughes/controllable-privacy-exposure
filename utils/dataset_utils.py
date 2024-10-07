@@ -120,6 +120,17 @@ def open_generated_summary(task, hadm_id, model, variation):
     )
     with open(target_file, "r") as f:
         return f.read()
+    
+
+def open_reidentified_input_document(task, hadm_id):
+    """
+    Load the generated summary for a document
+    """
+    target_file = (
+        f"{RE_ID_EXAMPLES_ROOT}/{task}/{hadm_id}-discharge-inputs.txt"
+    )
+    with open(target_file, "r") as f:
+        return f.read()
 
 
 def open_target_summary(task, hadm_id):

@@ -226,9 +226,32 @@
             },
             "args": [
                 "--tasks", "all",
-                "--model", "all",
+                // "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
+                // "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+                "--model", "gpt-4o-mini",
                 "--eval_type", "reidentification",
                 "--sub_tasks", "_sani_summ",
+                // "--file_id", "mistral-7b-instruct-v0.3-bnb-4bit-2024-10-03-20-56-01.json"
+                // "--file_id", "Meta-Llama-3.1-70B-Instruct-bnb-4bit-2024-10-05-21-51-39.json"
+            ],
+        },
+        {
+            "name": "Reidentif Graph Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/eval_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--tasks", "all",
+                "--model", "all",
+                "--eval_type", "graph",
+                "--sub_tasks", "_sani_summ",
+                // "--file_id", "mistral-7b-instruct-v0.3-bnb-4bit-2024-10-03-20-56-01.json"
+                "--file_id", "reidentification_results.json"
             ],
         }
     ]

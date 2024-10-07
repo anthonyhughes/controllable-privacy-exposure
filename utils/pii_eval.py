@@ -15,6 +15,7 @@ from utils.dataset_utils import (
     extract_hadm_ids,
     extract_hadm_ids_from_dir,
     open_generated_summary,
+    open_reidentified_input_document,
     result_file_is_present,
     store_privacy_results,
 )
@@ -26,9 +27,18 @@ d = Deidentifier()
 
 def run_pii_check(hadm_id, task, target_model, variation):
     """
-    Run PII evaluation for a single document
+    Run PII evaluation for a single generated summary
     """
     generated_summary = open_generated_summary(task, hadm_id, target_model, variation)
+    scrubbed_text = d.deidentify(generated_summary)
+    return scrubbed_text
+
+
+def run_pii_check_on_input(hadm_id, task):
+    """
+    Run PII evaluation for a single input document
+    """
+    generated_summary = open_reidentified_input_document(task, hadm_id)
     scrubbed_text = d.deidentify(generated_summary)
     return scrubbed_text
 
@@ -112,6 +122,25 @@ def update_raw_results(raw_results, result, task, hadm_id, variation):
     return raw_results
 
 
+def update_original_raw_results(raw_results, result, task, hadm_id):
+    """Capture all de-id results"""
+
+    # Capture potential updates
+    if task not in raw_results:
+        raw_results[task] = {}
+
+    raw_results[task].update(
+        {
+            hadm_id: {
+                "sanitized_encodings": result.encode_mapping,
+                "sanitized_text": result.text,
+                "counts": result.counts,
+            }
+        },
+    )
+    return raw_results
+
+
 def update_overall_pii_results(
     sub_task,
     hadm_id,
@@ -158,21 +187,18 @@ def update_results_for_task(
     token_counts,
     normalised_token_counts,
     pii_property_counts,
+    all_original_private_token_counts
 ):
     """
     Update the results for a task
     """
-    try:
-        avg_normalised_token_counts = sum(normalised_token_counts) / len(normalised_token_counts),
-    except ZeroDivisionError:
-        avg_normalised_token_counts = 0
-
-    try:
-        avg_document_percentage = leaked_doc_count / len(hadm_ids)
-    except ZeroDivisionError:
-        avg_document_percentage = 0
+    avg_normalised_token_counts = zero_division_handler(sum(normalised_token_counts), len(normalised_token_counts))
+    avg_document_percentage = zero_division_handler(leaked_doc_count, len(hadm_ids))
+    private_token_ratio = zero_division_handler(sum(token_counts), sum(all_original_private_token_counts))
 
     results[task][variation] = {
+        "original_private_token_counts": all_original_private_token_counts,
+        "private_token_ratio": private_token_ratio,
         "exposed_docs_count": leaked_doc_count,
         "docs_count": len(hadm_ids),
         "exposed_tokens_count": sum(token_counts),
@@ -186,17 +212,26 @@ def update_results_for_task(
     return results
 
 
+def zero_division_handler(nom, denom):
+    try:
+        return nom / denom
+    except ZeroDivisionError:
+        return 0
+
+
 def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES):
     """
     Run PII evaluation for all documents
     """
     results = {}
     raw_results = {}
+    raw_input_results = {}
     for task in tasks:
         for variation_prompt in variations:
             variation = variation_prompt["name"]
             baseline_all_token_counts = []
             all_token_counts = []
+            all_original_private_token_counts = []
             icl_all_token_counts = []
             sani_summ_all_token_counts = []
 
@@ -213,6 +248,10 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES)
             hadm_ids = extract_hadm_ids_from_dir(target_model, task, variation)
             for i, hadm_id in enumerate(hadm_ids):
                 # run privacy evaluation for privsumm
+                priv_result_for_input = run_pii_check_on_input(hadm_id, task)
+                raw_input_results = update_original_raw_results(raw_input_results, priv_result_for_input, task, hadm_id)
+                original_private_token_counts = fetch_total_pii_count(priv_result_for_input) 
+                all_original_private_token_counts.append(original_private_token_counts)               
                 if "" in sub_tasks and result_file_is_present(
                     task, hadm_id, target_model, variation
                 ):
@@ -230,7 +269,9 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES)
                     all_token_counts.append(counts)
 
                     priv_token_length = len(priv_result.text.split())
-                    all_normalised_token_counts.append(counts / priv_token_length)
+                    all_normalised_token_counts.append(
+                        zero_division_handler(counts, priv_token_length)
+                    )
 
                 # run privacy evaluation for baseline
                 baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
@@ -254,7 +295,7 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES)
 
                     baseline_token_length = len(baseline_results.text.split())
                     baseline_normalised_token_counts.append(
-                        baseline_counts / baseline_token_length
+                        zero_division_handler(baseline_counts, baseline_token_length)
                     )
 
                 # run privacy evaluation for icl-privsumm
@@ -278,7 +319,9 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES)
                     icl_all_token_counts.append(icl_counts)
 
                     icl_token_length = len(icl_results.text.split())
-                    icl_normalised_token_counts.append(icl_counts / icl_token_length)
+                    icl_normalised_token_counts.append(
+                        zero_division_handler(icl_counts, icl_token_length)
+                    )
 
                 sani_summ_task = f"{task}{SANI_SUMM_SUMMARY_TASK}"
                 print(
@@ -307,13 +350,8 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES)
                     sani_summ_all_token_counts.append(sani_summ_counts)
 
                     sani_summ_token_length = len(sani_summ_results.text.split())
-                    try:
-                        nrom_res = sani_summ_counts / sani_summ_token_length
-                    except ZeroDivisionError:
-                        nrom_res = 0
-                    
                     sani_summ_normalised_token_counts.append(
-                        nrom_res
+                        zero_division_handler(sani_summ_counts, sani_summ_token_length)
                     )
 
             # Take account of all docs with a leaked token
@@ -347,6 +385,7 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES)
                     all_token_counts,
                     all_normalised_token_counts,
                     pii_property_counts,
+                    all_original_private_token_counts
                 )
             if BASELINE_SUMMARY_TASK in sub_tasks:
                 results = update_results_for_task(
@@ -358,6 +397,7 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES)
                     baseline_all_token_counts,
                     baseline_normalised_token_counts,
                     baseline_pii_property_counts,
+                    all_original_private_token_counts
                 )
             if IN_CONTEXT_SUMMARY_TASK in sub_tasks:
                 results = update_results_for_task(
@@ -369,6 +409,7 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES)
                     icl_all_token_counts,
                     icl_normalised_token_counts,
                     icl_pii_property_counts,
+                    all_original_private_token_counts
                 )
             if SANI_SUMM_SUMMARY_TASK in sub_tasks:
                 results = update_results_for_task(
@@ -380,12 +421,15 @@ def run_privacy_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES)
                     sani_summ_all_token_counts,
                     sani_summ_normalised_token_counts,
                     sani_summ_pii_property_counts,
+                    all_original_private_token_counts
                 )
 
     store_privacy_results(raw_results, target_model, f"final_raw_privacy")
+    store_privacy_results(raw_input_results, target_model, f"final_inputs_raw_privacy")
     store_privacy_results(results, target_model, f"final_privacy")
     print("Done Task")
     print("Done")
+
 
 if __name__ == "__main__":
     original_discharge_summaries = load_original_discharge_summaries()

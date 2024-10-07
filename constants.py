@@ -31,6 +31,7 @@ RESULTS_DIR = DATA_ROOT + "results"
 UTILITY_RESULTS_DIR = DATA_ROOT + "utility_results"
 PRIVACY_RESULTS_DIR = DATA_ROOT + "privacy_results"
 FINAL_RAW_PRIVACY_RESULTS_DIR  = PRIVACY_RESULTS_DIR + "/final_raw_privacy"
+FINAL_REID_RESULTS_DIR  = PRIVACY_RESULTS_DIR + "/final_reid"
 BATCH_RESULTS_DIR = DATA_ROOT + "batch_results"
 BATCH_JOBS_DIR = DATA_ROOT + "batch_jobs"
 MODELS = [
@@ -45,7 +46,7 @@ EVAL_MODELS = [
     "Meta-Llama-3.1-70B-Instruct-bnb-4bit"
     # "llama3.1:70b"
 ]
-EVAL_TYPES = ["utility", "privacy", "reidentification", "all"]
+EVAL_TYPES = ["utility", "privacy", "reidentification", "graph", "all"]
 BATCH_FLAGS = ["batch", "check", "retrieve", "cancel", "create-batch"]
 
 # TASKS

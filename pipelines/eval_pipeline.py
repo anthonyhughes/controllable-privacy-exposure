@@ -1,4 +1,6 @@
 from constants import (
+    BRIEF_HOSPITAL_COURSE,
+    DISCHARGE_INSTRUCTIONS,
     EVAL_MODELS,
     EVAL_TYPES,
     SUMMARY_TYPES,
@@ -8,6 +10,7 @@ from evaluate import load
 from timeit import default_timer as timer
 import argparse
 
+from utils.graph_utils import gen_graphs
 from utils.pii_eval import run_privacy_eval
 from utils.reid_eval import run_reidentification_eval
 from utils.reid_eval_v2 import run_reidentification_eval_v2
@@ -46,6 +49,11 @@ if __name__ == "__main__":
         default="all",
         choices=EVAL_TYPES,
     )
+    parser.add_argument(
+        "-f",
+        "--file_id",
+        help="Choose a file to evaluate"
+    )
 
     args = parser.parse_args()
 
@@ -69,13 +77,28 @@ if __name__ == "__main__":
     for target_model in [models]:
         print(f"Running evaluation pipeline for model: {target_model}")
         print(f"Running eval modes: {args.eval_type}")
-        if args.eval_type in ["utility" , "all"]:
-            run_utility_eval(target_model=target_model, tasks=tasks, sub_tasks=sub_tasks)
-        if args.eval_type in ["privacy" , "all"]:
-            run_privacy_eval(target_model=target_model, tasks=tasks, sub_tasks=sub_tasks)
-        if args.eval_type in ["reidentification", "all"]:            
-            # run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1', sub_tasks=sub_tasks)            
-            run_reidentification_eval_v2(target_privacy_file="mistral-7b-instruct-v0.3-bnb-4bit-2024-10-03-20-56-01.json")
+        if args.eval_type in ["utility", "all"]:
+            run_utility_eval(
+                target_model=target_model, tasks=tasks, sub_tasks=sub_tasks
+            )
+        if args.eval_type in ["privacy", "all"]:
+            run_privacy_eval(
+                target_model=target_model, tasks=tasks, sub_tasks=sub_tasks
+            )
+        if args.eval_type in ["reidentification", "all"]:
+            file_id = args.file_id
+            # run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1', sub_tasks=sub_tasks)
+            run_reidentification_eval_v2(
+                model=target_model,
+                target_privacy_file=file_id,
+                tasks=[DISCHARGE_INSTRUCTIONS, BRIEF_HOSPITAL_COURSE],
+            )
+        if args.eval_type in ["graph"]:
+            file_id = args.file_id
+            # run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1', sub_tasks=sub_tasks)
+            gen_graphs(
+                target_file=file_id
+            )
         end_m = timer() - start
         print(f"Model time to complete in secs: {end_m}")
     end = timer() - start
