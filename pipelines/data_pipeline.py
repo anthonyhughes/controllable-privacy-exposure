@@ -23,4 +23,6 @@ if __name__ == "__main__":
         print("Done.")
     elif args.flag == "training":
         print("Starting training data pipeline")
+        hadm_ids = extract_hadm_ids_from_dir("gpt-4o-mini", "brief_hospital_course")
+
         

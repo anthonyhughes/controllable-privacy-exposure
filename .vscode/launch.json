@@ -2,6 +2,19 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "Mimic Data",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "mimic/mimic_data.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+            ],
+        },
+        {
             "name": "Pseudonymizer",
             "type": "debugpy",
             "request": "launch",

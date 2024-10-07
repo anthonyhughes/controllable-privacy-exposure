@@ -4,6 +4,7 @@ ICL_EXAMPLES_ROOT = DATA_ROOT + "icl_examples/"
 PSEUDO_TARGETS_ROOT = DATA_ROOT + "pseudonymized_targets/"
 RE_ID_TARGETS_ROOT = DATA_ROOT + "re_identified_targets"
 RE_ID_EXAMPLES_ROOT = DATA_ROOT + "re_identified_examples/"
+VALIDATION_RE_ID_EXAMPLES_ROOT = DATA_ROOT + "valid_re_identified_examples/"
 LEGAL_EXAMPLES_ROOT = EXAMPLES_ROOT + "legal_court/"
 PSEUDO_PROFILES_LOCATION = f"{DATA_ROOT}/pseudo-profiles.json"
 DISCHARGE_ME_ROOT = (
@@ -11,6 +12,7 @@ DISCHARGE_ME_ROOT = (
     + "discharge-me-bionlp-acl24-shared-task-on-streamlining-discharge-documentation-1.3/"
 )
 TRAIN_DISCHARGE_ME = DISCHARGE_ME_ROOT + "train/"
+VALID_DISCHARGE_ME = DISCHARGE_ME_ROOT + "valid/"
 BRIEF_HOSPITAL_COURSE = "brief_hospital_course"
 DISCHARGE_INSTRUCTIONS = "discharge_instructions"
 SUMMARY_TYPES = [BRIEF_HOSPITAL_COURSE, DISCHARGE_INSTRUCTIONS, "legal_court", "cnn"]

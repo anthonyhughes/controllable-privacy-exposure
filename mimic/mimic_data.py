@@ -1,3 +1,4 @@
+import os
 import re
 import pandas as pd
 
@@ -11,24 +12,28 @@ from constants import (
     EXAMPLES_ROOT,
     TRAIN_DISCHARGE_ME,
     SUMMARY_TYPES,
+    VALID_DISCHARGE_ME,
 )
 
 
-def load_target_summaries():
-    return pd.read_csv(TRAIN_DISCHARGE_ME + "discharge_target.csv")
+def load_target_summaries(target_input):
+    loc = VALID_DISCHARGE_ME if target_input == "valid" else TRAIN_DISCHARGE_ME
+    return pd.read_csv(loc + "discharge_target.csv")
 
 
-def load_radiology_summaries():
-    return pd.read_csv(TRAIN_DISCHARGE_ME + "radiology.csv")
+def load_radiology_summaries(target_input):
+    loc = VALID_DISCHARGE_ME if target_input == "valid" else TRAIN_DISCHARGE_ME
+    return pd.read_csv(loc + "radiology.csv")
 
 
-def load_original_discharge_summaries():
-    return pd.read_csv(TRAIN_DISCHARGE_ME + "discharge.csv")
+def load_original_discharge_summaries(target_input):
+    loc = VALID_DISCHARGE_ME if target_input == "valid" else TRAIN_DISCHARGE_ME
+    return pd.read_csv(loc + "discharge.csv")
 
 
 def save_example_to_file(filename, content_to_save):
     print("Saving training data for one patient:")
-    with open(EXAMPLES_ROOT + filename, "w") as f:
+    with open(f"{filename}", "w") as f:
         f.write(content_to_save)
 
 
@@ -67,11 +72,12 @@ def extract_sample_for_admission(
     radiology_summaries,
     target_summaries,
     target_summary_type,
+    target_input_set
 ):
     print("Example admission ID:", hadm_id)
     example_target_summaries = target_summaries[target_summaries["hadm_id"] == hadm_id]
     target_summaries_out = ""
-
+    root = f"{EXAMPLES_ROOT}{target_input_set}/{target_summary_type}/"
     if target_summary_type == "discharge_instructions":
         # target_summaries_out += "\n\n##Discharge Target Summary###\n\n"
         discharge_target = example_target_summaries["discharge_instructions"].values[0]
@@ -82,8 +88,9 @@ def extract_sample_for_admission(
         bhc_target = example_target_summaries["brief_hospital_course"].values[0]
         target_summaries_out += bhc_target
 
+    os.makedirs(f"{root}", exist_ok=True)
     save_example_to_file(
-        f"{target_summary_type}/{hadm_id}-target.txt", target_summaries_out
+        f"{root}/{hadm_id}-target.txt", target_summaries_out
     )
 
     training_summaries = ""
@@ -94,8 +101,9 @@ def extract_sample_for_admission(
     ]
     original_discharge = example_original_discharge_summaries["text"].values[0]
     training_summaries += original_discharge
+    
     save_example_to_file(
-        f"{target_summary_type}/{hadm_id}-discharge-inputs.txt", training_summaries
+        f"{root}/{hadm_id}-discharge-inputs.txt", training_summaries
     )
 
     print("Loading radiology summaries:")
@@ -109,28 +117,28 @@ def extract_sample_for_admission(
         r_summary = row["text"]
         radiology_summaries_out += r_summary
     save_example_to_file(
-        f"{target_summary_type}/{hadm_id}-radiology-inputs.txt", radiology_summaries_out
+        f"{root}/{hadm_id}-radiology-inputs.txt", radiology_summaries_out
     )
 
     print("Done.")
 
 
-def run(with_extraction):
+def run(with_extraction=True, target_input_set="valid"):
     print("Starting extraction of mimic data")
-    for target_summary_type in SUMMARY_TYPES:
-        original_discharge_summaries = load_original_discharge_summaries()
+    for target_summary_type in SUMMARY_TYPES[0:2]:
+        original_discharge_summaries = load_original_discharge_summaries(target_input_set)
 
         original_discharge_summaries = preprocessing_of_discharge_summaries(
             original_discharge_summaries, target_summary_type
         )
-        radiology_summaries = load_radiology_summaries()
+        radiology_summaries = load_radiology_summaries(target_input_set)
 
         print("Loading target summaries:")
-        target_summaries = load_target_summaries()
+        target_summaries = load_target_summaries(target_input_set)
 
         # extract the first n admission ids as a list
         target_admission_ids = extract_hadm_ids(
-            original_discharge_summaries=original_discharge_summaries, n=0
+            original_discharge_summaries=original_discharge_summaries, n=10
         )
         
         if with_extraction:
@@ -141,6 +149,7 @@ def run(with_extraction):
                     radiology_summaries,
                     target_summaries,
                     target_summary_type,
+                    target_input_set
                 )
     print("Done.")
     return target_admission_ids
