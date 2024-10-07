@@ -26,6 +26,7 @@
             },
             "args": [
                 "--task", "legal_court",
+                // "--task", "cnn",
                 "--plib", "spacy",
             ],
         },

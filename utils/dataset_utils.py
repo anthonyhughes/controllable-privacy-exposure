@@ -19,6 +19,7 @@ from constants import (
     RE_ID_TARGETS_ROOT,
     UTILITY_RESULTS_DIR,
     PRIVACY_RESULTS_DIR,
+    VALID_EXAMPLES_ROOT,
 )
 
 
@@ -95,7 +96,7 @@ def extract_hadm_ids_from_dir(model, task, variation):
     """Extract the hadm ids from the results directory"""
     if os.path.exists(f"{RESULTS_DIR}/{model}/{variation}/{task}") is False:
         return []
-    
+
     files = os.listdir(f"{RESULTS_DIR}/{model}/{variation}/{task}")
     hadm_ids = []
     for file in files:
@@ -120,15 +121,13 @@ def open_generated_summary(task, hadm_id, model, variation):
     )
     with open(target_file, "r") as f:
         return f.read()
-    
+
 
 def open_reidentified_input_document(task, hadm_id):
     """
     Load the generated summary for a document
     """
-    target_file = (
-        f"{RE_ID_EXAMPLES_ROOT}/{task}/{hadm_id}-discharge-inputs.txt"
-    )
+    target_file = f"{RE_ID_EXAMPLES_ROOT}/{task}/{hadm_id}-discharge-inputs.txt"
     with open(target_file, "r") as f:
         return f.read()
 
@@ -217,6 +216,26 @@ def open_legal_data():
     return legal_data
 
 
+def open_validation_legal_data():
+    """
+    Open the legal contracts data
+    """
+    print("Loading legal docs")
+    with open(f"{VALID_EXAMPLES_ROOT}/legal_court/all_v1.json", "r") as f:
+        data = json.load(f)
+        legal_data = {}
+        for uid, values in data.items():
+            legal_data[uid] = {
+                "uid": values["uid"],
+                # "id": values["id"],
+                "dataset": "tldrlegal_v1",
+                "document": values["original_text"],
+                "target": values["reference_summary"],
+                # "title": values["title"],
+            }
+    return legal_data
+
+
 def get_cnn_reference_summary(summac_datapoint: dict, CNNDM_test: dict) -> str:
     """gets the target sumamry from the data"""
 
@@ -232,6 +251,25 @@ def open_cnn_data():
     print("Loading CNN docs")
     cnn_dataset = load_cnn_dataset()
     cnn_test = {v["id"]: v for v in cnn_dataset["test"]}
+
+    data = {}
+    for uid, values in cnn_test.items():
+        data[uid] = {
+            "id": values["id"],
+            "dataset": "cnn_dailmail",
+            "document": values["article"],
+            "target": values["highlights"],
+        }
+    return data
+
+
+def open_cnn_train_data():
+    """
+    Open the CNN/DailyMail data
+    """
+    print("Loading CNN docs")
+    cnn_dataset = load_cnn_dataset()
+    cnn_test = {v["id"]: v for v in cnn_dataset["train"]}
 
     data = {}
     for uid, values in cnn_test.items():
@@ -264,7 +302,9 @@ def store_privacy_results(results, target_model, results_type):
     cdatetime = pd.Timestamp.now().strftime("%Y-%m-%d-%H-%M-%S")
     if os.path.exists(f"{PRIVACY_RESULTS_DIR}/{results_type}") == False:
         os.makedirs(f"{PRIVACY_RESULTS_DIR}/{results_type}")
-    with open(f"{PRIVACY_RESULTS_DIR}/{results_type}/{target_model}-{cdatetime}.json", "w") as f:
+    with open(
+        f"{PRIVACY_RESULTS_DIR}/{results_type}/{target_model}-{cdatetime}.json", "w"
+    ) as f:
         json.dump(results, f, indent=4)
 
 

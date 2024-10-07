@@ -1,18 +1,22 @@
 DATA_ROOT = "data/"
 EXAMPLES_ROOT = DATA_ROOT + "examples/"
+VALID_EXAMPLES_ROOT = EXAMPLES_ROOT + "valid/"
 ICL_EXAMPLES_ROOT = DATA_ROOT + "icl_examples/"
 PSEUDO_TARGETS_ROOT = DATA_ROOT + "pseudonymized_targets/"
 RE_ID_TARGETS_ROOT = DATA_ROOT + "re_identified_targets"
 RE_ID_EXAMPLES_ROOT = DATA_ROOT + "re_identified_examples/"
 VALIDATION_RE_ID_EXAMPLES_ROOT = DATA_ROOT + "valid_re_identified_examples/"
 LEGAL_EXAMPLES_ROOT = EXAMPLES_ROOT + "legal_court/"
+
 PSEUDO_PROFILES_LOCATION = f"{DATA_ROOT}/pseudo-profiles.json"
 DISCHARGE_ME_ROOT = (
     DATA_ROOT
     + "discharge-me-bionlp-acl24-shared-task-on-streamlining-discharge-documentation-1.3/"
 )
+
 TRAIN_DISCHARGE_ME = DISCHARGE_ME_ROOT + "train/"
 VALID_DISCHARGE_ME = DISCHARGE_ME_ROOT + "valid/"
+
 BRIEF_HOSPITAL_COURSE = "brief_hospital_course"
 DISCHARGE_INSTRUCTIONS = "discharge_instructions"
 SUMMARY_TYPES = [BRIEF_HOSPITAL_COURSE, DISCHARGE_INSTRUCTIONS, "legal_court", "cnn"]
@@ -36,6 +40,7 @@ FINAL_RAW_PRIVACY_RESULTS_DIR  = PRIVACY_RESULTS_DIR + "/final_raw_privacy"
 FINAL_REID_RESULTS_DIR  = PRIVACY_RESULTS_DIR + "/final_reid"
 BATCH_RESULTS_DIR = DATA_ROOT + "batch_results"
 BATCH_JOBS_DIR = DATA_ROOT + "batch_jobs"
+
 MODELS = [
     "gpt-4o-mini",
     "mistral-instruct-7b",
@@ -48,6 +53,7 @@ EVAL_MODELS = [
     "Meta-Llama-3.1-70B-Instruct-bnb-4bit"
     # "llama3.1:70b"
 ]
+
 EVAL_TYPES = ["utility", "privacy", "reidentification", "graph", "all"]
 BATCH_FLAGS = ["batch", "check", "retrieve", "cancel", "create-batch"]
 

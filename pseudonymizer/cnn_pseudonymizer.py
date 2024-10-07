@@ -7,18 +7,19 @@ from constants import (
     DEIDENTIFICATION_DICT,
 )
 from pseudonymizer.pseudo_utils import deidentify_text
-from utils.dataset_utils import open_cnn_data
+from utils.dataset_utils import open_cnn_data, open_cnn_train_data
 
 
-def run_cnn_pseudonmizer_processes(deidentifier, task="cnn"):
+def run_cnn_pseudonmizer_processes(deidentifier, task="cnn", target_input_set="valid"):
     """
     Psuedonymize legal docs
     """
     print("Start psuedo process for legal court summaries")
-    cnn_data = open_cnn_data()
+    cnn_data = open_cnn_train_data() if target_input_set == "valid" else open_cnn_data()
     ids = list(cnn_data.keys())
     icl_example_ids = ids[-5:]
     for i, key in enumerate(ids):
+        if i == 1000: break
         print(f"Started doc {i+1} of {len(cnn_data.keys())}")
         doc = cnn_data[key]
         target_summary = doc["target"]
@@ -31,35 +32,35 @@ def run_cnn_pseudonmizer_processes(deidentifier, task="cnn"):
 
         if key not in icl_example_ids:
             # Prebuild folder for main summaries (non-deidentified)
-            if not os.path.exists(f"{RE_ID_TARGETS_ROOT}/{task}_baseline"):
-                os.makedirs(f"{RE_ID_TARGETS_ROOT}/{task}_baseline")
+            if not os.path.exists(f"{RE_ID_TARGETS_ROOT}/{target_input_set}/{task}"):
+                os.makedirs(f"{RE_ID_TARGETS_ROOT}/{target_input_set}/{task}")
 
             # Store document per legal doc
             with open(
-                f"{RE_ID_TARGETS_ROOT}/{task}_baseline/{key}-target.txt",
+                f"{RE_ID_TARGETS_ROOT}/{target_input_set}/{task}/{key}-target.txt",
                 "w",
             ) as f:
                 f.write(target_summary)
 
             # Prebuild folder for main inputs
             main_legal_doc = doc["document"]
-            if not os.path.exists(f"{RE_ID_EXAMPLES_ROOT}/{task}"):
-                os.makedirs(f"{RE_ID_EXAMPLES_ROOT}/{task}")
+            if not os.path.exists(f"{RE_ID_EXAMPLES_ROOT}/{target_input_set}/{task}"):
+                os.makedirs(f"{RE_ID_EXAMPLES_ROOT}/{target_input_set}/{task}")
 
             # Store document per legal doc
             with open(
-                f"{RE_ID_EXAMPLES_ROOT}/{task}/{key}-discharge-inputs.txt",
+                f"{RE_ID_EXAMPLES_ROOT}/{target_input_set}/{task}/{key}-discharge-inputs.txt",
                 "w",
             ) as f:
                 f.write(main_legal_doc)
 
             # Prebuild folder for psudeo summaries
-            if not os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{task}"):
-                os.makedirs(f"{PSEUDO_TARGETS_ROOT}/{task}")
+            if not os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{target_input_set}/{task}"):
+                os.makedirs(f"{PSEUDO_TARGETS_ROOT}/{target_input_set}/{task}")
 
             # Store document per legal summary
             with open(
-                f"{PSEUDO_TARGETS_ROOT}/{task}/{key}-target.txt",
+                f"{PSEUDO_TARGETS_ROOT}/{target_input_set}/{task}/{key}-target.txt",
                 "w",
             ) as f:
                 f.write(replaced_scrubbed_text)
