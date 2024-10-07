@@ -5,7 +5,6 @@ ICL_EXAMPLES_ROOT = DATA_ROOT + "icl_examples/"
 PSEUDO_TARGETS_ROOT = DATA_ROOT + "pseudonymized_targets/"
 RE_ID_TARGETS_ROOT = DATA_ROOT + "re_identified_targets"
 RE_ID_EXAMPLES_ROOT = DATA_ROOT + "re_identified_examples/"
-VALIDATION_RE_ID_EXAMPLES_ROOT = DATA_ROOT + "valid_re_identified_examples/"
 LEGAL_EXAMPLES_ROOT = EXAMPLES_ROOT + "legal_court/"
 
 PSEUDO_PROFILES_LOCATION = f"{DATA_ROOT}/pseudo-profiles.json"

@@ -1,3 +1,4 @@
+import csv
 import json
 import os
 import random
@@ -325,3 +326,28 @@ def read_file(filename):
 def write_to_file(filename, text):
     with open(filename, "w") as f:
         f.write(text)
+
+
+def add_training_data_to_csv():
+    instruction = "Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates."
+    root = f"{PSEUDO_TARGETS_ROOT}valid"
+    training_data = pd.DataFrame(columns=["instruction", "input", "output"])
+    for summary_type in SUMMARY_TYPES:
+        target_folder = f"{root}/{summary_type}"
+        files = os.listdir(target_folder)
+        for file in files[0:10]:
+            print(target_folder, file)
+
+            with open(f"{target_folder}/{file}", "r") as f:
+                output = f.readlines()
+
+            reid_file = file.split("-")[0]
+            with open(
+                f"{RE_ID_EXAMPLES_ROOT}valid/{summary_type}/{reid_file}-discharge-inputs.txt",
+                "r",
+            ) as f:
+                input = f.readlines()
+
+            training_data.loc[len(training_data)] = [instruction, input, output]
+
+    training_data.to_csv("training_data.csv")

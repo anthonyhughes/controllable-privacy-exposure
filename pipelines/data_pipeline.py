@@ -1,8 +1,7 @@
 import argparse
 from mimic.mimic_data import run
 from reidentifier.re_identifier import run_process
-from pseudonymizer.pseudonymize import run_all_pseudonmizer_processes
-from utils.dataset_utils import extract_hadm_ids_from_dir
+from utils.dataset_utils import add_training_data_to_csv
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -25,6 +24,6 @@ if __name__ == "__main__":
         print("Done.")
     elif args.flag == "training":
         print("Starting training data pipeline")
-        # hadm_ids = extract_hadm_ids_from_dir("gpt-4o-mini", "brief_hospital_course")
+        add_training_data_to_csv()
 
         
