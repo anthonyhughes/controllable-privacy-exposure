@@ -19,6 +19,7 @@ from constants import (
     RE_ID_TARGETS_ROOT,
     UTILITY_RESULTS_DIR,
     PRIVACY_RESULTS_DIR,
+    VALID_DISCHARGE_ME,
     VALID_EXAMPLES_ROOT,
 )
 
@@ -89,7 +90,7 @@ def extract_hadm_ids(original_discharge_summaries, n=100):
         hadm_df = original_discharge_summaries.head(n)
     else:
         hadm_df = original_discharge_summaries
-    return list(hadm_df["hadm_id"])
+    return sorted(list(hadm_df["hadm_id"]))
 
 
 def extract_hadm_ids_from_dir(model, task, variation):
@@ -157,11 +158,12 @@ def open_pseudonymized_summary(task, hadm_id):
         return f.read()
 
 
-def fetch_admission_info(hadm_id):
+def fetch_admission_info(hadm_id, target_input):
     """Fetch admission info"""
     print(f"Admission info for {hadm_id}")
-    ed_train_df = pd.read_csv(f"{TRAIN_DISCHARGE_ME}/edstays.csv")
-    edstay = ed_train_df[ed_train_df["hadm_id"] == str(hadm_id)]
+    loc = VALID_DISCHARGE_ME if target_input == "valid" else TRAIN_DISCHARGE_ME
+    ed_train_df = pd.read_csv(f"{loc}/edstays.csv")
+    edstay = ed_train_df[ed_train_df["hadm_id"] == hadm_id]
     return edstay
 
 

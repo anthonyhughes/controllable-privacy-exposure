@@ -89,8 +89,8 @@ def remove_extra_piis(discharge_data):
 
 
 
-def generate_random_profile(hadm_id):
-    admission_info = fetch_admission_info(hadm_id)
+def generate_random_profile(hadm_id, target_input):
+    admission_info = fetch_admission_info(hadm_id, target_input)
     age = generate_random_adult_age()
     gender = admission_info["gender"].values[0]
     out_date = (

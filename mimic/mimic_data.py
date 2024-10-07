@@ -138,8 +138,10 @@ def run(with_extraction=True, target_input_set="valid"):
 
         # extract the first n admission ids as a list
         target_admission_ids = extract_hadm_ids(
-            original_discharge_summaries=original_discharge_summaries, n=10
+            original_discharge_summaries=original_discharge_summaries, n=1000
         )
+
+        target_admission_ids = sorted(target_admission_ids)
         
         if with_extraction:
             for example_admission_id in target_admission_ids:

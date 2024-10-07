@@ -1,7 +1,13 @@
 import json
 import os
 import re
-from constants import BASELINE_SUMMARY_TASK, RE_ID_EXAMPLES_ROOT, SUMMARY_TYPES, RE_ID_TARGETS_ROOT
+from constants import (
+    BASELINE_SUMMARY_TASK,
+    EXAMPLES_ROOT,
+    RE_ID_EXAMPLES_ROOT,
+    SUMMARY_TYPES,
+    RE_ID_TARGETS_ROOT,
+)
 from mimic.mimic_data import load_original_discharge_summaries
 from reidentifier.reidentify_utils import (
     fetch_file_names,
@@ -216,23 +222,23 @@ def fill_in_discharge_template(discharge_summary, profile):
     return discharge_summary
 
 
-def reidentify_ehr_record(target_summary_type, filetype, id, profile):
-    res = fetch_file_names(f"data/examples/{target_summary_type}", filetype, hadm_id=id)
+def reidentify_ehr_record(target_summary_type, filetype, id, profile, target_input):
+    res = fetch_file_names(f"{EXAMPLES_ROOT}{target_input}/{target_summary_type}", filetype, hadm_id=id)
     contents = load_file(res[0])
     data = fill_in_discharge_template(contents, profile)
     data = remove_extra_redactions(data)
     return data
 
 
-def reidentify_target_summary(target_summary_type, filetype, id, profile):
-    res = fetch_file_names(f"data/examples/{target_summary_type}", "target", hadm_id=id)
+def reidentify_target_summary(target_summary_type, filetype, id, profile, target_input):
+    res = fetch_file_names(f"{EXAMPLES_ROOT}{target_input}/{target_summary_type}", "target", hadm_id=id)
     target_summary = load_file(res[0])
     data = fill_in_discharge_template(target_summary, profile)
     data = remove_extra_redactions(data)
     return data
 
 
-def run_process(hadm_ids):
+def run_process(hadm_ids, target_input):
     print("Running reidentifier")
     # for both summary tasks
     profiles = []
@@ -241,42 +247,53 @@ def run_process(hadm_ids):
         for id in hadm_ids:
             print(f"Processing {target_summary_type} for {id}")
             filetype = "discharge-inputs"
-            
+
             # skip if a reference file is already present
-            if reference_file_is_present(f"{target_summary_type}{BASELINE_SUMMARY_TASK}", id):
+            if reference_file_is_present(
+                f"{target_input}/{target_summary_type}{BASELINE_SUMMARY_TASK}", id
+            ):
                 print(f"Skipping {id} as it has already been processed.")
                 continue
 
-            profile = generate_random_profile(id)
+            profile = generate_random_profile(id, target_input)
             profiles.append(profile)
-            data = reidentify_ehr_record(target_summary_type, filetype, id, profile)
-            
-            # create folder if it doesn't exist
-            if not os.path.exists(f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}"):
-                os.makedirs(f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}")
-            with open(
-                f"{RE_ID_EXAMPLES_ROOT}/{target_summary_type}/{id}-{filetype}.txt", "w"
-            ) as f:
-                f.write(data)
-
-            baseline_summary = reidentify_target_summary(
-                target_summary_type, filetype, id, profile
+            data = reidentify_ehr_record(
+                target_summary_type, filetype, id, profile, target_input
             )
 
             # create folder if it doesn't exist
             if not os.path.exists(
-                f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline"
+                f"{RE_ID_EXAMPLES_ROOT}/{target_input}/{target_summary_type}"
             ):
-                os.makedirs(f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline")
+                os.makedirs(
+                    f"{RE_ID_EXAMPLES_ROOT}/{target_input}/{target_summary_type}"
+                )
+            with open(
+                f"{RE_ID_EXAMPLES_ROOT}/{target_input}/{target_summary_type}/{id}-{filetype}.txt",
+                "w",
+            ) as f:
+                f.write(data)
+
+            baseline_summary = reidentify_target_summary(
+                target_summary_type, filetype, id, profile, target_input
+            )
+
+            # create folder if it doesn't exist
+            if not os.path.exists(
+                f"{RE_ID_TARGETS_ROOT}/{target_input}/{target_summary_type}_baseline"
+            ):
+                os.makedirs(
+                    f"{RE_ID_TARGETS_ROOT}/{target_input}/{target_summary_type}_baseline"
+                )
 
             with open(
-                f"{RE_ID_TARGETS_ROOT}/{target_summary_type}_baseline/{id}-target.txt",
+                f"{RE_ID_TARGETS_ROOT}/{target_input}/{target_summary_type}_baseline/{id}-target.txt",
                 "w",
             ) as f:
                 f.write(baseline_summary)
 
         print("Done.")
-    with open("data/pseudo-profiles.json", "w") as f:
+    with open("data/validation-pseudo-profiles.json", "w") as f:
         json.dump(profiles, f)
 
 

@@ -231,7 +231,7 @@ def fill_in_target_summary(discharge_summary):
     return discharge_summary
 
 
-def run_pseudonmizer_process(task, hadm_ids):
+def run_pseudonmizer_process(task, hadm_ids, target_input="valid"):
     """
     Run the re-identification process
     """
@@ -239,24 +239,24 @@ def run_pseudonmizer_process(task, hadm_ids):
     for id in hadm_ids:
         # print(res)
         print(f"Processing {task} for {id}")
-        res = fetch_file_names(f"data/examples/{task}", "target", hadm_id=id)
+        res = fetch_file_names(f"data/examples/{target_input}/{task}", "target", hadm_id=id)
         contents = load_file(res[0])
         data = fill_in_target_summary(contents)
         data = remove_extra_redactions(data)
         data = remove_extra_piis(data)
-        if not os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{task}"):
-            os.makedirs(f"{PSEUDO_TARGETS_ROOT}/{task}")
+        if not os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{target_input}/{task}"):
+            os.makedirs(f"{PSEUDO_TARGETS_ROOT}/{target_input}/{task}")
         with open(
-            f"{PSEUDO_TARGETS_ROOT}/{task}/{id}-target.txt",
+            f"{PSEUDO_TARGETS_ROOT}{target_input}/{task}/{id}-target.txt",
             "w",
         ) as f:
             f.write(data)
     print("Done.")
 
 
-def run_all_pseudonmizer_processes(hadm_ids):
-    for target_summary_type in SUMMARY_TYPES:
-        run_pseudonmizer_process(target_summary_type, hadm_ids)
+def run_all_pseudonmizer_processes(hadm_ids, target_input="valid"):
+    for target_summary_type in SUMMARY_TYPES[0:2]:
+        run_pseudonmizer_process(target_summary_type, hadm_ids, target_input)
 
 
 if __name__ == "__main__":
@@ -292,6 +292,6 @@ if __name__ == "__main__":
         deid = Deidentifier()
         run_cnn_pseudonmizer_processes(deidentifier=deid)
     else:
-        original_discharge_summaries = load_original_discharge_summaries()
-        hadm_ids = extract_hadm_ids(original_discharge_summaries)
-        run_all_pseudonmizer_processes(hadm_ids)
+        original_discharge_summaries = load_original_discharge_summaries(target_input="valid")
+        hadm_ids = extract_hadm_ids(original_discharge_summaries, n=1000)
+        run_all_pseudonmizer_processes(hadm_ids, target_input="valid")

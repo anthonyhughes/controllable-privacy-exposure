@@ -12,6 +12,21 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
+                "--flag", "test"
+            ],
+        },
+        {
+            "name": "Data Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/data_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+
             ],
         },
         {
@@ -25,8 +40,9 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                "--task", "legal_court",
+                // "--task", "legal_court",
                 // "--task", "cnn",
+                "--task", "discharge_instructions",
                 "--plib", "spacy",
             ],
         },
