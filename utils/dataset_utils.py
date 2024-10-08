@@ -8,6 +8,8 @@ import pandas as pd
 
 from constants import (
     BASELINE_SUMMARY_TASK,
+    BRIEF_HOSPITAL_COURSE,
+    DISCHARGE_INSTRUCTIONS,
     ICL_EXAMPLES_ROOT,
     IN_CONTEXT_SUMMARY_TASK,
     LEGAL_EXAMPLES_ROOT,
@@ -332,10 +334,10 @@ def add_training_data_to_csv():
     instruction = "Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates."
     root = f"{PSEUDO_TARGETS_ROOT}valid"
     training_data = pd.DataFrame(columns=["instruction", "input", "output"])
-    for summary_type in SUMMARY_TYPES:
+    for summary_type in [BRIEF_HOSPITAL_COURSE, DISCHARGE_INSTRUCTIONS, "cnn"]:
         target_folder = f"{root}/{summary_type}"
         files = os.listdir(target_folder)
-        for file in files[0:50]:
+        for file in files:
             print(target_folder, file)
 
             with open(f"{target_folder}/{file}", "r") as f:
@@ -350,4 +352,4 @@ def add_training_data_to_csv():
 
             training_data.loc[len(training_data)] = [instruction, input, output]
 
-    training_data.to_csv("data/fine-tuning/training_data-v2.csv", index=False)
+    training_data.to_csv("data/fine-tuning/training_data-v4.csv", index=False)
