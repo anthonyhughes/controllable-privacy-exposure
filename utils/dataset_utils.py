@@ -335,7 +335,7 @@ def add_training_data_to_csv():
     for summary_type in SUMMARY_TYPES:
         target_folder = f"{root}/{summary_type}"
         files = os.listdir(target_folder)
-        for file in files[0:10]:
+        for file in files[0:50]:
             print(target_folder, file)
 
             with open(f"{target_folder}/{file}", "r") as f:
@@ -350,4 +350,4 @@ def add_training_data_to_csv():
 
             training_data.loc[len(training_data)] = [instruction, input, output]
 
-    training_data.to_csv("training_data.csv")
+    training_data.to_csv("data/fine-tuning/training_data-v2.csv", index=False)

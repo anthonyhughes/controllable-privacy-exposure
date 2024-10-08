@@ -51,6 +51,8 @@ PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/
 
 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m mistral-7b-instruct-v0.3-bnb-4bit -e privacy -st all &
 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m gpt-4o-mini -e privacy -st all &
+PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m mistral-7b-instruct-v0.3-bnb-4bit -e privacy -st all &
+
 
 PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure nohup python pipelines/eval_pipeline.py -t all -m llama-3-8b-Instruct-bnb-4bit -e privacy -st all > llama8b-pii.log 2>&1&
 PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure nohup python pipelines/eval_pipeline.py -t all -m claude-3-5-sonnet-20240620 -e privacy -st all > claude-pii.log 2>&1&

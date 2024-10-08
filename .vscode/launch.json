@@ -259,10 +259,10 @@
                 // "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
                 // "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
                 // "--model", "gpt-4o-mini",
-                "--model", "claude-3-5-sonnet-20240620",
+                "--model", "gpt-4o-mini",
                 "--eval_type", "reidentification",
                 "--sub_tasks", "_sani_summ",
-                "--file_id", "claude-3-5-sonnet-20240620-2024-10-07-06-14-44.json"
+                "--file_id", "gpt-4o-mini-2024-10-07-17-36-01.json"                
             ],
         },
         {
@@ -281,7 +281,7 @@
                 "--eval_type", "graph",
                 "--sub_tasks", "_sani_summ",
                 // "--file_id", "mistral-7b-instruct-v0.3-bnb-4bit-2024-10-03-20-56-01.json"
-                "--file_id", "reidentification_results.json"
+                "--file_id", "gpt-4o-mini-2024-10-07-17-36-02.json"
             ],
         }
     ]
