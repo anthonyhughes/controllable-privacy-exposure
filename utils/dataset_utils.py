@@ -330,11 +330,21 @@ def write_to_file(filename, text):
         f.write(text)
 
 
+def convert_to_instruction(stype):
+    if stype == BRIEF_HOSPITAL_COURSE:
+        return "brief hospital course"
+    elif stype == DISCHARGE_INSTRUCTIONS:
+        return "discharge letter"
+    elif stype == "cnn":
+        return "news summary"
+
+
 def add_training_data_to_csv():
-    instruction = "Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates."
     root = f"{PSEUDO_TARGETS_ROOT}valid"
     training_data = pd.DataFrame(columns=["instruction", "input", "output"])
     for summary_type in [BRIEF_HOSPITAL_COURSE, DISCHARGE_INSTRUCTIONS, "cnn"]:
+        plain_task = convert_to_instruction(summary_type)
+        instruction = f"Summarise the following document into a {plain_task}. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates."
         target_folder = f"{root}/{summary_type}"
         files = os.listdir(target_folder)
         for file in files:

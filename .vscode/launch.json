@@ -16,20 +16,6 @@
             ],
         },
         {
-            "name": "Data Pipeline",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "pipelines/data_pipeline.py",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${cwd}"
-            },
-            "args": [
-                "--flag", "training"
-            ],
-        },
-        {
             "name": "Pseudonymizer",
             "type": "debugpy",
             "request": "launch",
@@ -44,6 +30,35 @@
                 // "--task", "cnn",
                 "--task", "discharge_instructions",
                 "--plib", "spacy",
+            ],
+        },
+        {
+            "name": "Build Training Data",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/data_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                // "--flag", "training"
+                "--flag", "test"
+            ],
+        },
+        {
+            "name": "Output Training Data",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/data_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--flag", "training"
             ],
         },
         {
