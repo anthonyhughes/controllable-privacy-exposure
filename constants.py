@@ -50,7 +50,7 @@ EVAL_MODELS = [
     "llama-3-8b-Instruct-bnb-4bit",
     "claude-3-5-sonnet-20240620",
     "Meta-Llama-3.1-70B-Instruct-bnb-4bit"
-    # "llama3.1:70b"
+    "llamonymous-3-8b-bnb-4bit"
 ]
 
 EVAL_TYPES = ["utility", "privacy", "reidentification", "graph", "all"]
