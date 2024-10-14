@@ -52,6 +52,14 @@ EVAL_MODELS = [
     "Meta-Llama-3.1-70B-Instruct-bnb-4bit"
     "llamonymous-3-8b-bnb-4bit"
 ]
+EVAL_MODELS_REAL = [
+    "Claude-Sonnet-3-5",
+    "GPT-4o",
+    "Llama-3.1-8b-Instruct",
+    "Llama-3.1-70B-Instruct",
+    "Mistral-7b-Instruct",
+]
+
 
 EVAL_TYPES = ["utility", "privacy", "reidentification", "graph", "all"]
 BATCH_FLAGS = ["batch", "check", "retrieve", "cancel", "create-batch"]
