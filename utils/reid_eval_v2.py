@@ -8,6 +8,7 @@ from constants import (
     FINAL_RAW_PRIVACY_RESULTS_DIR,
     FINAL_REID_RESULTS_DIR,
     IN_CONTEXT_SUMMARY_TASK,
+    PRIV_SUMMARY_TASK,
     RE_ID_EXAMPLES_ROOT,
     BRIEF_HOSPITAL_COURSE,
     SANI_SUMM_SUMMARY_TASK,
@@ -120,7 +121,8 @@ def run_reidentification_eval_v2(target_privacy_file, tasks, model):
 
         v_name = "variation_1"
 
-        for sub_task_suffix in TASK_SUFFIXES[1:4]:
+        # for sub_task_suffix in TASK_SUFFIXES[1:4]:
+        for sub_task_suffix in [PRIV_SUMMARY_TASK]:
             final_results[f"{task}{sub_task_suffix}"] = {}
             print(f"Running reidentification eval for {task}{sub_task_suffix}")
             sub_task = f"{task}{sub_task_suffix}"
