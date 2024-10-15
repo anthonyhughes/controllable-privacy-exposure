@@ -13,7 +13,7 @@ import argparse
 from utils.graph_utils import gen_graphs
 from utils.pii_eval import run_privacy_eval
 from utils.reid_eval import run_reidentification_eval
-from utils.reid_eval_v2 import run_reidentification_eval_v2
+from utils.reid_eval_v2 import run_clinical_reidentification_eval, run_nonclinical_reidentification_eval
 from utils.utility_utils import run_utility_eval
 
 bertscore = load("bertscore")
@@ -54,6 +54,16 @@ if __name__ == "__main__":
         "--file_id",
         help="Choose a file to evaluate"
     )
+    parser.add_argument(
+        "-sif",
+        "--sanitized_input_file",
+        help="Choose an input file to evaluate"
+    )
+    parser.add_argument(
+        "-ssf",
+        "--sanitized_summaries_file",
+        help="Choose a summaries file to evaluate"
+    )
 
     args = parser.parse_args()
 
@@ -86,12 +96,18 @@ if __name__ == "__main__":
                 target_model=target_model, tasks=tasks, sub_tasks=sub_tasks
             )
         if args.eval_type in ["reidentification", "all"]:
-            file_id = args.file_id
+            sanitized_input_file = args.sanitized_input_file
+            sanitized_summaries_file = args.sanitized_summaries_file
             # run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1', sub_tasks=sub_tasks)
-            run_reidentification_eval_v2(
+            # run_clinical_reidentification_eval(
+            #     model=target_model,
+            #     target_privacy_file=file_id,
+            #     tasks=[DISCHARGE_INSTRUCTIONS, BRIEF_HOSPITAL_COURSE],
+            # )
+            run_nonclinical_reidentification_eval(
                 model=target_model,
-                target_privacy_file=file_id,
-                tasks=[DISCHARGE_INSTRUCTIONS, BRIEF_HOSPITAL_COURSE],
+                sanitized_input_file=sanitized_input_file,
+                sanitized_summaries_file=sanitized_summaries_file,
             )
         if args.eval_type in ["graph"]:
             file_id = args.file_id

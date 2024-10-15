@@ -5,6 +5,7 @@ import time
 
 from constants import (
     DISCHARGE_INSTRUCTIONS,
+    FINAL_RAW_INPUTS_PRIVACY_RESULTS_DIR,
     FINAL_RAW_PRIVACY_RESULTS_DIR,
     FINAL_REID_RESULTS_DIR,
     IN_CONTEXT_SUMMARY_TASK,
@@ -99,7 +100,49 @@ def is_token_in_another_profile(id, mappings, potential_leaked_token):
     return potential_leaked_token in flattened_names
 
 
-def run_reidentification_eval_v2(target_privacy_file, tasks, model):
+def is_token_in_another_news_story(
+    orignal_news_stories, potential_leaked_token, doc_id
+):
+    c_orignal_news_stories = orignal_news_stories.copy()
+    del c_orignal_news_stories[doc_id]
+    flattened_names = [
+        key
+        for doc_ids in c_orignal_news_stories.keys()
+        for key, val in c_orignal_news_stories[doc_ids]["sanitized_encodings"].items()
+    ]
+    return potential_leaked_token.lower() in flattened_names
+
+
+def update_confusion_matrix(conf_look_up, property):
+    # calc precision and recall
+    try:
+        precision = conf_look_up[property]["tp"] / (
+            conf_look_up[property]["tp"] + conf_look_up[property]["fp"]
+        )
+        conf_look_up[property]["precision"] = precision
+    except ZeroDivisionError:
+        conf_look_up[property]["precision"] = 0
+
+    try:
+        recall = conf_look_up[property]["tp"] / (
+            conf_look_up[property]["tp"] + conf_look_up[property]["fn"]
+        )
+        conf_look_up[property]["recall"] = recall
+    except ZeroDivisionError:
+        conf_look_up[property]["recall"] = 0
+
+    # calc false positive rate
+    try:
+        fpr = conf_look_up[property]["fp"] / (
+            conf_look_up[property]["fp"] + conf_look_up[property]["tn"]
+        )
+        conf_look_up[property]["fpr"] = fpr
+    except ZeroDivisionError:
+        conf_look_up[property]["fpr"] = 0
+    return conf_look_up
+
+
+def run_clinical_reidentification_eval(target_privacy_file, tasks, model):
     """
     Run the reidentification evaluation
     """
@@ -171,36 +214,100 @@ def run_reidentification_eval_v2(target_privacy_file, tasks, model):
                                         conf_look_up[property]["fn"] += 1
             for property in ["PERSON", "DATE", "ORG"]:
                 print(property, conf_look_up[property])
-                # calc precision and recall
-                try:
-                    precision = conf_look_up[property]["tp"] / (
-                        conf_look_up[property]["tp"] + conf_look_up[property]["fp"]
-                    )
-                    conf_look_up[property]["precision"] = precision
-                except ZeroDivisionError:
-                    conf_look_up[property]["precision"] = 0
+                conf_look_up = update_confusion_matrix(conf_look_up, property)
 
-                try:
-                    recall = conf_look_up[property]["tp"] / (
-                        conf_look_up[property]["tp"] + conf_look_up[property]["fn"]
-                    )
-                    conf_look_up[property]["recall"] = recall
-                except ZeroDivisionError:
-                    conf_look_up[property]["recall"] = 0
-
-                # calc false positive rate
-                try:
-                    fpr = conf_look_up[property]["fp"] / (
-                        conf_look_up[property]["fp"] + conf_look_up[property]["tn"]
-                    )
-                    conf_look_up[property]["fpr"] = fpr
-                except ZeroDivisionError:
-                    conf_look_up[property]["fpr"] = 0
-                    
             final_results[f"{task}{sub_task_suffix}"] = conf_look_up
     cdatetime = time.strftime("%Y%m%d-%H%M%S")
     with open(
-        os.path.join(FINAL_REID_RESULTS_DIR, f"{model}-reidentification_results-{cdatetime}.json"),
+        os.path.join(
+            FINAL_REID_RESULTS_DIR, f"{model}-reidentification_results-{cdatetime}.json"
+        ),
+        "w",
+    ) as f:
+        json.dump(final_results, f, indent=4)
+
+
+def run_nonclinical_reidentification_eval(model, sanitized_input_file, sanitized_summaries_file):
+    # Load the sanitized input documents
+    raw_original_privacy_results = os.path.join(
+        FINAL_RAW_INPUTS_PRIVACY_RESULTS_DIR,
+        sanitized_input_file,
+    )
+    # Load the sanitized generated summaries
+    raw_summarised_privacy_results = os.path.join(
+        FINAL_RAW_PRIVACY_RESULTS_DIR,
+        sanitized_summaries_file,
+    )
+    final_results = {}
+    with open(raw_summarised_privacy_results, "r") as f:
+        privacy_results_of_summaries = json.load(f)
+        # For each task in the generated summaries file
+        tasks = privacy_results_of_summaries.keys()
+        for i, task in enumerate(tasks):
+            print(task)
+            print(f"task {task} is {i} of {len(tasks)}")
+            # Filter just to CNN privacy tasks
+            if "baseline" not in task:
+
+                if task.startswith("cnn"):
+                    m_task = "cnn"
+                elif task.startswith("legal_court"):
+                    m_task = "legal_court"
+                else:
+                    continue
+
+                with open(raw_original_privacy_results, "r") as f:
+                    original_privacy_results = json.load(f)
+                    original_privacy_results = original_privacy_results[m_task]
+
+                conf_look_up = {
+                    "PERSON": {"tp": 0, "fp": 0, "fn": 0, "tn": 0},
+                    "DATE": {"tp": 0, "fp": 0, "fn": 0, "tn": 0},
+                    "ORG": {"tp": 0, "fp": 0, "fn": 0, "tn": 0},
+                }
+                # For each document in the subtask
+                documents = privacy_results_of_summaries[task]["variation_1"].keys()
+                for i, document in enumerate(documents):
+                    print(f"doco {document} is {i} of {len(documents)}")
+                    cnn_summary = privacy_results_of_summaries[task]["variation_1"][
+                        document
+                    ]
+                    leaked_tokens = cnn_summary["sanitized_encodings"]
+
+                    original_document = original_privacy_results[document]
+                    private_input_tokens = original_document["sanitized_encodings"]
+                    for potential_leaked_token, token_type in leaked_tokens.items():
+                        for property in ["PERSON", "DATE", "ORG"]:
+                            if property in token_type:
+                                # Check if the token is in the original private document
+                                if potential_leaked_token in private_input_tokens:
+                                    conf_look_up[property]["tp"] += 1
+                                elif (
+                                    potential_leaked_token
+                                    not in privacy_results_of_summaries
+                                    and is_token_in_another_news_story(
+                                        original_privacy_results,
+                                        potential_leaked_token,
+                                        document,
+                                    )
+                                ):
+                                    conf_look_up[property]["fp"] += 1
+                            elif (
+                                potential_leaked_token
+                                not in privacy_results_of_summaries
+                            ):
+                                conf_look_up[property]["fn"] += 1
+                    
+                for property in ["PERSON", "DATE", "ORG"]:
+                    print(property, conf_look_up[property])
+                    conf_look_up = update_confusion_matrix(conf_look_up, property)
+
+                final_results[f"{task}"] = conf_look_up
+    cdatetime = time.strftime("%Y%m%d-%H%M%S")
+    with open(
+        os.path.join(
+            FINAL_REID_RESULTS_DIR, f"{model}-reidentification_results-{cdatetime}.json"
+        ),
         "w",
     ) as f:
         json.dump(final_results, f, indent=4)
