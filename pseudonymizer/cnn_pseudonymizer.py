@@ -5,8 +5,9 @@ from constants import (
     RE_ID_EXAMPLES_ROOT,
     RE_ID_TARGETS_ROOT,
     DEIDENTIFICATION_DICT,
+    SANITIZED_INPUTS_ROOT,
 )
-from pseudonymizer.pseudo_utils import deidentify_text
+from pseudonymizer.pseudo_utils import deidentify_text, sanitize_text
 from utils.dataset_utils import open_cnn_data, open_cnn_train_data
 
 
@@ -15,17 +16,26 @@ def run_cnn_pseudonmizer_processes(deidentifier, task="cnn", target_input_set="v
     Psuedonymize legal docs
     """
     print("Start psuedo process for legal court summaries")
-    cnn_data = open_cnn_train_data() if target_input_set == "valid" else open_cnn_data()
+    cnn_data = (
+        open_cnn_train_data()
+        if (target_input_set == "valid" or target_input_set == "train")
+        else open_cnn_data()
+    )
     ids = list(cnn_data.keys())
     icl_example_ids = ids[-5:]
+    ids = ids[0:5000]
     for i, key in enumerate(ids):
-        if i == 1000: break
         print(f"Started doc {i+1} of {len(cnn_data.keys())}")
         doc = cnn_data[key]
+        input_document = doc["document"]
         target_summary = doc["target"]
 
+        scrubbed_input_text = deidentifier.deidentify(input_document)
         scrubbed_text = deidentifier.deidentify(target_summary)
 
+        sanitized_input_doc = sanitize_text(
+            text=scrubbed_input_text.text, deidentification_dict=DEIDENTIFICATION_DICT
+        )
         replaced_scrubbed_text = deidentify_text(
             text=scrubbed_text.text, deidentification_dict=DEIDENTIFICATION_DICT
         )
@@ -64,6 +74,17 @@ def run_cnn_pseudonmizer_processes(deidentifier, task="cnn", target_input_set="v
                 "w",
             ) as f:
                 f.write(replaced_scrubbed_text)
+
+            # Prebuild folder for sanitized inputs
+            if not os.path.exists(f"{SANITIZED_INPUTS_ROOT}/{target_input_set}/{task}"):
+                os.makedirs(f"{SANITIZED_INPUTS_ROOT}/{target_input_set}/{task}")
+
+            # Store document per input
+            with open(
+                f"{SANITIZED_INPUTS_ROOT}/{target_input_set}/{task}/{key}.txt",
+                "w",
+            ) as f:
+                f.write(sanitized_input_doc)
         else:
             # Prebuild folder for psudeo summaries
             if not os.path.exists(f"{ICL_EXAMPLES_ROOT}/{task}"):

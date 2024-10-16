@@ -3,6 +3,7 @@ EXAMPLES_ROOT = DATA_ROOT + "examples/"
 VALID_EXAMPLES_ROOT = EXAMPLES_ROOT + "valid/"
 ICL_EXAMPLES_ROOT = DATA_ROOT + "icl_examples/"
 PSEUDO_TARGETS_ROOT = DATA_ROOT + "pseudonymized_targets/"
+SANITIZED_INPUTS_ROOT = DATA_ROOT + "sanitized_inputs"
 RE_ID_TARGETS_ROOT = DATA_ROOT + "re_identified_targets"
 RE_ID_EXAMPLES_ROOT = DATA_ROOT + "re_identified_examples/"
 LEGAL_EXAMPLES_ROOT = EXAMPLES_ROOT + "legal_court/"
@@ -18,7 +19,9 @@ VALID_DISCHARGE_ME = DISCHARGE_ME_ROOT + "valid/"
 
 BRIEF_HOSPITAL_COURSE = "brief_hospital_course"
 DISCHARGE_INSTRUCTIONS = "discharge_instructions"
-SUMMARY_TYPES = [BRIEF_HOSPITAL_COURSE, DISCHARGE_INSTRUCTIONS, "legal_court", "cnn"]
+CNN = "cnn"
+LEGAL_COURT = "legal_court"
+SUMMARY_TYPES = [BRIEF_HOSPITAL_COURSE, DISCHARGE_INSTRUCTIONS, LEGAL_COURT, CNN]
 ALT_SUMMARY_TYPES = ["legal_court"]
 EXAMPLE_ADMISSION_IDS = [
     22343752,
@@ -80,7 +83,7 @@ DEIDENTIFICATION_DICT = {
     "DATE": "the date",
     "LOC": "the location",
     "NAME": "the person",
-    "PERSON": "A person",
+    "PERSON": "a person",
     "ORG": "the organisation",
     "FAC": "the location"
 }

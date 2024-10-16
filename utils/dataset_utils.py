@@ -24,6 +24,8 @@ from constants import (
     PRIVACY_RESULTS_DIR,
     VALID_DISCHARGE_ME,
     VALID_EXAMPLES_ROOT,
+    CNN,
+    SANITIZED_INPUTS_ROOT
 )
 
 
@@ -340,26 +342,39 @@ def convert_to_instruction(stype):
 
 
 def add_training_data_to_csv():
-    root = f"{PSEUDO_TARGETS_ROOT}valid"
     training_data = pd.DataFrame(columns=["instruction", "input", "output"])
-    for summary_type in [BRIEF_HOSPITAL_COURSE, DISCHARGE_INSTRUCTIONS, "cnn"]:
-        plain_task = convert_to_instruction(summary_type)
-        instruction = f"Summarise the following document into a {plain_task}. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates."
-        target_folder = f"{root}/{summary_type}"
-        files = os.listdir(target_folder)
-        for file in files:
-            print(target_folder, file)
+    training_instructions = {
+        "sanitize": "Sanitize the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.",
+        "summarise": "Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.",
+    }
+    for instruction_type in training_instructions.keys():
+        if instruction_type == "summarise":
+            root = f"{PSEUDO_TARGETS_ROOT}valid"
+        elif instruction_type == "sanitize":
+            root = f"{SANITIZED_INPUTS_ROOT}/valid"
+        for summary_type in [BRIEF_HOSPITAL_COURSE, DISCHARGE_INSTRUCTIONS, CNN]:
+            target_folder = f"{root}/{summary_type}"
+            files = os.listdir(target_folder)
 
-            with open(f"{target_folder}/{file}", "r") as f:
-                output = f.readlines()
+            # currently preventing overlap between health records for the clinical tasks
+            if summary_type == BRIEF_HOSPITAL_COURSE:
+                files = files[0:2500]
+            elif summary_type == DISCHARGE_INSTRUCTIONS:
+                files = files[2500:]
 
-            reid_file = file.split("-")[0]
-            with open(
-                f"{RE_ID_EXAMPLES_ROOT}valid/{summary_type}/{reid_file}-discharge-inputs.txt",
-                "r",
-            ) as f:
-                input = f.readlines()
+            for file in files:
+                print(target_folder, file)
 
-            training_data.loc[len(training_data)] = [instruction, input, output]
+                with open(f"{target_folder}/{file}", "r") as f:
+                    output = f.read()
 
-    training_data.to_csv("data/fine-tuning/training_data-v4.csv", index=False)
+                reid_file = file.split('.')[0].split("-")[0]
+                with open(
+                    f"{RE_ID_EXAMPLES_ROOT}valid/{summary_type}/{reid_file}-discharge-inputs.txt",
+                    "r",
+                ) as f:
+                    input = f.read()
+
+                training_data.loc[len(training_data)] = [training_instructions[instruction_type], input, output]
+
+    training_data.to_csv("data/fine-tuning/training_data-v6.csv", index=False)

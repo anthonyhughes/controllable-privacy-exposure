@@ -43,8 +43,8 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                // "--flag", "training"
-                "--flag", "test"
+                "--flag", "training"
+                // "--flag", "test"
             ],
         },
         {

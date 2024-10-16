@@ -13,7 +13,7 @@ if __name__ == "__main__":
         print("Starting data pipeline")
         # Mimic extraction
         target_input = "valid"
-        hadm_ids = run(with_extraction=False, target_input_set=target_input)
+        hadm_ids = run(with_extraction=True, target_input_set=target_input)
         # hadm_ids = extract_hadm_ids_from_dir("gpt-4o-mini", "brief_hospital_course")
         # Add pseudo-identification data to mimic data
         sorted_ids = sorted(hadm_ids)

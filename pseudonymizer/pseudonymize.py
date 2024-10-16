@@ -7,6 +7,7 @@ from constants import (
     PSEUDO_TARGETS_ROOT,
     PSUEDO_LIBS,
     SUMMARY_TYPES,
+    SANITIZED_INPUTS_ROOT
 )
 from mimic.mimic_data import load_original_discharge_summaries
 from pseudonymizer.cnn_pseudonymizer import run_cnn_pseudonmizer_processes
@@ -239,18 +240,35 @@ def run_pseudonmizer_process(task, hadm_ids, target_input="valid"):
     for id in hadm_ids:
         # print(res)
         print(f"Processing {task} for {id}")
-        res = fetch_file_names(f"data/examples/{target_input}/{task}", "target", hadm_id=id)
-        contents = load_file(res[0])
+        # Sanitized inputs
+        input_files = fetch_file_names(f"data/examples/{target_input}/{task}", "discharge-inputs", hadm_id=id)
+        input_contents = load_file(input_files[0])
+
+        # 
+        summary_files = fetch_file_names(f"data/examples/{target_input}/{task}", "target", hadm_id=id)
+        contents = load_file(summary_files[0])
         data = fill_in_target_summary(contents)
         data = remove_extra_redactions(data)
         data = remove_extra_piis(data)
-        if not os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{target_input}/{task}"):
-            os.makedirs(f"{PSEUDO_TARGETS_ROOT}/{target_input}/{task}")
+
+        # Write the original redacted doc to file
+        if not os.path.exists(f"{SANITIZED_INPUTS_ROOT}/{target_input}/{task}"):
+            os.makedirs(f"{SANITIZED_INPUTS_ROOT}/{target_input}/{task}")
+
         with open(
-            f"{PSEUDO_TARGETS_ROOT}{target_input}/{task}/{id}-target.txt",
+            f"{SANITIZED_INPUTS_ROOT}/{target_input}/{task}/{id}-discharge-inputs.txt",
             "w",
         ) as f:
-            f.write(data)
+            f.write(input_contents)
+
+        # # Write the pseudonymized doc to file
+        # if not os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{target_input}/{task}"):
+        #     os.makedirs(f"{PSEUDO_TARGETS_ROOT}/{target_input}/{task}")
+        # with open(
+        #     f"{PSEUDO_TARGETS_ROOT}{target_input}/{task}/{id}-target.txt",
+        #     "w",
+        # ) as f:
+        #     f.write(data)
     print("Done.")
 
 
@@ -293,5 +311,5 @@ if __name__ == "__main__":
         run_cnn_pseudonmizer_processes(deidentifier=deid)
     else:
         original_discharge_summaries = load_original_discharge_summaries(target_input="valid")
-        hadm_ids = extract_hadm_ids(original_discharge_summaries, n=1000)
+        hadm_ids = extract_hadm_ids(original_discharge_summaries, n=5000)
         run_all_pseudonmizer_processes(hadm_ids, target_input="valid")
