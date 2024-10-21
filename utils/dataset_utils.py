@@ -25,7 +25,7 @@ from constants import (
     VALID_DISCHARGE_ME,
     VALID_EXAMPLES_ROOT,
     CNN,
-    SANITIZED_INPUTS_ROOT
+    SANITIZED_INPUTS_ROOT,
 )
 
 
@@ -368,13 +368,17 @@ def add_training_data_to_csv():
                 with open(f"{target_folder}/{file}", "r") as f:
                     output = f.read()
 
-                reid_file = file.split('.')[0].split("-")[0]
+                reid_file = file.split(".")[0].split("-")[0]
                 with open(
                     f"{RE_ID_EXAMPLES_ROOT}valid/{summary_type}/{reid_file}-discharge-inputs.txt",
                     "r",
                 ) as f:
                     input = f.read()
 
-                training_data.loc[len(training_data)] = [training_instructions[instruction_type], input, output]
+                training_data.loc[len(training_data)] = [
+                    training_instructions[instruction_type],
+                    input,
+                    output,
+                ]
 
     training_data.to_csv("data/fine-tuning/training_data-v6.csv", index=False)

@@ -21,7 +21,7 @@ BRIEF_HOSPITAL_COURSE = "brief_hospital_course"
 DISCHARGE_INSTRUCTIONS = "discharge_instructions"
 CNN = "cnn"
 LEGAL_COURT = "legal_court"
-SUMMARY_TYPES = [BRIEF_HOSPITAL_COURSE, DISCHARGE_INSTRUCTIONS, LEGAL_COURT, CNN]
+SUMMARY_TYPES = [DISCHARGE_INSTRUCTIONS, BRIEF_HOSPITAL_COURSE, LEGAL_COURT, CNN]
 ALT_SUMMARY_TYPES = ["legal_court"]
 EXAMPLE_ADMISSION_IDS = [
     22343752,
@@ -38,9 +38,9 @@ EXAMPLE_ADMISSION_IDS = [
 RESULTS_DIR = DATA_ROOT + "results"
 UTILITY_RESULTS_DIR = DATA_ROOT + "utility_results"
 PRIVACY_RESULTS_DIR = DATA_ROOT + "privacy_results"
-FINAL_RAW_PRIVACY_RESULTS_DIR  = PRIVACY_RESULTS_DIR + "/final_raw_privacy"
-FINAL_RAW_INPUTS_PRIVACY_RESULTS_DIR  = PRIVACY_RESULTS_DIR + "/final_inputs_raw_privacy"
-FINAL_REID_RESULTS_DIR  = PRIVACY_RESULTS_DIR + "/final_reid"
+FINAL_RAW_PRIVACY_RESULTS_DIR = PRIVACY_RESULTS_DIR + "/final_raw_privacy"
+FINAL_RAW_INPUTS_PRIVACY_RESULTS_DIR = PRIVACY_RESULTS_DIR + "/final_inputs_raw_privacy"
+FINAL_REID_RESULTS_DIR = PRIVACY_RESULTS_DIR + "/final_reid"
 BATCH_RESULTS_DIR = DATA_ROOT + "batch_results"
 BATCH_JOBS_DIR = DATA_ROOT + "batch_jobs"
 
@@ -53,8 +53,8 @@ EVAL_MODELS = [
     "mistral-7b-instruct-v0.3-bnb-4bit",
     "llama-3-8b-Instruct-bnb-4bit",
     "claude-3-5-sonnet-20240620",
-    "Meta-Llama-3.1-70B-Instruct-bnb-4bit"
-    "llamonymous-3-8b-bnb-4bit"
+    "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+    "llamonymous-3-8b-bnb-4bit",
 ]
 EVAL_MODELS_REAL = [
     "Claude-Sonnet-3-5",
@@ -74,7 +74,13 @@ PRIV_SUMMARY_TASK = ""
 IN_CONTEXT_SUMMARY_TASK = "_in_context"
 SANI_SUMM_SUMMARY_TASK = "_sani_summ"
 SANITIZE_TASK = "_sanitized"
-TASK_SUFFIXES = [BASELINE_SUMMARY_TASK, PRIV_SUMMARY_TASK, IN_CONTEXT_SUMMARY_TASK, SANI_SUMM_SUMMARY_TASK, SANITIZE_TASK]
+TASK_SUFFIXES = [
+    BASELINE_SUMMARY_TASK,
+    PRIV_SUMMARY_TASK,
+    IN_CONTEXT_SUMMARY_TASK,
+    SANI_SUMM_SUMMARY_TASK,
+    SANITIZE_TASK,
+]
 
 METRICS = ["rouge1", "rouge2", "rougeL", "bertscore"]
 PSUEDO_LIBS = ["spacy", "flair", "bert-deid"]
@@ -85,6 +91,6 @@ DEIDENTIFICATION_DICT = {
     "NAME": "the person",
     "PERSON": "a person",
     "ORG": "the organisation",
-    "FAC": "the location"
+    "FAC": "the location",
 }
 MAX_TOKENS = 2048

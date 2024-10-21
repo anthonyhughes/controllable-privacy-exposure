@@ -318,6 +318,26 @@
                 // "--file_id", "mistral-7b-instruct-v0.3-bnb-4bit-2024-10-03-20-56-01.json"
                 "--file_id", "Meta-Llama-3.1-70B-Instruct-bnb-4bit-reidentification_results-20241008-092100.json"
             ],
+        },
+        {
+            "name": "Statistical Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/statistical_testing_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                // "--tasks", "all",
+                // "--model", "claude-3-5-sonnet-20240620",
+                // "--model", "gpt-4o-mini",
+                // "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
+                // "--model", "llama-3-8b-Instruct-bnb-4bit",
+                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+
+            ],
         }
     ]
 }
