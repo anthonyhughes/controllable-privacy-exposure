@@ -12,6 +12,7 @@ from constants import (
     PRIV_SUMMARY_TASK,
     SANI_SUMM_SUMMARY_TASK,
     SANITIZE_TASK,
+    STATS_DIR,
     SUMMARY_TYPES,
     UTILITY_RESULTS_DIR,
 )
@@ -84,11 +85,15 @@ def t_test_calc(data: list, comparator_data: list):
 
 def run():
     # Scores from the first table
-    for model in EVAL_MODELS[0:2]:
+    for model in EVAL_MODELS[3:4]:
         all_tasks_results = []
         for task in SUMMARY_TYPES:
             task_result = []
-            for sub_task in [PRIV_SUMMARY_TASK, IN_CONTEXT_SUMMARY_TASK, SANI_SUMM_SUMMARY_TASK]:
+            for sub_task in [
+                PRIV_SUMMARY_TASK,
+                IN_CONTEXT_SUMMARY_TASK,
+                SANI_SUMM_SUMMARY_TASK,
+            ]:
                 sub_task_result = []
                 print(f"{sub_task}")
                 if sub_task == SANITIZE_TASK:
@@ -114,7 +119,9 @@ def run():
                     )
                 task_result.append(sub_task_result)
             all_tasks_results.append(task_result)
-        with open(f"data/stats_results/{model}.json", "w") as f:
+        if not os.path.exists(STATS_DIR):
+            os.makedirs(STATS_DIR, exist_ok=True)
+        with open(f"{STATS_DIR}/{model}.json", "w") as f:
             json.dump(all_tasks_results, f, indent=4)
 
 

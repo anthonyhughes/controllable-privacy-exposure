@@ -43,7 +43,7 @@ FINAL_RAW_INPUTS_PRIVACY_RESULTS_DIR = PRIVACY_RESULTS_DIR + "/final_inputs_raw_
 FINAL_REID_RESULTS_DIR = PRIVACY_RESULTS_DIR + "/final_reid"
 BATCH_RESULTS_DIR = DATA_ROOT + "batch_results"
 BATCH_JOBS_DIR = DATA_ROOT + "batch_jobs"
-
+STATS_DIR = "data/stats_results"
 MODELS = [
     "gpt-4o-mini",
     "mistral-instruct-7b",
