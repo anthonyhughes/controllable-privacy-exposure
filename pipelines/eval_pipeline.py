@@ -1,3 +1,4 @@
+from time import sleep
 from constants import (
     BRIEF_HOSPITAL_COURSE,
     DISCHARGE_INSTRUCTIONS,
@@ -98,12 +99,12 @@ if __name__ == "__main__":
         if args.eval_type in ["reidentification", "all"]:
             sanitized_input_file = args.sanitized_input_file
             sanitized_summaries_file = args.sanitized_summaries_file
-            # run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1', sub_tasks=sub_tasks)
-            # run_clinical_reidentification_eval(
-            #     model=target_model,
-            #     target_privacy_file=file_id,
-            #     tasks=[DISCHARGE_INSTRUCTIONS, BRIEF_HOSPITAL_COURSE],
-            # )
+            run_clinical_reidentification_eval(
+                model=target_model,
+                target_privacy_file=sanitized_input_file,
+                tasks=[DISCHARGE_INSTRUCTIONS, BRIEF_HOSPITAL_COURSE],
+            )
+            sleep(5)
             run_nonclinical_reidentification_eval(
                 model=target_model,
                 sanitized_input_file=sanitized_input_file,

@@ -66,3 +66,7 @@ PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure/ nohup python 
 PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t cnn -m Meta-Llama-3.1-70B-Instruct-bnb-4bit -e utility -st all &
 PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t cnn -m claude-3-5-sonnet-20240620 -e utility -st all &
 PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m llamonymous-3-8b-bnb-4bit -e utility -st all &
+
+
+PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m llamonymous-3-8b-bnb-4bit -e privacy -st all &
+PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m mistralymous-7b-bnb-4bit -e privacy -st all &

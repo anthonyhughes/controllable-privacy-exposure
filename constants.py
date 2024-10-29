@@ -55,6 +55,7 @@ EVAL_MODELS = [
     "claude-3-5-sonnet-20240620",
     "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
     "llamonymous-3-8b-bnb-4bit",
+    "mistralymous-7b-bnb-4bit"
 ]
 EVAL_MODELS_REAL = [
     "Claude-Sonnet-3-5",

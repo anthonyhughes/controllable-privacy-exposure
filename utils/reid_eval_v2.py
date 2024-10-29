@@ -165,7 +165,7 @@ def run_clinical_reidentification_eval(target_privacy_file, tasks, model):
         v_name = "variation_1"
 
         # for sub_task_suffix in TASK_SUFFIXES[1:4]:
-        for sub_task_suffix in [PRIV_SUMMARY_TASK]:
+        for sub_task_suffix in [PRIV_SUMMARY_TASK,IN_CONTEXT_SUMMARY_TASK]:
             final_results[f"{task}{sub_task_suffix}"] = {}
             print(f"Running reidentification eval for {task}{sub_task_suffix}")
             sub_task = f"{task}{sub_task_suffix}"
@@ -181,7 +181,7 @@ def run_clinical_reidentification_eval(target_privacy_file, tasks, model):
             # all ids of patients in the generated summaries
             for id in hadm_ids:
                 prop_lookup = {
-                    "PERSON": ["name", "clinician_name"],
+                    "PERSON": ["name"],
                     "DATE": ["in_date", "out_date", "intervention_date", "birth_date"],
                     "ORG": ["location"],
                 }
