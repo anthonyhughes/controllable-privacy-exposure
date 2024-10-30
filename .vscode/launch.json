@@ -217,6 +217,23 @@
             "envFile": "${workspaceFolder}/.env"
         },
         {
+            "name": "Unsloth Fine-tune Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/unsloth_ft_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}",
+                "CUDA_VISIBLE_DEVICES": "0"
+            },
+            "args": [
+                "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+                "--training_data_file", "training_data-v6.csv",
+            ],
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
             "name": "Utility Eval Pipeline",
             "type": "debugpy",
             "request": "launch",

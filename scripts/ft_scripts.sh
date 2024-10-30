@@ -1,0 +1,2 @@
+# Inference Pipelines for Llama 3.1 70b
+CUDA_VISIBLE_DEVICES=0 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/unsloth_ft_pipeline.py -t training_data-v6.csv -m Meta-Llama-3.1-70B-Instruct-bnb-4bit > llama70b-ft.log 2>&1&
