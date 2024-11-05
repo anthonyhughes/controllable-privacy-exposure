@@ -272,8 +272,75 @@ instruction_prompt = """
 {}"""
 
 
+variation_1_prompt_prefix_for_ft_task = {
+    "name": "variation_1",
+    # sani summ
+    "brief_hospital_course_sani_summ": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    "discharge_instructions_sani_summ": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    "legal_court_sani_summ": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    "cnn_sani_summ": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    # in context
+    "brief_hospital_course_in_context": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+        These are example summaries:
+        [incontext_examples]
+        Summarise this document:\n
+    """,
+    "discharge_instructions_in_context": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+        These are example summaries:
+        [incontext_examples]
+        Summarise this document:\n
+    """,
+    "legal_court_in_context": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+        These are example summaries:
+        [incontext_examples]
+        Summarise this document:\n
+    """,
+    "cnn_in_context": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+        These are example summaries:
+        [incontext_examples]
+        Summarise this document:\n
+    """,
+    # 0-shot privacy
+    "brief_hospital_course": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    "discharge_instructions": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    "cnn": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    "legal_court": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    "brief_hospital_course_baseline": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    "discharge_instructions_baseline": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    "legal_court_baseline": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+    "cnn_baseline": """
+        Summarise the following document. Do not reveal any personally identifying information; such as names, ages, organisations, locations, race and dates.\n
+    """,
+}
+
 variations = [
-    variation_1_prompt_prefix_for_task,
-    variation_2_prompt_prefix_for_task,
-    variation_3_prompt_prefix_for_task,
+    variation_1_prompt_prefix_for_ft_task,
+    # variation_2_prompt_prefix_for_task,
+    # variation_3_prompt_prefix_for_task,
 ]

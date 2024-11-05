@@ -26,8 +26,12 @@ import os
 
 
 def get_model(target_model):
+    if target_model == "llamonymous-3-70b-bnb-4bit":
+        target_model = f"./data/ft_models/llamonymous-3-70b-bnb-4bit/v1/lora_model"
+    else:
+        target_model = "unsloth/" + target_model
     model, tokenizer = FastLanguageModel.from_pretrained(
-        model_name="unsloth/" + target_model,
+        model_name=target_model,
         max_seq_length=MAX_TOKENS,
         dtype=None,
         load_in_4bit=True,
@@ -70,7 +74,7 @@ def is_excluded_id(id):
         "21457143",
         "24147617",
         "23417083",
-        "24173031"
+        "24173031",
     ]
 
 
@@ -96,7 +100,7 @@ def run_all_inference(target_model, hadm_ids, summary_type):
         print(f"Running inference for {len(hadm_ids)} identities")
         for i, id in enumerate(hadm_ids):
             if is_excluded_id(id):
-                print(f'Skipping {id}')
+                print(f"Skipping {id}")
                 continue
 
             print(f"Running inference for file {i+1}/{len(hadm_ids)}")
@@ -123,10 +127,7 @@ def run_all_inference(target_model, hadm_ids, summary_type):
             file_input = read_file(input_filename)
 
             # if the output file already exists, skip it (inference already completed)
-            if (
-                file_input is not None
-                and os.path.exists(output_filename) is False
-            ):
+            if file_input is not None and os.path.exists(output_filename) is False:
                 print("Privacy Baseline")
                 # get a pseduo summary
                 pseudo_trimmed_res = run_inference(
@@ -135,20 +136,18 @@ def run_all_inference(target_model, hadm_ids, summary_type):
                 # write pseudonimysed output
                 write_to_file(output_filename, pseudo_trimmed_res)
 
-            if file_input is not None and os.path.exists(baseline_output_file) is False:
-                print("Instruction Baseline")
-                # get a baseline (non-pseduo summary)
-                baseline_trimmed_res = run_inference(
-                    instruction_baseline, file_input, model, tokenizer
-                )
-                # write baseline output
-                write_to_file(baseline_output_file, baseline_trimmed_res)
+            # Not running baseline summary for this model
+            # if file_input is not None and os.path.exists(baseline_output_file) is False:
+            #     print("Instruction Baseline")
+            #     # get a baseline (non-pseduo summary)
+            #     baseline_trimmed_res = run_inference(
+            #         instruction_baseline, file_input, model, tokenizer
+            #     )
+            #     # write baseline output
+            #     write_to_file(baseline_output_file, baseline_trimmed_res)
 
             try:
-                if (
-                    file_input is not None
-                    and os.path.exists(icl_output_file) is False
-                ):
+                if file_input is not None and os.path.exists(icl_output_file) is False:
                     print("ICL")
                     # get a baseline (non-pseduo summary)
                     # add an in-context example
@@ -161,7 +160,7 @@ def run_all_inference(target_model, hadm_ids, summary_type):
                     # write baseline output
                     write_to_file(icl_output_file, icl_trimmed_res)
             except Exception as e:
-                print(f'ERROR SKIPPING ICL!! {id}')
+                print(f"ERROR SKIPPING ICL!! {id}")
                 print(e)
 
             if (

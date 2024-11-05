@@ -168,3 +168,4 @@ openai_config.py
 *.tar
 *.out
 .vscode-server/
+outputs/

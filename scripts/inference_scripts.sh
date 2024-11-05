@@ -15,3 +15,9 @@ CUDA_VISIBLE_DEVICES=1 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ 
 CUDA_VISIBLE_DEVICES=1 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/unsloth_pipeline.py -t brief_hospital_course -m llama-3-8b-Instruct-bnb-4bit > llama8b-bhi-sani-summ.log 2>&1&
 CUDA_VISIBLE_DEVICES=1 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/unsloth_pipeline.py -t cnn -m llama-3-8b-Instruct-bnb-4bit > llama8b-cnn-ss.log 2>&1&
 CUDA_VISIBLE_DEVICES=1 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/unsloth_pipeline.py -t legal_court -m llama-3-8b-Instruct-bnb-4bit > llama8b-lc-sani-summ.log 2>&1&
+
+# Inference pipelines for ift llama 3.1 70b
+CUDA_VISIBLE_DEVICES=1 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/unsloth_pipeline.py -t discharge_instructions -m llamonymous-3-70b-bnb-4bit > llama70b-di.log 2>&1&
+CUDA_VISIBLE_DEVICES=0 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/unsloth_pipeline.py -t brief_hospital_course -m llamonymous-3-70b-bnb-4bit > llama70b-bhi.log 2>&1&
+CUDA_VISIBLE_DEVICES=1 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/unsloth_pipeline.py -t cnn -m llamonymous-3-70b-bnb-4bit > llama70b-cnn.log 2>&1&
+CUDA_VISIBLE_DEVICES=1 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/unsloth_pipeline.py -t legal_court -m llamonymous-3-70b-bnb-4bit > llama70b-legal.log 2>&1&
