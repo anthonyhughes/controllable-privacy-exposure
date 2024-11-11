@@ -303,8 +303,8 @@
                 // "--sanitized_input_file", "llama-3-8b-Instruct-bnb-4bit-2024-10-07-23-06-53.json",
                 // "--sanitized_input_file", "Meta-Llama-3.1-70B-Instruct-bnb-4bit-2024-10-07-10-04-29.json",
 
-                "--sanitized_input_file", "llamonymous-3-8b-bnb-4bit-2024-10-27-09-18-36.json",
-                // "--sanitized_input_file", "mistralymous-7b-bnb-4bit-2024-10-27-09-20-45.json",
+                "--sanitized_input_file", "llamonymous-3-8b-bnb-4bit-2024-11-08-13-43-13.json",
+                // "--sanitized_input_file", "mistralymous-7b-bnb-4bit-2024-11-08-14-16-29.json",
 
 
                 // "--sanitized_summaries_file", "claude-3-5-sonnet-20240620-2024-10-07-06-14-44.json",
@@ -313,8 +313,8 @@
                 // "--sanitized_summaries_file", "llama-3-8b-Instruct-bnb-4bit-2024-10-07-23-06-52.json",
                 // "--sanitized_summaries_file", "Meta-Llama-3.1-70B-Instruct-bnb-4bit-2024-10-07-10-04-28.json",
                 
-                "--sanitized_summaries_file", "llamonymous-3-8b-bnb-4bit-2024-10-27-09-18-36.json",
-                // "--sanitized_summaries_file", "mistralymous-7b-bnb-4bit-2024-10-27-09-20-45.json",
+                "--sanitized_summaries_file", "llamonymous-3-8b-bnb-4bit-2024-11-08-13-43-13.json",
+                // "--sanitized_summaries_file", "mistralymous-7b-bnb-4bit-2024-11-08-14-16-29.json",
 
                 "--eval_type", "reidentification",
                 "--sub_tasks", "all",
