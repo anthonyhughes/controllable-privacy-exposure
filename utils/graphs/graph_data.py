@@ -113,7 +113,7 @@ def find_privacy_file(model):
     return None
 
 
-def gen_data_for_ptr_utility(utility_metric):
+def gen_data_for_ptr_utility(utility_metric, privacy_metric="private_token_ratio"):
     tmp_data = {}
     for model in [
         "gpt-4o-mini",
@@ -153,7 +153,7 @@ def gen_data_for_ptr_utility(utility_metric):
                         tmp_data[model][nkey].append(
                             (
                                 data[key][utility_metric],
-                                privacy_data[key]["variation_1"]["private_token_ratio"],
+                                privacy_data[key]["variation_1"][privacy_metric],
                             )
                         )
 

@@ -31,3 +31,8 @@ def gen_graphs():
     metric = "rougeL"
     bs_data = gen_data_for_ptr_utility(utility_metric=metric)
     gen_utility_privacy_graph(bs_data, metric, metric_range=(0.05, 0.3))
+
+    # metric = "bertscore"
+    # bs_data = gen_data_for_ptr_utility(utility_metric=metric, privacy_metric="pii_document_percentage")
+    # gen_utility_privacy_graph(bs_data, metric, metric_range=(0.76, 0.875), privacy_range=(0, 1), privacy_metric="pii_document_percentage")
+

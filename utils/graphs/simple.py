@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 
 from constants import EVAL_MODELS_REAL_MAPPING, PRIVACY_RESULTS_DIR
-from utils.graphs.utils import clean_label
+from utils.graphs.utils import clean_label, clean_metric, clean_model_name, clean_privacy_metric
 
 
 # Utility function to find Pareto-efficient points with the lowest privacy and highest utility
@@ -23,11 +23,9 @@ def pareto_front(points):
     return pareto_points
 
 
-def clean_model_name(model_name):
-    return EVAL_MODELS_REAL_MAPPING[model_name]
-
-
-def gen_utility_privacy_graph(data, metric, metric_range=(0.75, 0.875)):
+def gen_utility_privacy_graph(
+    data, metric, metric_range=(0.75, 0.875), privacy_range=(0, 0.6), privacy_metric="private_token_ratio"
+):
     # Set up the figure with a 4x2 grid of subplots
     fig, axes = plt.subplots(nrows=2, ncols=4, figsize=(16, 8))
     axes = axes.flatten()  # Flatten the 2D array of axes for easy iteration
@@ -44,7 +42,6 @@ def gen_utility_privacy_graph(data, metric, metric_range=(0.75, 0.875)):
         "1 Shot": "+",
         "Sanitize and Summarize": "v",
     }
-
 
     dataset_colors = {
         "brief_hospital_course": "blue",
@@ -100,20 +97,20 @@ def gen_utility_privacy_graph(data, metric, metric_range=(0.75, 0.875)):
         model_name = clean_model_name(model_name)
         ax.set_title(model_name)
         ax.set_xlim(metric_range[0], metric_range[1])
-        ax.set_ylim(0, 0.6)
+        ax.set_ylim(privacy_range[0], privacy_range[1])
 
         # Draw lines connecting methodologies for the same dataset
         for dataset_name, points in dataset_points.items():
-                points = sorted(points, key=lambda x: x[0])  # Sort points by utility score
-                utility_scores, privacy_scores = zip(*points)
-                ax.plot(
-                    utility_scores,
-                    privacy_scores,
-                    label=f"{dataset_name} (connection)",
-                    color=dataset_colors[dataset_name],
-                    linestyle="--",
-                    alpha=0.6,
-                )
+            points = sorted(points, key=lambda x: x[0])  # Sort points by utility score
+            utility_scores, privacy_scores = zip(*points)
+            ax.plot(
+                utility_scores,
+                privacy_scores,
+                label=f"{dataset_name} (connection)",
+                color=dataset_colors[dataset_name],
+                linestyle="--",
+                alpha=0.6,
+            )
 
     # Create a custom legend by combining unique labels and markers
     handles, labels = ax.get_legend_handles_labels()
@@ -133,7 +130,8 @@ def gen_utility_privacy_graph(data, metric, metric_range=(0.75, 0.875)):
     )
     axes[0].set_ylabel("PTR")
     axes[4].set_ylabel("PTR")
-    n_metric = metric.title()
+    n_metric = clean_metric(metric)
+    n_privacy_metric = clean_privacy_metric(privacy_metric)
     axes[4].set_xlabel(f"{n_metric}")
     axes[5].set_xlabel(f"{n_metric}")
     axes[6].set_xlabel(f"{n_metric}")
@@ -141,9 +139,11 @@ def gen_utility_privacy_graph(data, metric, metric_range=(0.75, 0.875)):
 
     # Adjust layout to prevent overlap and make space for the title
     plt.tight_layout()
-    fig.suptitle(f"Utility ({n_metric.title()}) vs. Privacy (PTR)", y=1.01)
+    fig.suptitle(
+        f"Utility ({n_metric.title()}) vs. Privacy ({n_privacy_metric})", y=1.01
+    )
     # Save the figure
     fig.savefig(
-        f"./{PRIVACY_RESULTS_DIR}/graphs/utility-privacy-{metric}.png",
+        f"./{PRIVACY_RESULTS_DIR}/graphs/utility-privacy-{metric}-{privacy_metric}.png",
         bbox_inches="tight",
     )
