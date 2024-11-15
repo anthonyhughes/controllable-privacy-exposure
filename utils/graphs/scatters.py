@@ -11,7 +11,6 @@ import pandas as pd
 
 
 def plot_scatter_graph_for_util_priv():
-
     # Example data for sanitize and summarize - discharge letters
     models = ["GPT-4o", "Sonnet3.5", "Llama3.1-70b", "Llama3.1-8b", "Mistral7b"]
     model_complexity_set = [

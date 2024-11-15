@@ -110,10 +110,6 @@ if __name__ == "__main__":
                 sanitized_input_file=sanitized_input_file,
                 sanitized_summaries_file=sanitized_summaries_file,
             )
-        if args.eval_type in ["graph"]:
-            file_id = args.file_id
-            # run_reidentification_eval(target_model=target_model, tasks=tasks, variation='variation_1', sub_tasks=sub_tasks)
-            gen_graphs()
         end_m = timer() - start
         print(f"Model time to complete in secs: {end_m}")
     end = timer() - start

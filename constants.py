@@ -38,6 +38,7 @@ EXAMPLE_ADMISSION_IDS = [
 RESULTS_DIR = DATA_ROOT + "results"
 UTILITY_RESULTS_DIR = DATA_ROOT + "utility_results"
 PRIVACY_RESULTS_DIR = DATA_ROOT + "privacy_results"
+FINAL_PRIVACY_RESULTS_DIR = PRIVACY_RESULTS_DIR + "/final_privacy"
 FINAL_RAW_PRIVACY_RESULTS_DIR = PRIVACY_RESULTS_DIR + "/final_raw_privacy"
 FINAL_RAW_INPUTS_PRIVACY_RESULTS_DIR = PRIVACY_RESULTS_DIR + "/final_inputs_raw_privacy"
 FINAL_REID_RESULTS_DIR = PRIVACY_RESULTS_DIR + "/final_reid"
@@ -59,11 +60,15 @@ EVAL_MODELS = [
     "llamonymous-3-70b-bnb-4bit",
 ]
 EVAL_MODELS_REAL = [
-    "Claude-Sonnet-3-5",
     "GPT-4o",
+    "Claude-Sonnet-3-5",
     "Llama-3.1-8b-Instruct",
-    "Llama-3.1-70B-Instruct",
-    "Mistral-7b-Instruct",
+    # "Llama-3.1-70B-Instruct",
+    # "IFT Llama-3.1-70B-Instruct",
+    # "Llama-3.1-8b-Instruct",
+    # "IFT Llama-3.1-8b-Instruct",
+    # "Mistral-7b-Instruct",
+    # "IFT Mistral-7b-Instruct",
 ]
 
 
@@ -96,3 +101,13 @@ DEIDENTIFICATION_DICT = {
     "FAC": "the location",
 }
 MAX_TOKENS = 2048
+EVAL_MODELS_REAL_MAPPING = {
+    "gpt-4o-mini": "GPT-4o",
+    "mistral-7b-instruct-v0.3-bnb-4bit": "Mistral-7b-Instruct",
+    "llama-3-8b-Instruct-bnb-4bit": "Llama-3.1-8b-Instruct",
+    "claude-3-5-sonnet-20240620": "Claude-Sonnet-3-5",
+    "Meta-Llama-3.1-70B-Instruct-bnb-4bit": "Llama-3.1-70B-Instruct",
+    "llamonymous-3-8b-bnb-4bit": "IFT Llama-3.1-8b-Instruct",
+    "mistralymous-7b-bnb-4bit": "IFT Mistral-7b-Instruct",
+    "llamonymous-3-70b-bnb-4bit": "IFT Llama-3.1-70B-Instruct",
+}
