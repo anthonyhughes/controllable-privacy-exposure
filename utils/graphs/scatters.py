@@ -8,7 +8,7 @@ from constants import (
 )
 import seaborn as sns
 import pandas as pd
-
+from scipy.stats import linregress
 
 def plot_scatter_graph_for_util_priv():
     # Example data for sanitize and summarize - discharge letters
@@ -182,3 +182,40 @@ def plot_scatter_graph_for_sem_priv():
     # Show plot
     plt.tight_layout()
     plt.savefig(f"{PRIVACY_RESULTS_DIR}/graphs/bert-scatter-plot.png")
+
+def plot_ptr_vs_tpr(ptr_data):    
+    # Convert to DataFrame
+    df = pd.DataFrame(ptr_data)
+
+    # Create subplots for TPR and FPR vs PTR
+    fig, axes = plt.subplots(1, 2, figsize=(14, 6), sharey=True)
+
+    # Function to add regression line and display slope
+    def plot_relationship(ax, x, y, xlabel, ylabel, title):
+        sns.scatterplot(x=x, y=y, hue="Model", data=df, ax=ax, palette="Set1", s=100)
+        slope, intercept, r_value, p_value, std_err = linregress(x, y)
+        sns.lineplot(
+            x=x, y=slope * x + intercept, ax=ax, color="black", label=f"Trend (R² = {r_value**2:.2f})"
+        )
+        ax.set_title(title)
+        ax.set_xlabel(xlabel)
+        ax.set_ylabel(ylabel)
+        ax.legend()
+
+    # Plot TPR vs PTR
+    plot_relationship(
+        axes[0], df["All PII Counts"], df["All Positive Counts"], "Private Token Counts", "True and False Positive Rate", "Private vs Identifiable"
+    )
+
+    # # Plot FPR vs PTR
+    # plot_relationship(
+    #     axes[1], df["PTR"], df["False Positive Rate"], "Private Token Ratio (PTR)", "False Positive Rate", "FPR vs PTR"
+    # )
+
+    # Adjust layout
+    plt.tight_layout()
+    plt.suptitle("Relationship Between Privacy and Identifiability", y=1)
+    plt.tight_layout()
+    plt.savefig(
+        f"{PRIVACY_RESULTS_DIR}/graphs/tpr-ptr-scatter.png"
+    )

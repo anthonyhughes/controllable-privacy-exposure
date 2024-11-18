@@ -30,3 +30,26 @@ def clean_privacy_metric(priv_metric):
         return "Private Token Ratio"
     else:
         return priv_metric
+
+
+def clean_variations(variations):
+    return [f"Variation {i+1}" for i in range(len(variations))]
+
+
+def clean_property(pii_property):
+    if pii_property == "PERSON" or pii_property == "names":
+        return "Names"
+    elif pii_property == "DATE" or pii_property == "dates":
+        return "Dates"
+    elif pii_property == "ORG" or pii_property == "org":
+        return "Organizations"
+    else:
+        return "All PII"
+
+def clean_task_suffix(task_suffix):
+    if task_suffix == "_in_context":
+        return "1-Shot"
+    elif task_suffix == "_sani_summ":
+        return "Sanitized & Summarize"
+    else:
+        return "0-Shot"

@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-from utils.graphs.utils import clean_label
+from utils.graphs.utils import clean_label, clean_property
 
 mpl.rcParams["hatch.linewidth"] = 0.2
 
@@ -66,14 +66,14 @@ def gen_bar_chart(true_positive_rates, tasks, file_suffix_name):
         # Labeling
         # ax.set_xlabel("Methodologies")
         # ax.set_ylabel("True Positive Rate")        
-        ax.set_title(f"TPR for {clean_label(tasks[idx])} Task")
+        ax.set_title(f"{clean_label(tasks[idx])} Summaries")
         # angling the x-axis labels        
         ax.set_xticks(x)
         ax.set_xticklabels(methodologies, rotation=20)
     
     # Common y-axis label
     axes[0].set_ylabel("True Positive Rate")
-    fig.suptitle(f"True Positive Rates of {file_suffix_name.title()}")
+    fig.suptitle(f"True Positive Rates of {clean_property(file_suffix_name)}")
 
     # Legend on the first subplot to avoid repetition
     # smaller font size in legend
