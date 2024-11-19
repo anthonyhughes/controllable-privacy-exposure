@@ -109,28 +109,25 @@ def find_privacy_file(model):
     return None
 
 
-def gen_data_for_ptr_utility(utility_metric, privacy_metric="private_token_ratio"):
+def gen_data_for_ptr_utility(
+    utility_metric, privacy_metric="private_token_ratio"
+):
     tmp_data = {}
+    baselines = []
     for model in [
-        "gpt-4o-mini",
-        "claude-3-5-sonnet-20240620",
         "mistral-7b-instruct-v0.3-bnb-4bit",
+        "llama-3-8b-Instruct-bnb-4bit",
         "mistralymous-7b-bnb-4bit",
         "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
-        "llamonymous-3-70b-bnb-4bit",
-        "llama-3-8b-Instruct-bnb-4bit",
         "llamonymous-3-8b-bnb-4bit",
+        "llamonymous-3-70b-bnb-4bit",
+        "claude-3-5-sonnet-20240620",
+        "gpt-4o-mini",
     ]:
+
         if model not in tmp_data:
             tmp_data[model] = {}
-        for i, task in enumerate(
-            [
-                "brief_hospital_course",
-                "cnn",
-                "discharge_instructions",
-                "legal_court",
-            ]
-        ):
+        for i, task in enumerate(target_tasks):
             utility_file = f"{UTILITY_RESULTS_DIR}/{task}_final_utility/{model}.json"
             privacy_file = find_privacy_file(model)
             with open(utility_file, "r") as f:
@@ -138,22 +135,34 @@ def gen_data_for_ptr_utility(utility_metric, privacy_metric="private_token_ratio
                 with open(f"{FINAL_PRIVACY_RESULTS_DIR}/{privacy_file}", "r") as f:
                     privacy_data = json.load(f)
                     for key in data.keys():
-                        # if not "_in_context" or "_sani_" in key:
-                        #     continue
                         if "baseline" in key:
+                            if model == "gpt-4o-mini":
+                                print(key)
+                                baselines.append(
+                                    (
+                                        data[key][utility_metric],
+                                        privacy_data[key]["variation_1"][
+                                            privacy_metric
+                                        ],
+                                    )
+                                )
                             continue
+
                         nkey = handle_key(key)
                         if nkey not in tmp_data[model]:
                             tmp_data[model][nkey] = []
-
+                        if "variation_2" in privacy_data[key]:
+                            avg_ptr = (
+                                privacy_data[key]["variation_1"][privacy_metric]
+                                + privacy_data[key]["variation_2"][privacy_metric]
+                                + privacy_data[key]["variation_3"][privacy_metric]
+                            ) / 3
+                        else:
+                            avg_ptr = privacy_data[key]["variation_1"][privacy_metric]
                         tmp_data[model][nkey].append(
-                            (
-                                data[key][utility_metric],
-                                privacy_data[key]["variation_1"][privacy_metric],
-                            )
+                            (data[key][utility_metric], avg_ptr)
                         )
-
-    return tmp_data
+    return tmp_data, "gpt-4o-mini", baselines
 
 
 def gen_data_for_ptr_variation(privacy_metric="private_token_ratio"):
@@ -268,7 +277,7 @@ def gen_false_positives_for_heat_map(task_suffix):
         "mistral-7b-instruct-v0.3-bnb-4bit",
         "mistralymous-7b-bnb-4bit",
     ]
-    hmap_data = [[],[],[],[],[],[],[],[]]
+    hmap_data = [[], [], [], [], [], [], [], []]
     for target_task in target_tasks:
         if target_task == "cnn" or target_task == "legal_court":
             files = reid_non_clinical_files
@@ -278,9 +287,14 @@ def gen_false_positives_for_heat_map(task_suffix):
             with open(f"{FINAL_REID_RESULTS_DIR}/{file}", "r") as f:
                 data = json.load(f)
                 task_data = data[target_task + task_suffix]
-                all_false_pos = task_data["PERSON"]["fp"] + task_data["DATE"]["fp"] + task_data["ORG"]["fp"]
+                all_false_pos = (
+                    task_data["PERSON"]["fp"]
+                    + task_data["DATE"]["fp"]
+                    + task_data["ORG"]["fp"]
+                )
                 hmap_data[i].append(all_false_pos)
     return models, target_tasks, hmap_data
+
 
 def gen_ptr_tp_data():
     data = {
@@ -288,19 +302,33 @@ def gen_ptr_tp_data():
         "All Positive Counts": [],
         "All PII Counts": [],
     }
-    with open(f"{FINAL_REID_RESULTS_DIR}/gpt-4o-mini-reidentification_results-20241008-093250.json", "r") as f:
+    with open(
+        f"{FINAL_REID_RESULTS_DIR}/gpt-4o-mini-reidentification_results-20241008-093250.json",
+        "r",
+    ) as f:
         nonclin_data = json.load(f)
-    with open(f"{FINAL_REID_RESULTS_DIR}/gpt-4o-mini-reidentification_results-20241015-115757.json", "r") as f:
+    with open(
+        f"{FINAL_REID_RESULTS_DIR}/gpt-4o-mini-reidentification_results-20241015-115757.json",
+        "r",
+    ) as f:
         clin_data = json.load(f)
     # merge the data
     merged = nonclin_data | clin_data
     for target_task in merged.keys():
         task_data = merged[target_task]
-        true_pos_counts = task_data["PERSON"]["tp"] + task_data["DATE"]["tp"] + task_data["ORG"]["tp"]
-        false_pos_counts = task_data["PERSON"]["fp"] + task_data["DATE"]["fp"] + task_data["ORG"]["fp"]
+        true_pos_counts = (
+            task_data["PERSON"]["tp"] + task_data["DATE"]["tp"] + task_data["ORG"]["tp"]
+        )
+        false_pos_counts = (
+            task_data["PERSON"]["fp"] + task_data["DATE"]["fp"] + task_data["ORG"]["fp"]
+        )
         data["Model"].append(target_task)
         data["All Positive Counts"].append(true_pos_counts + false_pos_counts)
-        with(open(f"{FINAL_PRIVACY_RESULTS_DIR}/gpt-4o-mini-2024-10-07-17-36-02.json", "r")) as f:
+        with open(
+            f"{FINAL_PRIVACY_RESULTS_DIR}/gpt-4o-mini-2024-10-07-17-36-02.json", "r"
+        ) as f:
             privacy_data = json.load(f)
-        data["All PII Counts"].append(privacy_data[target_task]["variation_1"]["exposed_tokens_count"])
+        data["All PII Counts"].append(
+            privacy_data[target_task]["variation_1"]["exposed_tokens_count"]
+        )
     return data

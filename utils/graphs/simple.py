@@ -98,38 +98,23 @@ def gen_utility_privacy_graph(
         ax.set_title(model_name)
         ax.set_xlim(metric_range[0], metric_range[1])
         ax.set_ylim(privacy_range[0], privacy_range[1])
+        ax.grid(axis="both", linestyle="--", )
 
-        # Draw lines connecting methodologies for the same dataset
-        for dataset_name, points in dataset_points.items():
-            points = sorted(points, key=lambda x: x[0])  # Sort points by utility score
-            utility_scores, privacy_scores = zip(*points)
-            ax.plot(
-                utility_scores,
-                privacy_scores,
-                label=f"{dataset_name} (connection)",
-                color=dataset_colors[dataset_name],
-                linestyle="--",
-                alpha=0.6,
-            )
+        # # Draw lines connecting methodologies for the same dataset
+        # for dataset_name, points in dataset_points.items():
+        #     points = sorted(points, key=lambda x: x[0])  # Sort points by utility score
+        #     utility_scores, privacy_scores = zip(*points)
+        #     ax.plot(
+        #         utility_scores,
+        #         privacy_scores,
+        #         label=f"{dataset_name} (connection)",
+        #         color=dataset_colors[dataset_name],
+        #         linestyle="--",
+        #         alpha=0.6,
+        #     )            
 
-    # Create a custom legend by combining unique labels and markers
-    handles, labels = ax.get_legend_handles_labels()
-    by_label = dict(zip(labels, handles))
-    fig.legend(
-        by_label.values(),
-        by_label.keys(),
-        loc="lower center",
-        ncol=3,
-        markerscale=1.75,
-        title="Methodologies & Datasets",
-        bbox_to_anchor=(0.5, -0.15),
-        # font size
-        prop={"size": 10},
-        # mark or line size
-        # linescale=1.5,
-    )
-    axes[0].set_ylabel("PTR")
-    axes[4].set_ylabel("PTR")
+    axes[0].set_ylabel("Private Token Ratio")
+    axes[4].set_ylabel("Private Token Ratio")
     n_metric = clean_metric(metric)
     n_privacy_metric = clean_privacy_metric(privacy_metric)
     axes[4].set_xlabel(f"{n_metric}")
@@ -140,8 +125,40 @@ def gen_utility_privacy_graph(
     # Adjust layout to prevent overlap and make space for the title
     plt.tight_layout()
     fig.suptitle(
-        f"Utility ({n_metric.title()}) vs. Privacy ({n_privacy_metric})", y=1.01
+        f"Utility ({clean_metric(n_metric)}) vs. Privacy ({n_privacy_metric})", y=1.01
     )
+
+        # Create legend for methodologies
+    methodology_handles = [
+        plt.Line2D([0], [0], color=color, marker=methodology_markers[method], linestyle='', label=method)
+        for method, color in methodology_colors.items()
+    ]
+    fig.legend(
+        handles=methodology_handles,
+        loc="lower left",
+        ncol=3,
+        markerscale=1.5,
+        title="Methodologies",
+        bbox_to_anchor=(0.1, -0.15),  # Adjust position
+        prop={"size": 10},
+    )
+
+    # Create legend for datasets
+    dataset_handles = [
+        plt.Line2D([0], [0], color=colour, linestyle='--', label=dataset)
+        for colour, (dataset, marker) in zip(dataset_colors.values(), data_set_marks.items())
+    ]
+    fig.legend(
+        handles=dataset_handles,
+        loc="lower right",
+        ncol=4,
+        markerscale=1.5,
+        title="Datasets",
+        bbox_to_anchor=(0.9, -0.15),  # Adjust position
+        prop={"size": 10},
+    )
+
+
     # Save the figure
     fig.savefig(
         f"./{PRIVACY_RESULTS_DIR}/graphs/utility-privacy-{metric}-{privacy_metric}.png",

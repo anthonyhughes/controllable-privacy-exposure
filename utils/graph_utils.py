@@ -1,4 +1,7 @@
-from utils.graphs.bar_chart import gen_bar_chart
+from matplotlib import pyplot as plt
+from matplotlib.transforms import Bbox
+from constants import PRIVACY_RESULTS_DIR
+from utils.graphs.bar_chart import gen_bar_chart, gen_utility_privacy_bar_chart, gen_utility_privacy_bar_chart_for_uber
 from utils.graphs.graph_data import (
     gen_data_for_all_properties_comparison,
     gen_data_for_property_comparison,
@@ -7,7 +10,7 @@ from utils.graphs.graph_data import (
     gen_data_for_ptr_mean_std_variation,
     gen_data_for_document_length,
     gen_false_positives_for_heat_map,
-    gen_ptr_tp_data
+    gen_ptr_tp_data,
 )
 from utils.graphs.heatmaps import plot_heat_map
 from utils.graphs.scatters import plot_ptr_vs_tpr
@@ -52,7 +55,7 @@ def gen_graphs():
     # gen_std_variance_graph(bs_data, file_suffix="private_token_ratio")
 
     # bs_data = gen_data_for_document_length(privacy_metric="private_token_ratio")
-    
+
     # bs_data = gen_false_positives_for_heat_map(task_suffix="")
     # plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="")
 
@@ -62,7 +65,8 @@ def gen_graphs():
     # bs_data = gen_false_positives_for_heat_map(task_suffix="_sani_summ")
     # plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_sani_summ")
 
-    bs_data = gen_ptr_tp_data()
-    # plot_ptr_vs_tpr(bs_data)
-    gen_diff_plot_for_privacy(bs_data)
-    
+    # bs_data = gen_ptr_tp_data()
+    # gen_diff_plot_for_privacy(bs_data)
+
+    metric = "rougeL"
+    gen_utility_privacy_bar_chart_for_uber(metric)

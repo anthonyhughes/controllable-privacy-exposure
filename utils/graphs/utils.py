@@ -14,11 +14,21 @@ def clean_model_name(model_name):
     return EVAL_MODELS_REAL_MAPPING[model_name]
 
 
+def fetch_clean_dataset_name(target_task_idx):
+    target_tasks = [
+        "brief_hospital_course",
+        "cnn",
+        "discharge_instructions",
+        "legal_court",
+    ]
+    return clean_label(target_tasks[target_task_idx])
+
+
 def clean_metric(metric):
-    if metric == "Bertscore":
+    if metric == "Bertscore" or metric == "bertscore":
         return "BERTScore"
-    elif metric == "RougeL":
-        return "Rouge-L"
+    elif metric == "RougeL" or metric == "rougeL":
+        return "RougeL"
     else:
         return metric
 
