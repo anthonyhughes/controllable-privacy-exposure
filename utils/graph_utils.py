@@ -1,7 +1,7 @@
 from matplotlib import pyplot as plt
 from matplotlib.transforms import Bbox
 from constants import PRIVACY_RESULTS_DIR
-from utils.graphs.bar_chart import gen_bar_chart, gen_utility_privacy_bar_chart, gen_utility_privacy_bar_chart_for_uber
+from utils.graphs.bar_chart import gen_bar_chart, gen_utility_privacy_bar_chart, gen_utility_privacy_bar_chart_for_uber, gen_utility_privacy_bar_chart_for_tpr_uber
 from utils.graphs.graph_data import (
     gen_data_for_all_properties_comparison,
     gen_data_for_property_comparison,
@@ -68,5 +68,10 @@ def gen_graphs():
     # bs_data = gen_ptr_tp_data()
     # gen_diff_plot_for_privacy(bs_data)
 
-    metric = "rougeL"
-    gen_utility_privacy_bar_chart_for_uber(metric)
+    utility_metric = "rougeL"
+    privacy_metric = "ptr"
+    gen_utility_privacy_bar_chart_for_uber(utility_metric, privacy_metric)
+
+    utility_metric = "rouge1"
+    privacy_metric = "tpr"
+    gen_utility_privacy_bar_chart_for_tpr_uber(utility_metric, privacy_metric)

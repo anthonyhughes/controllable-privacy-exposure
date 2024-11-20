@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pandas as pd
 
-from utils.graphs.graph_data import gen_data_for_ptr_utility
+from utils.graphs.graph_data import gen_data_for_ptr_utility, gen_data_for_tpr_utility
 from utils.graphs.utils import (
     clean_label,
     clean_metric,
@@ -97,7 +97,7 @@ def gen_bar_chart(true_positive_rates, tasks, file_suffix_name):
 
 
 def gen_utility_privacy_bar_chart(
-    bs_data, metric, target_task_idx, baseline_model, baseline_metrics, ax
+    bs_data, metric, target_task_idx, baseline_model, baseline_metrics, ax, privacy_metric="tpr"
 ):
     # Example Data
     n_metric = clean_metric(metric)
@@ -191,37 +191,38 @@ def gen_utility_privacy_bar_chart(
         if i % 2 == 0:
             label.set_y(label.get_position()[1] + 0)  # Move up
         else:
-            label.set_y(label.get_position()[1] - 0.025)  # Move down
-    # Example of adding horizontal dashed lines at y=30 and y=70
-    line_positions = [
-        baseline_metrics[target_task_idx][0],
-        baseline_metrics[target_task_idx][1],
-    ]  # Y-coordinates for the lines
-    line_colors = ["black", "black"]  # Colors for each line
-    line_styles = ["--", "--"]  # Both lines are dashed
-    metrics = [n_metric, "PTR"]
+            label.set_y(label.get_position()[1] - 0.035)  # Move down
 
-    for i, (y, color, style) in enumerate(
-        zip(line_positions, line_colors, line_styles)
-    ):
-        ax.axhline(
-            y=y,  # Position of the line on the y-axis
-            color=color,  # Line color
-            linestyle=style,  # Line style (e.g., dashed)
-            linewidth=1,  # Line thickness
-            alpha=0.75,  # Transparency
-            label=f"Threshold {y}",  # Label for the legend
-        )
-        ax.text(
-            x=3.5,  # X-coordinate (middle of the plot area)
-            y=y,  # Y-coordinate (same as the line)
-            s=f"{clean_model_name(baseline_model)} {metrics[i]} baseline",  # Text to display
-            color=color,
-            fontsize=8,
-            ha="center",  # Horizontal alignment
-            va="center",  # Vertical alignment
-            backgroundcolor="white",
-        )
+    if baseline_model != "":
+        line_positions = [
+            baseline_metrics[target_task_idx][0],
+            baseline_metrics[target_task_idx][1],
+        ]  # Y-coordinates for the lines
+        line_colors = ["black", "black"]  # Colors for each line
+        line_styles = ["--", "--"]  # Both lines are dashed
+        metrics = [n_metric, privacy_metric.upper()]  # Metric names
+
+        for i, (y, color, style) in enumerate(
+            zip(line_positions, line_colors, line_styles)
+        ):
+            ax.axhline(
+                y=y,  # Position of the line on the y-axis
+                color=color,  # Line color
+                linestyle=style,  # Line style (e.g., dashed)
+                linewidth=1,  # Line thickness
+                alpha=0.75,  # Transparency
+                label=f"Threshold {y}",  # Label for the legend
+            )
+            ax.text(
+                x=3.5,  # X-coordinate (middle of the plot area)
+                y=y,  # Y-coordinate (same as the line)
+                s=f"{clean_model_name(baseline_model)} {metrics[i]} Baseline",  # Text to display
+                color=color,
+                fontsize=8,
+                ha="center",  # Horizontal alignment
+                va="center",  # Vertical alignment
+                backgroundcolor="white",
+            )
 
     # Add legend
     # Create a legend for methodologies
@@ -253,13 +254,27 @@ def gen_utility_privacy_bar_chart(
         plt.Line2D(
             [0], [0], color="grey", marker="s", linestyle="", label=f"{n_metric}"
         ),
-        plt.Line2D(
-            [0], [0], color=line_colors[0], linestyle="--", label=f"Utility Baseline"
-        ),
-        plt.Line2D(
-            [0], [0], color=line_colors[1], linestyle="--", label=f"Privacy Baseline"
-        ),
     ]
+
+    if baseline_model != "":
+        methodology_handles.append(
+            plt.Line2D(
+                [0],
+                [0],
+                color=line_colors[0],
+                linestyle="--",
+                label=f"Utility Baseline",
+            )
+        )
+        methodology_handles.append(
+            plt.Line2D(
+                [0],
+                [0],
+                color=line_colors[1],
+                linestyle="--",
+                label=f"Privacy Baseline",
+            )
+        )
 
     # Add legend to the plot
     if target_task_idx == 0:
@@ -271,18 +286,19 @@ def gen_utility_privacy_bar_chart(
         )
 
     # Set y-axis label and title
+    n_priv_metric = clean_metric(privacy_metric)
     if target_task_idx == 0 or target_task_idx == 2:
-        ax.set_ylabel("RogueL and Private Token Ratio", fontsize=10)
+        ax.set_ylabel(f"{n_metric} and {n_priv_metric}", fontsize=10)
     dataset_label = fetch_clean_dataset_name(target_task_idx)
     ax.set_title(f"{dataset_label}", fontsize=10)
 
     # Add grid and adjust layout
-    ax.grid(axis="y", linestyle="--", alpha=0.6)    
+    ax.grid(axis="y", linestyle="--", alpha=0.6)
     return ax
 
 
-def gen_utility_privacy_bar_chart_for_uber(metric):
-    fig, axes = plt.subplots(2, 2, figsize=(14, 12))  # Create a new 2x2 grid
+def gen_utility_privacy_bar_chart_for_uber(metric, privacy_metric):
+    fig, axes = plt.subplots(2, 2, figsize=(12, 8)) 
     axes = axes.flatten()  # Make it iterable
 
     # Generate data and plot into the new grid
@@ -293,13 +309,33 @@ def gen_utility_privacy_bar_chart_for_uber(metric):
 
         # Re-plot the chart directly into the target subplot
         gen_utility_privacy_bar_chart(
-            bs_data, metric, i, baseline_model, baseline_metrics, ax=ax
+            bs_data, metric, i, baseline_model, baseline_metrics, ax=ax, privacy_metric=privacy_metric
         )
 
-    fig.suptitle(f"{clean_metric(metric)} (Utility) vs. Private Token Ratio (Privacy)")
+    fig.suptitle(f"Utility ({clean_metric(metric)}) vs. Privacy (Private Token Ratio)")
     # Adjust layout and save
     plt.tight_layout()
     plt.savefig(
         f"{PRIVACY_RESULTS_DIR}/graphs/privacy-vs-utility-uber.png",
+        bbox_inches="tight",
+    )
+
+
+def gen_utility_privacy_bar_chart_for_tpr_uber(metric, privacy_metric):
+    fig, axes = plt.subplots(2, 2, figsize=(12, 8))  # Create a new 2x2 grid
+    axes = axes.flatten()  # Make it iterable
+
+    # Generate data and plot into the new grid
+    for i, ax in enumerate(axes):
+        bs_data = gen_data_for_tpr_utility(utility_metric=metric)
+
+        # Re-plot the chart directly into the target subplot
+        gen_utility_privacy_bar_chart(bs_data, metric, i, "", [], ax=ax, privacy_metric="tpr")
+
+    fig.suptitle(f"Utility ({clean_metric(metric)}) vs. Exposure (True Positive Rate)")
+    # Adjust layout and save
+    plt.tight_layout()
+    plt.savefig(
+        f"{PRIVACY_RESULTS_DIR}/graphs/exposure-vs-utility-uber.png",
         bbox_inches="tight",
     )

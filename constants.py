@@ -103,11 +103,11 @@ DEIDENTIFICATION_DICT = {
 MAX_TOKENS = 2048
 EVAL_MODELS_REAL_MAPPING = {
     "gpt-4o-mini": "GPT-4o",
-    "mistral-7b-instruct-v0.3-bnb-4bit": "Mistral-7b-Instruct",
-    "llama-3-8b-Instruct-bnb-4bit": "Llama-3.1-8b-Instruct",
+    "mistral-7b-instruct-v0.3-bnb-4bit": "Mistral-7b",
+    "llama-3-8b-Instruct-bnb-4bit": "Llama-3.1-8b",
     "claude-3-5-sonnet-20240620": "Claude-Sonnet-3-5",
-    "Meta-Llama-3.1-70B-Instruct-bnb-4bit": "Llama-3.1-70B-Instruct",
-    "llamonymous-3-8b-bnb-4bit": "IFT Llama-3.1-8b-Instruct",
-    "mistralymous-7b-bnb-4bit": "IFT Mistral-7b-Instruct",
-    "llamonymous-3-70b-bnb-4bit": "IFT Llama-3.1-70B-Instruct",
+    "Meta-Llama-3.1-70B-Instruct-bnb-4bit": "Llama-3.1-70B",
+    "llamonymous-3-8b-bnb-4bit": "IFT Llama-3.1-8b",
+    "mistralymous-7b-bnb-4bit": "IFT Mistral-7b",
+    "llamonymous-3-70b-bnb-4bit": "IFT Llama-3.1-70B",
 }

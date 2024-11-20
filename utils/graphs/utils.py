@@ -7,6 +7,8 @@ def clean_label(label) -> str:
     """
     if label == "cnn":
         return "CNN/DailyMail"
+    if label == "legal_court":
+        return "Legal Contracts"
     return label.replace("_", " ").title()
 
 
@@ -28,7 +30,15 @@ def clean_metric(metric):
     if metric == "Bertscore" or metric == "bertscore":
         return "BERTScore"
     elif metric == "RougeL" or metric == "rougeL":
-        return "RougeL"
+        return "Rouge-L"
+    elif metric == "Rouge1" or metric == "rouge1":
+        return "Rouge-1"
+    elif metric == "tpr":
+        return "True Positive Rate"
+    elif metric == "fpr":
+        return "False Positive Rate"
+    elif metric == "ptr":
+        return "Privacy Token Ratio"
     else:
         return metric
 

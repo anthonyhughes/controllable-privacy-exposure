@@ -109,9 +109,13 @@ def find_privacy_file(model):
     return None
 
 
-def gen_data_for_ptr_utility(
-    utility_metric, privacy_metric="private_token_ratio"
-):
+def find_reid_file(model):
+    privacy_files = os.listdir(FINAL_REID_RESULTS_DIR)
+    privacy_files = [file for file in privacy_files if model in file]
+    return privacy_files
+
+
+def gen_data_for_ptr_utility(utility_metric, privacy_metric="private_token_ratio"):
     tmp_data = {}
     baselines = []
     for model in [
@@ -332,3 +336,57 @@ def gen_ptr_tp_data():
             privacy_data[target_task]["variation_1"]["exposed_tokens_count"]
         )
     return data
+
+
+def gen_data_for_tpr_utility(utility_metric, privacy_metric="private_token_ratio"):
+    tmp_data = {}
+    for model in [
+        "mistral-7b-instruct-v0.3-bnb-4bit",
+        "llama-3-8b-Instruct-bnb-4bit",
+        "mistralymous-7b-bnb-4bit",
+        "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+        "llamonymous-3-8b-bnb-4bit",
+        "llamonymous-3-70b-bnb-4bit",
+        "claude-3-5-sonnet-20240620",
+        "gpt-4o-mini",
+    ]:
+
+        if model not in tmp_data:
+            tmp_data[model] = {}
+        for i, task in enumerate(target_tasks):
+            utility_file = f"{UTILITY_RESULTS_DIR}/{task}_final_utility/{model}.json"
+            privacy_file = find_reid_file(model)
+            with open(utility_file, "r") as f:
+                data = json.load(f)
+            with open(
+                f"{FINAL_REID_RESULTS_DIR}/{privacy_file[0]}",
+                "r",
+            ) as f:
+                nonclin_data = json.load(f)
+            with open(
+                f"{FINAL_REID_RESULTS_DIR}/{privacy_file[1]}",
+                "r",
+            ) as f:
+                clin_data = json.load(f)
+            # merge the data
+            reid_data = nonclin_data | clin_data
+            for key in data.keys():
+                if "baseline" in key:
+                    continue
+                nkey = handle_key(key)
+                if nkey not in tmp_data[model]:
+                    tmp_data[model][nkey] = []
+                # true_pos_counts = (
+                #     reid_data[key]["PERSON"]["tp"] + reid_data[key]["DATE"]["tp"] + reid_data[key]["ORG"]["tp"]
+                # )
+                # false_pos_counts = (
+                #     reid_data[key]["PERSON"]["fp"] + reid_data[key]["DATE"]["fp"] + reid_data[key]["ORG"]["fp"]
+                # )
+                # if true_pos_counts == 0 or false_pos_counts == 0:
+                #     tpr = 0
+                # else:
+                #     tpr = true_pos_counts / (true_pos_counts + false_pos_counts)
+                tmp_data[model][nkey].append(
+                    (data[key][utility_metric], reid_data[key]["PERSON"]["recall"])
+                )
+    return tmp_data
