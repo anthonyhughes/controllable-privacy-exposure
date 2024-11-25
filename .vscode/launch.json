@@ -353,6 +353,17 @@
                 // "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
 
             ],
+        },
+        {
+            "name": "Human Eval Sampling",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "utils/human_eval.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
         }
     ]
 }
