@@ -14,11 +14,20 @@ from utils.graphs.utils import clean_variations
 
 target_tasks = [
     "brief_hospital_course",
-    "cnn",
     "discharge_instructions",
+    "cnn",
     "legal_court",
 ]
-
+models_in_order = [
+    "gpt-4o-mini",
+    "claude-3-5-sonnet-20240620",
+    "mistral-7b-instruct-v0.3-bnb-4bit",
+    "mistralymous-7b-bnb-4bit",
+    "llama-3-8b-Instruct-bnb-4bit",
+    "llamonymous-3-8b-bnb-4bit",
+    "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+    "llamonymous-3-70b-bnb-4bit",
+]
 reid_clinical_files = [
     "claude-3-5-sonnet-20240620-reidentification_results-20241007-093020.json",
     "gpt-4o-mini-reidentification_results-20241008-093250.json",
@@ -118,17 +127,7 @@ def find_reid_file(model):
 def gen_data_for_ptr_utility(utility_metric, privacy_metric="private_token_ratio"):
     tmp_data = {}
     baselines = []
-    for model in [
-        "mistral-7b-instruct-v0.3-bnb-4bit",
-        "llama-3-8b-Instruct-bnb-4bit",
-        "mistralymous-7b-bnb-4bit",
-        "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
-        "llamonymous-3-8b-bnb-4bit",
-        "llamonymous-3-70b-bnb-4bit",
-        "claude-3-5-sonnet-20240620",
-        "gpt-4o-mini",
-    ]:
-
+    for model in models_in_order:
         if model not in tmp_data:
             tmp_data[model] = {}
         for i, task in enumerate(target_tasks):
@@ -141,7 +140,7 @@ def gen_data_for_ptr_utility(utility_metric, privacy_metric="private_token_ratio
                     for key in data.keys():
                         if "baseline" in key:
                             if model == "gpt-4o-mini":
-                                print(key)
+                                # print(key)
                                 baselines.append(
                                     (
                                         data[key][utility_metric],
@@ -166,6 +165,14 @@ def gen_data_for_ptr_utility(utility_metric, privacy_metric="private_token_ratio
                         tmp_data[model][nkey].append(
                             (data[key][utility_metric], avg_ptr)
                         )
+    # sort the nested keys of each model so that 0 shot comes first
+    for model in tmp_data.keys():
+        tmp_data[model] = dict(
+            sorted(
+                tmp_data[model].items(),
+                key=lambda item: 0 if "0 Shot" in item[0] else 1,
+            )
+        )
     return tmp_data, "gpt-4o-mini", baselines
 
 
@@ -180,10 +187,10 @@ def gen_data_for_ptr_variation(privacy_metric="private_token_ratio"):
         "claude-3-5-sonnet-20240620",
         "mistral-7b-instruct-v0.3-bnb-4bit",
         "mistralymous-7b-bnb-4bit",
-        "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
-        "llamonymous-3-70b-bnb-4bit",
         "llama-3-8b-Instruct-bnb-4bit",
         "llamonymous-3-8b-bnb-4bit",
+        "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+        "llamonymous-3-70b-bnb-4bit",
     ]:
         privacy_file = find_privacy_file(model)
         with open(f"{FINAL_PRIVACY_RESULTS_DIR}/{privacy_file}", "r") as f:
@@ -340,17 +347,7 @@ def gen_ptr_tp_data():
 
 def gen_data_for_tpr_utility(utility_metric, privacy_metric="private_token_ratio"):
     tmp_data = {}
-    for model in [
-        "mistral-7b-instruct-v0.3-bnb-4bit",
-        "llama-3-8b-Instruct-bnb-4bit",
-        "mistralymous-7b-bnb-4bit",
-        "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
-        "llamonymous-3-8b-bnb-4bit",
-        "llamonymous-3-70b-bnb-4bit",
-        "claude-3-5-sonnet-20240620",
-        "gpt-4o-mini",
-    ]:
-
+    for model in models_in_order:
         if model not in tmp_data:
             tmp_data[model] = {}
         for i, task in enumerate(target_tasks):
@@ -376,16 +373,6 @@ def gen_data_for_tpr_utility(utility_metric, privacy_metric="private_token_ratio
                 nkey = handle_key(key)
                 if nkey not in tmp_data[model]:
                     tmp_data[model][nkey] = []
-                # true_pos_counts = (
-                #     reid_data[key]["PERSON"]["tp"] + reid_data[key]["DATE"]["tp"] + reid_data[key]["ORG"]["tp"]
-                # )
-                # false_pos_counts = (
-                #     reid_data[key]["PERSON"]["fp"] + reid_data[key]["DATE"]["fp"] + reid_data[key]["ORG"]["fp"]
-                # )
-                # if true_pos_counts == 0 or false_pos_counts == 0:
-                #     tpr = 0
-                # else:
-                #     tpr = true_pos_counts / (true_pos_counts + false_pos_counts)
                 tmp_data[model][nkey].append(
                     (data[key][utility_metric], reid_data[key]["PERSON"]["recall"])
                 )
