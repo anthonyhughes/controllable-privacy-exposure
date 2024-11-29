@@ -104,6 +104,8 @@ def gen_utility_privacy_bar_chart(
     baseline_metrics,
     axes,
     privacy_metric="tpr",
+    util_ylim=(0.1, 0.275),
+    priv_ylim=(0, 0.6)
 ):
     # Process data
     n_metric = clean_metric(metric)
@@ -177,7 +179,7 @@ def gen_utility_privacy_bar_chart(
     ]):
         ax.set_xticks(model_centers)
         ax.set_xticklabels(
-            [clean_model_name(model) for model in models], fontsize=8, rotation=45
+            [clean_model_name(model) for model in models], fontsize=8, rotation=25, ha="right"
         )
 
         if baseline_model:
@@ -208,7 +210,7 @@ def gen_utility_privacy_bar_chart(
         ax.set_title(f"{dataset_label}", fontsize=10)
 
     # Add legend to first column only
-    if target_task_idx == 0:
+    if target_task_idx == 1:
         methodology_handles = [
             plt.Line2D([0], [0], color=color, marker="o", linestyle="", label=label)
             for color, label in zip(
@@ -230,6 +232,8 @@ def gen_utility_privacy_bar_chart(
     if target_task_idx == 0:
         ax_utility.set_ylabel(n_metric)            
         ax_privacy.set_ylabel(clean_metric(privacy_metric))
+    ax_utility.set_ylim(util_ylim[0], util_ylim[1])
+    ax_privacy.set_ylim(priv_ylim[0], priv_ylim[1])
 
 
 def gen_utility_privacy_bar_chart_for_uber(metric, privacy_metric):
@@ -250,6 +254,8 @@ def gen_utility_privacy_bar_chart_for_uber(metric, privacy_metric):
             [],
             axes=axes,
             privacy_metric=privacy_metric,
+            util_ylim=(0, 0.28),
+            priv_ylim=(0, 0.65)
         )
 
     fig.suptitle(
@@ -279,6 +285,8 @@ def gen_utility_privacy_bar_chart_for_tpr_uber(metric, privacy_metric):
             [],
             axes=axes,
             privacy_metric=privacy_metric,
+            util_ylim=(0, 0.28),
+            priv_ylim=(0, 0.6)
         )
 
     fig.suptitle(f"Utility ({clean_metric(metric)}) vs. Exposure (True Positive Rate)")
