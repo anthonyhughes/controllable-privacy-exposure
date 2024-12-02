@@ -72,3 +72,11 @@ CUDA_VISIBLE_DEVICES=1 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ 
 
 CUDA_VISIBLE_DEVICES=1 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m llamonymous-3-8b-bnb-4bit -e privacy -st all &
 CUDA_VISIBLE_DEVICES=1 PYTHONPATH=/home/acp23ajh/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m mistralymous-7b-bnb-4bit -e privacy -st all &
+
+# 
+
+PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m llama-3-8b-Instruct-bnb-4bit -e utility -st _summ_sann &
+PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m mistral-7b-instruct-v0.3-bnb-4bit -e utility -st _summ_sann &
+PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure/ nohup python pipelines/eval_pipeline.py -t all -m gpt-4o-mini -e utility -st _summ_sann &
+
+PYTHONPATH=/Users/anthonyhughes/PhD/controllable-privacy-exposure nohup python pipelines/eval_pipeline.py -t all -m llama-3-8b-Instruct-bnb-4bit -e privacy -st _summ_sann &

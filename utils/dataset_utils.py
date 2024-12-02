@@ -17,6 +17,7 @@ from constants import (
     RESULTS_DIR,
     PSEUDO_TARGETS_ROOT,
     SANI_SUMM_SUMMARY_TASK,
+    SUMM_SANN_SUMMARY_TASK,
     SUMMARY_TYPES,
     TRAIN_DISCHARGE_ME,
     RE_ID_TARGETS_ROOT,
@@ -148,6 +149,7 @@ def open_target_summary(task, hadm_id):
     else:
         task = task.replace(f"{IN_CONTEXT_SUMMARY_TASK}", "")
         task = task.replace(f"{SANI_SUMM_SUMMARY_TASK}", "")
+        task = task.replace(f"{SUMM_SANN_SUMMARY_TASK}", "")
         target_file = f"{PSEUDO_TARGETS_ROOT}/{task}/{hadm_id}-target.txt"
 
     with open(target_file, "r") as f:
@@ -200,6 +202,7 @@ def reference_file_is_present(task, hadm_id) -> bool:
     else:
         task = task.replace(f"{IN_CONTEXT_SUMMARY_TASK}", "")
         task = task.replace(f"{SANI_SUMM_SUMMARY_TASK}", "")
+        task = task.replace(f"{SUMM_SANN_SUMMARY_TASK}", "")
         return os.path.exists(f"{PSEUDO_TARGETS_ROOT}/{task}/{hadm_id}-target.txt")
 
 

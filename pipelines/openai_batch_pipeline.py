@@ -13,6 +13,7 @@ from constants import (
     RESULTS_DIR,
     SANI_SUMM_SUMMARY_TASK,
     SANITIZE_TASK,
+    SUMM_SANN_SUMMARY_TASK,
     SUMMARY_TYPES,
     TASK_SUFFIXES,
     BATCH_FLAGS,
@@ -27,6 +28,7 @@ from utils.dataset_utils import (
     result_file_is_present,
 )
 from utils.prompt_variations import variations, sanitize_prompt
+
 
 def build_instruction_prompt_with_document(
     instruction,
@@ -44,6 +46,7 @@ def build_instruction_prompt_with_document(
                 ### Response:
             """,
     }
+
 
 def build_prompt_for_task(
     task,
@@ -143,7 +146,7 @@ def build_all_variations_for_task(
         if SANITIZE_TASK in tasks_suffixes and not result_file_is_present(
             sani_task, id, model, v_name
         ):
-            print("Adding sani task to batch")            
+            print("Adding sani task to batch")
             sani_prompt = build_prompt_for_task(task, sanitize_prompt, id)
             job_to_store = marshall_prompt_into_openai_object(
                 sani_prompt, model, f"{v_name}_{sani_task}_{id}"
@@ -165,14 +168,38 @@ def build_all_variations_for_task(
                 task=sani_task, hadm_id=id, model=model, variation=v_name
             )
             sani_summ_prompt = prompt_prefix_for_task[sani_summ_task]
-            sani_summ_prompt = build_instruction_prompt_with_document(sani_summ_prompt, sanitized_doc)
+            sani_summ_prompt = build_instruction_prompt_with_document(
+                sani_summ_prompt, sanitized_doc
+            )
             job_to_store = marshall_prompt_into_openai_object(
                 sani_summ_prompt, model, f"{v_name}_{sani_summ_task}_{id}"
-            )            
+            )
             append_result_to_batch_job(job_to_store, model, cdatetime)
         else:
             print(f"Skipping document {id} on task {task}")
 
+        # now sanitize the baseline summaries
+        summ_sann_task = f"{task}{SUMM_SANN_SUMMARY_TASK}"
+        # check summary not available and sanitized doc is available
+        if (
+            SUMM_SANN_SUMMARY_TASK in tasks_suffixes
+            and not result_file_is_present(summ_sann_task, id, model, v_name)
+            and result_file_is_present(baseline_task, id, model, v_name)
+        ):
+            print("Adding summ_sann_task task to batch")
+            baseline_summary = open_generated_summary(
+                task=baseline_task, hadm_id=id, model=model, variation=v_name
+            )
+            summ_sann_prompt = prompt_prefix_for_task[summ_sann_task]
+            summ_sann_prompt = build_instruction_prompt_with_document(
+                summ_sann_prompt, baseline_summary
+            )
+            job_to_store = marshall_prompt_into_openai_object(
+                summ_sann_prompt, model, f"{v_name}_{summ_sann_task}_{id}"
+            )
+            append_result_to_batch_job(job_to_store, model, cdatetime)
+        else:
+            print(f"Skipping document {id} on task {task}")
 
 def append_result_to_batch_job(openai_job, model, cdatetime):
     """Save result"""
@@ -213,7 +240,13 @@ def run(hadm_ids, model="gpt-4o-mini", tasks=SUMMARY_TYPES, start_time="now"):
         for i, id in enumerate(hadm_ids):
             print(f"Create batch for OpenAI")
             print(f"{task} on document {id} - {i+1}/{len(hadm_ids)}")
-            build_all_variations_for_task(id, task, model=model, cdatetime=start_time)
+            build_all_variations_for_task(
+                id,
+                task,
+                model=model,
+                cdatetime=start_time,
+                tasks_suffixes=[SUMM_SANN_SUMMARY_TASK],
+            )
             print(f"Pipeline completed - {id}")
 
     batch_file = prep_batch_job(cdatetime=start_time, client=client, model=model)
@@ -286,18 +319,18 @@ if __name__ == "__main__":
             run(hadm_ids=ids, tasks=[task], model=args.model)
         else:
             target_admission_ids = extract_hadm_ids_from_dir(
-                "llama-3-8b-Instruct-bnb-4bit", "brief_hospital_course", "variation_1"
+                model, "brief_hospital_course", "variation_1"
             )
             run(hadm_ids=target_admission_ids, tasks=[task], model=args.model)
     elif flag == "check":
         client = OpenAI(
             api_key=os.environ.get("OPENAI_API_KEY"),
         )
-        job_id = args.job_id
-        batch_job = client.batches.retrieve(job_id)
-        print(batch_job)
-        # all_batch_jobs = client.batches.list(limit=4)
-        # print(all_batch_jobs)
+        # job_id = args.job_id
+        # batch_job = client.batches.retrieve(job_id)
+        # print(batch_job)
+        all_batch_jobs = client.batches.list(limit=4)
+        print(all_batch_jobs)
     elif flag == "cancel":
         client = OpenAI(
             api_key=os.environ.get("OPENAI_API_KEY"),

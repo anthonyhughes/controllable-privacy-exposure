@@ -6,6 +6,7 @@ from constants import (
     IN_CONTEXT_SUMMARY_TASK,
     METRICS,
     SANI_SUMM_SUMMARY_TASK,
+    SUMM_SANN_SUMMARY_TASK,
     TASK_SUFFIXES,
     UTILITY_RESULTS_DIR,
     SUMMARY_TYPES,
@@ -50,14 +51,16 @@ def calculate_average_per_variation(results, task, variation):
     baseline_task = f"{task}{BASELINE_SUMMARY_TASK}"
     icl_task = f"{task}{IN_CONTEXT_SUMMARY_TASK}"
     sani_summ_task = f"{task}{SANI_SUMM_SUMMARY_TASK}"
+    summ_sann_task = f"{task}{SUMM_SANN_SUMMARY_TASK}"
 
-    tasks = [task, baseline_task, icl_task, sani_summ_task]
+    tasks = [task, baseline_task, icl_task, sani_summ_task, summ_sann_task]
 
     # Add these tasks to the avg_scores dictionary
     avg_scores[baseline_task] = {}
     avg_scores[icl_task] = {}
     avg_scores[task] = {}
     avg_scores[sani_summ_task] = {}
+    avg_scores[summ_sann_task] = {}
 
     for task in tasks:
         for metric in METRICS:
@@ -193,6 +196,18 @@ def run_utility_eval(target_model, tasks=SUMMARY_TYPES, sub_tasks=TASK_SUFFIXES)
                     )
                     print(f"Running evaluation for document: {hadm_id}")
                     update_results_for_task(results, sani_summ_task, hadm_id, target_model, variation)
+
+            if SUMM_SANN_SUMMARY_TASK in sub_tasks:
+                summ_sann_task = f"{task}{SUMM_SANN_SUMMARY_TASK}"
+                print(f"Running evaluation for task: {summ_sann_task} and model: {target_model}")
+                hadm_ids = extract_hadm_ids_from_dir(target_model, summ_sann_task, variation)
+                for i, hadm_id in enumerate(hadm_ids[0:10]):
+                    print(f"Completed: {i+1}/{len(hadm_ids)}")
+                    print(
+                        f"Running evaluation for {summ_sann_task}, model: {target_model}, document: {hadm_id}, variation: {variation}"
+                    )
+                    print(f"Running evaluation for document: {hadm_id}")
+                    update_results_for_task(results, summ_sann_task, hadm_id, target_model, variation)
             
             # Store the averages per variant
             avg_results_for_variant = calculate_average_per_variation(results, task=task, variation=variation)        

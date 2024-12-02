@@ -90,6 +90,30 @@ variation_1_prompt_prefix_for_task = {
     "cnn_baseline": """
         Summarise the document into a news summary:\n
     """,
+    "brief_hospital_course_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
+    "discharge_instructions_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
+    "legal_court_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
+    "cnn_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
 }
 
 variation_2_prompt_prefix_for_task = {
@@ -172,6 +196,30 @@ variation_2_prompt_prefix_for_task = {
     "cnn_baseline": """
         Summarise the following document.
     """,
+    "brief_hospital_course_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
+    "discharge_instructions_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
+    "legal_court_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
+    "cnn_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
 }
 
 variation_3_prompt_prefix_for_task = {
@@ -253,6 +301,30 @@ variation_3_prompt_prefix_for_task = {
     """,
     "cnn_baseline": """
         Give me a short summary of the document below:
+    """,
+    "brief_hospital_course_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
+    "discharge_instructions_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
+    "legal_court_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
+    """,
+    "cnn_summ_sann": """
+        Sanitize the following document.
+        You must not reveal any personally identifying
+        information; such as names, ages, organisations,
+        locations, race and dates.:\n
     """,
 }
 
@@ -343,4 +415,10 @@ variations = [
     variation_1_prompt_prefix_for_ft_task,
     # variation_2_prompt_prefix_for_task,
     # variation_3_prompt_prefix_for_task,
+]
+
+variations = [
+    variation_1_prompt_prefix_for_task,
+    variation_2_prompt_prefix_for_task,
+    variation_3_prompt_prefix_for_task,
 ]

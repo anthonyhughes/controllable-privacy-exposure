@@ -72,22 +72,22 @@
                 "PYTHONPATH": "${cwd}"
             },
         },
-        {
-            "name": "OpenAI Pipeline",
-            "type": "debugpy",
-            "request": "launch",
-            "program": "pipelines/openai_pipeline.py",
-            "console": "integratedTerminal",
-            "cwd": "${workspaceFolder}",
-            "env": {
-                "PYTHONPATH": "${cwd}"
-            },
-            "args": [
-                "--task", "cnn",
-                "--model", "gpt-4o-mini",
-            ],
-            "envFile": "${workspaceFolder}/.env"
-        },
+        // {
+        //     "name": "OpenAI Pipeline",
+        //     "type": "debugpy",
+        //     "request": "launch",
+        //     "program": "pipelines/openai_pipeline.py",
+        //     "console": "integratedTerminal",
+        //     "cwd": "${workspaceFolder}",
+        //     "env": {
+        //         "PYTHONPATH": "${cwd}"
+        //     },
+        //     "args": [
+        //         "--task", "cnn",
+        //         "--model", "gpt-4o-mini",
+        //     ],
+        //     "envFile": "${workspaceFolder}/.env"
+        // },
         {
             "name": "OpenAI Batch Pipeline",
             "type": "debugpy",
@@ -99,10 +99,10 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
-                // "--task", "legal_court",
+                "--task", "legal_court",
                 // "--task", "cnn",
                 // "--task", "discharge_instructions",
-                "--task", "brief_hospital_course",
+                // "--task", "brief_hospital_course",
                 "--model", "gpt-4o-mini",
                 "--flag", "batch"
             ],
@@ -158,7 +158,7 @@
                 "--task", "cnn",
                 "--model", "gpt-4o-mini",
                 "--flag", "retrieve",
-                "--file_id", "file-wPRjmlZ5YfwzZvserABumhbP"
+                "--file_id", "file-PzqKZAHCMivzcf4ay7EekV"
             ],
             "envFile": "${workspaceFolder}/.env"
         },        
@@ -244,15 +244,15 @@
                 "PYTHONPATH": "${cwd}"
             },
             "args": [
+                "--sub_tasks", "_summ_sann",
                 // "--tasks", "legal_court",
-                "--sub_tasks", "_sani_summ",
                 // "--tasks", "legal_court",
-                "--tasks", "cnn",
+                "--tasks", "all",
 
-                // "--model", "llama-3-8b-Instruct-bnb-4bit",
+                "--model", "llama-3-8b-Instruct-bnb-4bit",
                 // "--model", "gpt-4o-mini",
                 // "--model", "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
-                "--model", "claude-3-5-sonnet-20240620",                
+                // "--model", "claude-3-5-sonnet-20240620",                
                 
                 "--eval_type", "utility"
             ],
@@ -271,9 +271,9 @@
                 // "--model", "llama-3-8b-Instruct-bnb-4bit",
                 // "--model", "mistral-7b-instruct-v0.3-bnb-4bit",
                 // "--model", "claude-3-5-sonnet-20240620",
-                "--tasks", "all",
-                "--sub_tasks", "all",                
-                "--model", "mistralymous-7b-bnb-4bit",
+                "--tasks", "discharge_instructions",
+                "--sub_tasks", "_summ_sann",                
+                "--model", "llama-3-8b-Instruct-bnb-4bit",
                 "--eval_type", "privacy"
             ],
         },
