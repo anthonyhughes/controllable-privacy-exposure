@@ -210,7 +210,7 @@ def gen_utility_privacy_bar_chart(
         ax.set_title(f"{dataset_label}", fontsize=10)
 
     # Add legend to first column only
-    if target_task_idx == 1:
+    if target_task_idx == 0:
         methodology_handles = [
             plt.Line2D([0], [0], color=color, marker="o", linestyle="", label=label)
             for color, label in zip(

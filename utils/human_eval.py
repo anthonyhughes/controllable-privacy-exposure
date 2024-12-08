@@ -122,75 +122,55 @@ def calculate_inter_annotation_agreement():
         print(result)
 
 
-def calculate_preferences():
-    df_annotator_1 = pd.read_csv(
-        HUMAN_EVALS_DIR
-        + "1221c161-e2fd-4faf-90e5-767eabcdd6cf_private_summaries_random_sample_eval_version_2 - summaries_evaluation.csv"
-    )
-    df_annotator_2 = pd.read_csv(
-        HUMAN_EVALS_DIR
-        + "dd6832cd-1618-46ce-bfc2-77ca348d6730_private_summaries_random_sample_eval_version_2 - summaries_evaluation.csv"
-    )
-    model_selection_data = pd.read_csv(
-        HUMAN_EVALS_DIR + "random_selection_calibration.csv"
-    )
-    # slect a row by the value of its Doc ID column
-    # print(model_selection_data.loc[model_selection_data["Doc ID"] == "legalsum79"])
-    opens_q_prefs = {}
-    closeds_q_prefs = {}
-    for row in model_selection_data.iterrows():
-        current_doc_id = row[1]["Doc ID"]
-        model_a = row[1]["Model A"]
-        model_b = row[1]["Model B"]
-        df_annotator_1_row = df_annotator_1.loc[df_annotator_1["uid"] == current_doc_id]
-        df_annotator_2_row = df_annotator_2.loc[df_annotator_2["uid"] == current_doc_id]
-        # print(df_annotator_1_row)
-        # print(df_annotator_2_row)        
-        for i in range(6, 12):
-            if i not in opens_q_prefs:
-                opens_q_prefs[i] = 0
-            if i not in closeds_q_prefs:
-                closeds_q_prefs[i] = 0
-            question_selection_a = df_annotator_1_row.iloc[:, i].tolist()
-            question_selection_b = df_annotator_2_row.iloc[:, i].tolist()
-            if len(question_selection_a) == 0 or len(question_selection_b) == 0:
-                continue
-            
-            if question_selection_a[0] == "Both":
-                closeds_q_prefs[i] += 1
-                opens_q_prefs[i] += 1
-            if question_selection_b[0] == "Both":
-                closeds_q_prefs[i] += 1
-                opens_q_prefs[i] += 1
-            if question_selection_a[0] == "Summary 1":
-                print(f"{model_a} was selected")
-                if model_a == "claude-3-5-sonnet-20240620":
+def calculate_preferences_annotators(participant_ids):
+    for id in participant_ids:
+        df_annotator = pd.read_csv(
+            HUMAN_EVALS_DIR
+            + f"{id}_private_summaries_random_sample_eval_version_2 - summaries_evaluation.csv"
+        )
+        model_selection_data = pd.read_csv(
+            HUMAN_EVALS_DIR + "random_selection_calibration.csv"
+        )
+        # slect a row by the value of its Doc ID column
+        opens_q_prefs = {}
+        closeds_q_prefs = {}
+        for row in model_selection_data.iterrows():
+            current_doc_id = row[1]["uid"]
+            model_a = row[1]["Model A"]
+            model_b = row[1]["Model B"]
+            df_annotator_1_row = df_annotator.loc[df_annotator["UID"] == current_doc_id]
+            for i in range(4, 10):
+                question_selection_a = df_annotator_1_row.iloc[:, i].tolist()
+                print(question_selection_a)
+                if i not in opens_q_prefs:
+                    opens_q_prefs[i] = 0
+                if i not in closeds_q_prefs:
+                    closeds_q_prefs[i] = 0                
+                if len(question_selection_a) == 0:
+                    continue
+                
+                if question_selection_a[0] == "Both":
                     closeds_q_prefs[i] += 1
-                elif model_a == "Meta-Llama-3.1-70B-Instruct-bnb-4bit":
                     opens_q_prefs[i] += 1
-            if question_selection_b[0] == "Summary 2":
-                print(f"{model_b} was selected")
-                if model_b == "claude-3-5-sonnet-20240620":
-                    closeds_q_prefs[i] += 1
-                elif model_b == "Meta-Llama-3.1-70B-Instruct-bnb-4bit":
-                    opens_q_prefs[i] += 1
-
+                elif question_selection_a[0] == "Summary 1":
+                    print(f"{model_a} was selected")
+                    if model_a == "claude-3-5-sonnet-20240620":
+                        closeds_q_prefs[i] += 1
+                    elif model_a == "Meta-Llama-3.1-70B-Instruct-bnb-4bit":
+                        opens_q_prefs[i] += 1
+                elif question_selection_a[0] == "Summary 2":
+                    print(f"{model_b} was selected")
+                    if model_b == "claude-3-5-sonnet-20240620":
+                        closeds_q_prefs[i] += 1
+                    elif model_b == "Meta-Llama-3.1-70B-Instruct-bnb-4bit":
+                        opens_q_prefs[i] += 1
+                print(opens_q_prefs)
+                print(closeds_q_prefs)
     print(opens_q_prefs)
     print(closeds_q_prefs)
 
 
-
-    # for i in range(6, 12):
-    #     print(df_annotator_1.columns[i])
-    #     annotator_1 = df_annotator_1.iloc[:, 1].tolist()
-    #     annotator_1 = df_annotator_1.iloc[:, i].tolist()
-    #     annotator_2 = df_annotator_2.iloc[:, i].tolist()
-    #     # print the element that occured the most
-    #     print(max(set(annotator_1), key=annotator_1.count))
-    #     print(max(set(annotator_2), key=annotator_2.count))
-
-
 if __name__ == "__main__":
-    random_file_selection_from_dir(['1221c161-e2fd-4faf-90e5-767eabcdd6cf', 'dd6832cd-1618-46ce-bfc2-77ca348d6730'])
+    # random_file_selection_from_dir(['1221c161-e2fd-4faf-90e5-767eabcdd6cf', 'dd6832cd-1618-46ce-bfc2-77ca348d6730'])
     # calculate_inter_annotation_agreement()
-    # calculate_preferences()
+    calculate_preferences_annotators(['1221c161-e2fd-4faf-90e5-767eabcdd6cf', 'dd6832cd-1618-46ce-bfc2-77ca348d6730'])

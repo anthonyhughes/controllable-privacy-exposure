@@ -138,6 +138,8 @@ def gen_data_for_ptr_utility(utility_metric, privacy_metric="private_token_ratio
                 with open(f"{FINAL_PRIVACY_RESULTS_DIR}/{privacy_file}", "r") as f:
                     privacy_data = json.load(f)
                     for key in data.keys():
+                        if "_summ_sann" in key:
+                            continue
                         if "baseline" in key:
                             if model == "gpt-4o-mini":
                                 # print(key)
@@ -368,7 +370,7 @@ def gen_data_for_tpr_utility(utility_metric, privacy_metric="private_token_ratio
             # merge the data
             reid_data = nonclin_data | clin_data
             for key in data.keys():
-                if "baseline" in key:
+                if "baseline" in key or "_summ_san" in key:
                     continue
                 nkey = handle_key(key)
                 if nkey not in tmp_data[model]:
