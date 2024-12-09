@@ -73,7 +73,7 @@ EVAL_MODELS_REAL = [
 ]
 
 
-EVAL_TYPES = ["utility", "privacy", "reidentification", "graph", "all"]
+EVAL_TYPES = ["hallucination", "utility", "privacy", "reidentification", "graph", "all"]
 BATCH_FLAGS = ["batch", "check", "retrieve", "cancel", "create-batch"]
 
 # TASKS

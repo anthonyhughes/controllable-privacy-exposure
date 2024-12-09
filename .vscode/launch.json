@@ -278,6 +278,21 @@
             ],
         },
         {
+            "name": "Halluciation Eval Pipeline",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/eval_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            },
+            "args": [
+                "--model", "gpt-4o-mini",
+                "--eval_type", "hallucination"
+            ],
+        }
+        {
             "name": "Reidentif Eval Pipeline",
             "type": "debugpy",
             "request": "launch",

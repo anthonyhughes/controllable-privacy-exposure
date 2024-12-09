@@ -216,6 +216,9 @@ def gen_data_for_ptr_variation(privacy_metric="private_token_ratio"):
 
 
 def gen_data_for_ptr_mean_std_variation(privacy_metric="private_token_ratio"):
+    """
+    Generate the mean and standard deviation of the PTR for each variation
+    """
     variations = ["variation_1", "variation_2", "variation_3"]
     results = {
         "Variant": clean_variations(variations),

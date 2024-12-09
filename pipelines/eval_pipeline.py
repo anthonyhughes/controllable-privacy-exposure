@@ -12,6 +12,7 @@ from timeit import default_timer as timer
 import argparse
 
 from utils.graph_utils import gen_graphs
+from utils.hallucination_eval import run_hallucination_eval
 from utils.pii_eval import run_privacy_eval
 from utils.reid_eval import run_reidentification_eval
 from utils.reid_eval_v2 import run_clinical_reidentification_eval, run_nonclinical_reidentification_eval
@@ -88,6 +89,10 @@ if __name__ == "__main__":
     for target_model in [models]:
         print(f"Running evaluation pipeline for model: {target_model}")
         print(f"Running eval modes: {args.eval_type}")
+        if args.eval_type in ["hallucination", "all"]:
+            run_hallucination_eval(
+                target_model=target_model
+            )
         if args.eval_type in ["utility", "all"]:
             run_utility_eval(
                 target_model=target_model, tasks=tasks, sub_tasks=sub_tasks
