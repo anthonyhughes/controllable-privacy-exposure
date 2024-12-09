@@ -291,7 +291,7 @@
                 "--model", "gpt-4o-mini",
                 "--eval_type", "hallucination"
             ],
-        }
+        },
         {
             "name": "Reidentif Eval Pipeline",
             "type": "debugpy",
