@@ -10,7 +10,7 @@ from utils.graphs.graph_data import (
     gen_data_for_ptr_variation,
     gen_data_for_ptr_mean_std_variation,
     gen_data_for_document_length,
-    gen_false_positives_for_heat_map,
+    gen_positives_for_heat_map,
     gen_ptr_tp_data,
 )
 from utils.graphs.heatmaps import plot_heat_map
@@ -52,8 +52,8 @@ def gen_graphs():
     # bs_data = gen_data_for_ptr_variation(privacy_metric="private_token_ratio")
     # gen_variance_graph(bs_data, file_suffix="private_token_ratio")
 
-    # bs_data = gen_data_for_ptr_mean_std_variation(privacy_metric="private_token_ratio")
-    # gen_std_variance_graph(bs_data, file_suffix="private_token_ratio")
+    bs_data = gen_data_for_ptr_mean_std_variation(privacy_metric="private_token_ratio")
+    gen_std_variance_graph(bs_data, file_suffix="private_token_ratio")
 
     # bs_data = gen_data_for_document_length(privacy_metric="private_token_ratio")
 
@@ -63,16 +63,21 @@ def gen_graphs():
     # bs_data = gen_false_positives_for_heat_map(task_suffix="_in_context")
     # plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_in_context")
 
-    # bs_data = gen_false_positives_for_heat_map(task_suffix="_sani_summ")
-    # plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_sani_summ")
+    pos_type = "fp"
+    bs_data = gen_positives_for_heat_map(task_suffix="_sani_summ", positive_type=pos_type)
+    plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_sani_summ", positive_type=pos_type)
+
+    # pos_type = "fn"
+    # bs_data = gen_positives_for_heat_map(task_suffix="_sani_summ", positive_type=pos_type)
+    # plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_sani_summ", positive_type=pos_type)
 
     # bs_data = gen_ptr_tp_data()
     # gen_diff_plot_for_privacy(bs_data)
 
-    utility_metric = "rougeL"
-    privacy_metric = "ptr"
-    gen_utility_privacy_bar_chart_for_uber(utility_metric, privacy_metric)
+    # utility_metric = "rougeL"
+    # privacy_metric = "ptr"
+    # gen_utility_privacy_bar_chart_for_uber(utility_metric, privacy_metric)
 
-    utility_metric = "rougeL"
-    privacy_metric = "tpr"
-    gen_utility_privacy_bar_chart_for_tpr_uber(utility_metric, privacy_metric)
+    # utility_metric = "rougeL"
+    # privacy_metric = "tpr"
+    # gen_utility_privacy_bar_chart_for_tpr_uber(utility_metric, privacy_metric)

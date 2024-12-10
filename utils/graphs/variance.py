@@ -59,9 +59,9 @@ def gen_std_variance_graph(data, file_suffix):
         plt.text(i, mean + 0.005, f"{mean:.2f} ± {std:.2f}", ha="center", fontsize=10)
 
     # Labels and title
-    plt.xlabel("Promopt Variant", fontsize=12)
+    plt.xlabel("Prompt Prefix Variant", fontsize=12)
     plt.ylabel("Private Token Ratio (PTR)", fontsize=12)
-    plt.title("Prompt Variant Impact on PTR", fontsize=14)
+    plt.title("Prompt Prefix Variant Impact on PTR", fontsize=14)
     plt.tight_layout()
 
         # Save the figure

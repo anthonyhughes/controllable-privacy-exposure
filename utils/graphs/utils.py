@@ -53,7 +53,7 @@ def clean_privacy_metric(priv_metric):
 
 
 def clean_variations(variations):
-    return [f"Variation {i+1}" for i in range(len(variations))]
+    return [f"Prompt Prefix {i+1}" for i in range(len(variations))]
 
 
 def clean_property(pii_property):
@@ -70,6 +70,6 @@ def clean_task_suffix(task_suffix):
     if task_suffix == "_in_context":
         return "1-Shot"
     elif task_suffix == "_sani_summ":
-        return "Sanitized & Summarize"
+        return "Anonymize & Summarize"
     else:
         return "0-Shot"

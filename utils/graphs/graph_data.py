@@ -282,7 +282,7 @@ def gen_data_for_document_length():
     return results
 
 
-def gen_false_positives_for_heat_map(task_suffix):
+def gen_positives_for_heat_map(task_suffix, positive_type="fp"):
     models = [
         "gpt-4o-mini",
         "claude-3-5-sonnet-20240620",
@@ -304,9 +304,9 @@ def gen_false_positives_for_heat_map(task_suffix):
                 data = json.load(f)
                 task_data = data[target_task + task_suffix]
                 all_false_pos = (
-                    task_data["PERSON"]["fp"]
-                    + task_data["DATE"]["fp"]
-                    + task_data["ORG"]["fp"]
+                    task_data["PERSON"][positive_type]
+                    + task_data["DATE"][positive_type]
+                    + task_data["ORG"][positive_type]
                 )
                 hmap_data[i].append(all_false_pos)
     return models, target_tasks, hmap_data
