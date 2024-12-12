@@ -40,6 +40,9 @@ def gen_variance_graph(data, file_suffix):
 
 
 def gen_std_variance_graph(data, file_suffix):
+    font_size = 20
+    tick_label_size = 16  # Define font size for tick labels
+
     # Convert to arrays
     variances = data["Variant"]
     means = data["PTR_Mean"]
@@ -56,16 +59,22 @@ def gen_std_variance_graph(data, file_suffix):
 
     # Add annotations
     for i, (mean, std) in enumerate(zip(means, std_devs)):
-        plt.text(i, mean + 0.005, f"{mean:.2f} ± {std:.2f}", ha="center", fontsize=10)
+        plt.text(i, mean + 0.005, f"{mean:.2f} ± {std:.2f}", ha="center", fontsize=font_size)
 
     # Labels and title
-    plt.xlabel("Prompt Prefix Variant", fontsize=12)
-    plt.ylabel("Private Token Ratio (PTR)", fontsize=12)
-    plt.title("Prompt Prefix Variant Impact on PTR", fontsize=14)
+    plt.xlabel("Prompt Prefix Variant", fontsize=font_size)
+    plt.ylabel("Private Token Ratio (PTR)", fontsize=font_size)
+
+    # Set tick label sizes
+    plt.xticks(fontsize=tick_label_size)
+    plt.yticks(fontsize=tick_label_size)
+
+    # Adjust layout
     plt.tight_layout()
 
-        # Save the figure
+    # Save the figure
     plt.savefig(
         f"./{PRIVACY_RESULTS_DIR}/graphs/privacy-mean-std-variance-{file_suffix}.png",
         bbox_inches="tight",
+        dpi=1200,
     )

@@ -10,10 +10,11 @@ from utils.graphs.graph_data import (
     gen_data_for_ptr_variation,
     gen_data_for_ptr_mean_std_variation,
     gen_data_for_document_length,
-    gen_positives_for_heat_map,
+    gen_fp_positives_for_heat_map,
+    gen_fn_positives_for_heat_map,
     gen_ptr_tp_data,
 )
-from utils.graphs.heatmaps import plot_heat_map
+from utils.graphs.heatmaps import plot_heat_map, plot_heat_maps_side_by_side
 from utils.graphs.scatters import plot_ptr_vs_tpr
 from utils.graphs.simple import gen_utility_privacy_graph
 from utils.graphs.variance import gen_std_variance_graph, gen_variance_graph
@@ -63,13 +64,20 @@ def gen_graphs():
     # bs_data = gen_false_positives_for_heat_map(task_suffix="_in_context")
     # plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_in_context")
 
-    pos_type = "fp"
-    bs_data = gen_positives_for_heat_map(task_suffix="_sani_summ", positive_type=pos_type)
-    plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_sani_summ", positive_type=pos_type)
+    # pos_type = "fp"
+    # bs_data = gen_fp_positives_for_heat_map(task_suffix="_sani_summ", positive_type=pos_type)
+    # plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_sani_summ", positive_type=pos_type)
 
     # pos_type = "fn"
-    # bs_data = gen_positives_for_heat_map(task_suffix="_sani_summ", positive_type=pos_type)
+    # bs_data = gen_fp_positives_for_heat_map(task_suffix="_sani_summ", positive_type=pos_type)
     # plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_sani_summ", positive_type=pos_type)
+
+    # Example call
+    bs_data_fp = gen_fp_positives_for_heat_map(task_suffix="_sani_summ", positive_type="fp")
+    bs_data_fn = gen_fn_positives_for_heat_map(task_suffix="_sani_summ", positive_type="fn")
+    plot_heat_maps_side_by_side(
+        bs_data_fp[0], bs_data_fp[1], bs_data_fp[2], bs_data_fn[2], task_suffix="_sani_summ"
+    )
 
     # bs_data = gen_ptr_tp_data()
     # gen_diff_plot_for_privacy(bs_data)

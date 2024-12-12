@@ -62,5 +62,86 @@ def plot_heat_map(models, tasks, data, task_suffix, positive_type):
     # Show the heatmap
     plt.tight_layout()
     plt.savefig(
-        f"{PRIVACY_RESULTS_DIR}/graphs/{positive_type}-heatmap-{task_suffix}.png"
+        f"{PRIVACY_RESULTS_DIR}/graphs/{positive_type}-heatmap-{task_suffix}.png",
+        dpi=1200
+    )
+
+def plot_heat_maps_side_by_side(models, tasks, data_fp, data_fn, task_suffix):
+    # Set up the matplotlib figure with two subplots side by side
+    fig, axes = plt.subplots(1, 2, figsize=(8, 4))  # 1 row, 2 columns
+
+    # Clean model and task labels
+    models = [clean_model_name(model) for model in models]
+    tasks = [clean_label(task) for task in tasks]
+
+    # Create a shared color bar scale
+    vmin, vmax = 0, 1000
+
+    # Data for False Positives heatmap
+    data_fp = pd.DataFrame(data_fp, index=models, columns=tasks)
+    # sns.set(font_scale=0.75)
+    fp_plot = sns.heatmap(
+        data_fp,
+        annot=True,
+        cmap='mako_r',
+        vmin=vmin,
+        vmax=vmax,
+        linewidths=0.5,
+        fmt="g",
+        square=True,
+        annot_kws={"size": 8},
+        ax=axes[0],
+        cbar=False  # Disable individual color bar
+    )
+    axes[0].set_xticklabels(axes[0].get_xticklabels(), rotation=25, ha='right', rotation_mode='anchor', va='top', fontsize=9)
+    axes[0].tick_params(axis='y', labelsize=9)
+
+    # Data for False Negatives heatmap
+    data_fn = pd.DataFrame(data_fn, index=models, columns=tasks)
+    fn_plot = sns.heatmap(
+        data_fn,
+        annot=True,
+        cmap='mako_r',
+        vmin=vmin,
+        vmax=vmax,
+        linewidths=0.5,
+        fmt="g",
+        square=True,
+        annot_kws={"size": 8},
+        ax=axes[1],
+        cbar=False  # Disable individual color bar
+    )
+    axes[1].set_xticklabels(axes[1].get_xticklabels(), rotation=25, ha='right', rotation_mode='anchor', va='top', fontsize=9)
+    axes[1].tick_params(axis='y', left=False)  # Disable y-axis ticks and labels
+    axes[1].set_yticks([])  # Remove y-axis labels for the second heatmap
+
+    # Add a shared color bar to the right of the second heatmap
+    cbar = fig.colorbar(
+        fn_plot.collections[0],  # Link color bar to the second heatmap
+        ax=axes,  # Apply to both axes
+        location="right",
+        fraction=0.03,  # Width of the color bar
+        pad=0  # Padding between the color bar and the heatmap
+    )
+    # Customize the color bar ticks
+    ticks = cbar.get_ticks()  # Get current ticks
+    ticks[-1] = vmax  # Ensure the last tick matches the maximum value
+    tick_labels = [f"{tick:.0f}" for tick in ticks[:-1]] + [">1000"]  # Replace the last label
+    cbar.set_ticks(ticks)
+    cbar.set_ticklabels(tick_labels)
+    cbar.ax.set_position([cbar.ax.get_position().x0 - 0.13,  # Align left with second heatmap
+                        axes[0].get_position().y0 + 0,  # Align top with first heatmap
+                        cbar.ax.get_position().width, 
+                        axes[0].get_position().height]) 
+    # cbar.set_label("False Positive/Negative Rates", fontsize=9)
+
+    # Adjust layout to avoid overlapping
+    fig.subplots_adjust(right=0.71, wspace=-0.4)  # Ensure space for the color bar
+
+    # plt.tight_layout()
+    # Save the figure
+    plt.savefig(
+        f"{PRIVACY_RESULTS_DIR}/graphs/fp-fn-heatmaps-{task_suffix}.png",
+        dpi=1200,
+        bbox_inches='tight'
     )

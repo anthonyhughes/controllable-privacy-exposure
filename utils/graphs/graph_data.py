@@ -282,7 +282,7 @@ def gen_data_for_document_length():
     return results
 
 
-def gen_positives_for_heat_map(task_suffix, positive_type="fp"):
+def gen_fp_positives_for_heat_map(task_suffix, positive_type="fp"):
     models = [
         "gpt-4o-mini",
         "claude-3-5-sonnet-20240620",
@@ -306,6 +306,36 @@ def gen_positives_for_heat_map(task_suffix, positive_type="fp"):
                 all_false_pos = (
                     task_data["PERSON"][positive_type]
                     + task_data["DATE"][positive_type]
+                    + task_data["ORG"][positive_type]
+                )
+                hmap_data[i].append(all_false_pos)
+    return models, target_tasks, hmap_data
+
+
+def gen_fn_positives_for_heat_map(task_suffix, positive_type="fp"):
+    models = [
+        "gpt-4o-mini",
+        "claude-3-5-sonnet-20240620",
+        "Meta-Llama-3.1-70B-Instruct-bnb-4bit",
+        "llamonymous-3-70b-bnb-4bit",
+        "llama-3-8b-Instruct-bnb-4bit",
+        "llamonymous-3-8b-bnb-4bit",
+        "mistral-7b-instruct-v0.3-bnb-4bit",
+        "mistralymous-7b-bnb-4bit",
+    ]
+    hmap_data = [[], [], [], [], [], [], [], []]
+    for target_task in target_tasks:
+        if target_task == "cnn" or target_task == "legal_court":
+            files = reid_non_clinical_files
+        else:
+            files = reid_clinical_files
+        for i, file in enumerate(files):
+            with open(f"{FINAL_REID_RESULTS_DIR}/{file}", "r") as f:
+                data = json.load(f)
+                task_data = data[target_task + task_suffix]
+                all_false_pos = (
+                    task_data["PERSON"][positive_type]
+                    # + task_data["DATE"][positive_type]
                     + task_data["ORG"][positive_type]
                 )
                 hmap_data[i].append(all_false_pos)
