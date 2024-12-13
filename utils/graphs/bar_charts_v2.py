@@ -98,14 +98,15 @@ def gen_bar_chart(true_positive_rates, tasks, file_suffix_name):
 
 def gen_utility_privacy_bar_chart(
     bs_data,
+    tpr_data,
     metric,
     target_task_idx,
     baseline_model,
     baseline_metrics,
     axes,
-    privacy_metric="tpr",
-    util_ylim=(0.1, 0.275),
-    priv_ylim=(0, 0.6)
+    util_ylim=(0.4, 0.275),
+    priv_ylim=(0, 0.6),
+    expo_ylim=(0, 0.7)
 ):
     # Process data
     n_metric = clean_metric(metric)
@@ -119,7 +120,12 @@ def gen_utility_privacy_bar_chart(
             data[model] = []
         model_data = bs_data[model]
         for methodology in methodologies:
-            data[model].append(model_data[methodology][target_task_idx])
+            struct = (
+                model_data[methodology][target_task_idx][0], #utliity
+                model_data[methodology][target_task_idx][1], # ptr 
+                tpr_data[model][methodology][target_task_idx][1] # tpr
+            )
+            data[model].append(struct)
 
     # Sort data by average score
     # data = dict(
@@ -145,14 +151,16 @@ def gen_utility_privacy_bar_chart(
     x_positions = []
     utility_values = []
     privacy_values = []
+    exposure_values = []
     colors = []
     current_x = 0
 
     for model, scores in data.items():
-        for idx, (utility, privacy) in enumerate(scores):
+        for idx, (utility, privacy, exposure) in enumerate(scores):
             x_positions.append(current_x)
             utility_values.append(utility)
             privacy_values.append(privacy)
+            exposure_values.append(exposure)
             colors.append(method_colors[idx])
             current_x += 0.25
         current_x += gap
@@ -172,10 +180,17 @@ def gen_utility_privacy_bar_chart(
         x_positions, privacy_values, bar_width, color=colors, alpha=0.7
     )
 
+    # Plot privacy bars (bottom row)
+    ax_exposure = axes[target_task_idx + 8]
+    expo_bars = ax_exposure.bar(
+        x_positions, exposure_values, bar_width, color=colors, alpha=0.7
+    )
+
     # Configure both plots
     for i, (ax, values, metric_name) in enumerate([
         (ax_utility, utility_values, n_metric),
-        (ax_privacy, privacy_values, privacy_metric.upper()),
+        (ax_privacy, privacy_values, "PTR"),
+        (ax_exposure, exposure_values, "TPR"),
     ]):
         ax.set_xticks(model_centers)
         ax.set_xticklabels(
@@ -231,9 +246,11 @@ def gen_utility_privacy_bar_chart(
     # set y axis label
     if target_task_idx == 0:
         ax_utility.set_ylabel(n_metric)            
-        ax_privacy.set_ylabel(clean_metric(privacy_metric))
+        ax_privacy.set_ylabel(clean_metric("PTR"))
+        ax_exposure.set_ylabel(clean_metric("TPR"))
     ax_utility.set_ylim(util_ylim[0], util_ylim[1])
     ax_privacy.set_ylim(priv_ylim[0], priv_ylim[1])
+    ax_exposure.set_ylim(expo_ylim[0], expo_ylim[1])
 
 
 def gen_utility_privacy_bar_chart_for_uber(metric, privacy_metric):

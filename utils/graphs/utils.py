@@ -19,9 +19,9 @@ def clean_model_name(model_name):
 def fetch_clean_dataset_name(target_task_idx):
     target_tasks = [
         "brief_hospital_course",
-        "cnn",
         "discharge_instructions",
         "legal_court",
+        "cnn",
     ]
     return clean_label(target_tasks[target_task_idx])
 

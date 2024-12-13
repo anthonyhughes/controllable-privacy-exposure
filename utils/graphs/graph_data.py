@@ -14,9 +14,9 @@ from utils.graphs.utils import clean_variations
 
 target_tasks = [
     "brief_hospital_course",
-    "discharge_instructions",
-    "cnn",
+    "discharge_instructions",    
     "legal_court",
+    "cnn",
 ]
 models_in_order = [
     "gpt-4o-mini",
@@ -403,7 +403,7 @@ def gen_data_for_tpr_utility(utility_metric, privacy_metric="private_token_ratio
             # merge the data
             reid_data = nonclin_data | clin_data
             for key in data.keys():
-                if "baseline" in key or "_summ_san" in key:
+                if "baseline" in key or "_summ_sann" in key:
                     continue
                 nkey = handle_key(key)
                 if nkey not in tmp_data[model]:

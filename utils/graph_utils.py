@@ -3,6 +3,7 @@ from matplotlib.transforms import Bbox
 from constants import PRIVACY_RESULTS_DIR
 from utils.graphs.bar_chart import gen_bar_chart, gen_utility_privacy_bar_chart
 from utils.graphs.bar_charts_v2 import gen_bar_chart, gen_utility_privacy_bar_chart, gen_utility_privacy_bar_chart_for_uber, gen_utility_privacy_bar_chart_for_tpr_uber
+from utils.graphs.bar_charts_v3 import gen_combined_utility_privacy_bar_chart
 from utils.graphs.graph_data import (
     gen_data_for_all_properties_comparison,
     gen_data_for_property_comparison,
@@ -53,8 +54,8 @@ def gen_graphs():
     # bs_data = gen_data_for_ptr_variation(privacy_metric="private_token_ratio")
     # gen_variance_graph(bs_data, file_suffix="private_token_ratio")
 
-    bs_data = gen_data_for_ptr_mean_std_variation(privacy_metric="private_token_ratio")
-    gen_std_variance_graph(bs_data, file_suffix="private_token_ratio")
+    # bs_data = gen_data_for_ptr_mean_std_variation(privacy_metric="private_token_ratio")
+    # gen_std_variance_graph(bs_data, file_suffix="private_token_ratio")
 
     # bs_data = gen_data_for_document_length(privacy_metric="private_token_ratio")
 
@@ -72,12 +73,11 @@ def gen_graphs():
     # bs_data = gen_fp_positives_for_heat_map(task_suffix="_sani_summ", positive_type=pos_type)
     # plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_sani_summ", positive_type=pos_type)
 
-    # Example call
-    bs_data_fp = gen_fp_positives_for_heat_map(task_suffix="_sani_summ", positive_type="fp")
-    bs_data_fn = gen_fn_positives_for_heat_map(task_suffix="_sani_summ", positive_type="fn")
-    plot_heat_maps_side_by_side(
-        bs_data_fp[0], bs_data_fp[1], bs_data_fp[2], bs_data_fn[2], task_suffix="_sani_summ"
-    )
+    # bs_data_fp = gen_fp_positives_for_heat_map(task_suffix="_sani_summ", positive_type="fp")
+    # bs_data_fn = gen_fn_positives_for_heat_map(task_suffix="_sani_summ", positive_type="fn")
+    # plot_heat_maps_side_by_side(
+    #     bs_data_fp[0], bs_data_fp[1], bs_data_fp[2], bs_data_fn[2], task_suffix="_sani_summ"
+    # )
 
     # bs_data = gen_ptr_tp_data()
     # gen_diff_plot_for_privacy(bs_data)
@@ -89,3 +89,4 @@ def gen_graphs():
     # utility_metric = "rougeL"
     # privacy_metric = "tpr"
     # gen_utility_privacy_bar_chart_for_tpr_uber(utility_metric, privacy_metric)
+    gen_combined_utility_privacy_bar_chart("rougeL")
