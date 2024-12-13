@@ -62,7 +62,7 @@
             ],
         },
         {
-            "name": "Stats",
+            "name": "Corpora Stats",
             "type": "debugpy",
             "request": "launch",
             "program": "pipelines/stats_pipeline.py",
