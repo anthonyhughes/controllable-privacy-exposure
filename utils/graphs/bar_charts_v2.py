@@ -104,12 +104,14 @@ def gen_utility_privacy_bar_chart(
     baseline_model,
     baseline_metrics,
     axes,
-    util_ylim=(0.4, 0.275),
+    util_ylim=(0.05, 0.275),
+    util2_ylim=(0.75, 0.90),
     priv_ylim=(0, 0.6),
     expo_ylim=(0, 0.7)
 ):
     # Process data
     n_metric = clean_metric(metric)
+    n2_metric = clean_metric("bertscore")
     models = list(bs_data.keys())
     methodologies = list(bs_data[models[0]].keys())
 
@@ -122,8 +124,9 @@ def gen_utility_privacy_bar_chart(
         for methodology in methodologies:
             struct = (
                 model_data[methodology][target_task_idx][0], #utliity
-                model_data[methodology][target_task_idx][1], # ptr 
-                tpr_data[model][methodology][target_task_idx][1] # tpr
+                tpr_data[model][methodology][target_task_idx][0], # bertscore
+                model_data[methodology][target_task_idx][1], # ptr
+                tpr_data[model][methodology][target_task_idx][1], # tpr
             )
             data[model].append(struct)
 
@@ -150,15 +153,17 @@ def gen_utility_privacy_bar_chart(
     # Prepare plotting data
     x_positions = []
     utility_values = []
+    utility2_values = []
     privacy_values = []
     exposure_values = []
     colors = []
     current_x = 0
 
     for model, scores in data.items():
-        for idx, (utility, privacy, exposure) in enumerate(scores):
+        for idx, (utility, utility2, privacy, exposure) in enumerate(scores):
             x_positions.append(current_x)
             utility_values.append(utility)
+            utility2_values.append(utility2)
             privacy_values.append(privacy)
             exposure_values.append(exposure)
             colors.append(method_colors[idx])
@@ -174,14 +179,18 @@ def gen_utility_privacy_bar_chart(
         x_positions, utility_values, bar_width, color=colors, alpha=0.7
     )
 
-    # Plot privacy bars (bottom row)
-    ax_privacy = axes[target_task_idx + 4]
+    ax_utility2 = axes[target_task_idx + 4]
+    utility2_bars = ax_utility2.bar(
+        x_positions, utility2_values, bar_width, color=colors, alpha=0.7
+    )
+
+    ax_privacy = axes[target_task_idx + 8]
     privacy_bars = ax_privacy.bar(
         x_positions, privacy_values, bar_width, color=colors, alpha=0.7
     )
 
     # Plot privacy bars (bottom row)
-    ax_exposure = axes[target_task_idx + 8]
+    ax_exposure = axes[target_task_idx + 12]
     expo_bars = ax_exposure.bar(
         x_positions, exposure_values, bar_width, color=colors, alpha=0.7
     )
@@ -189,6 +198,7 @@ def gen_utility_privacy_bar_chart(
     # Configure both plots
     for i, (ax, values, metric_name) in enumerate([
         (ax_utility, utility_values, n_metric),
+        (ax_utility2, utility2_values, n2_metric),
         (ax_privacy, privacy_values, "PTR"),
         (ax_exposure, exposure_values, "TPR"),
     ]):
@@ -245,11 +255,16 @@ def gen_utility_privacy_bar_chart(
         )
     # set y axis label
     if target_task_idx == 0:
-        ax_utility.set_ylabel(n_metric)            
+        ax_utility.set_ylabel(n_metric)
+        ax_utility2.set_ylabel(n2_metric)
         ax_privacy.set_ylabel(clean_metric("PTR"))
         ax_exposure.set_ylabel(clean_metric("TPR"))
     ax_utility.set_ylim(util_ylim[0], util_ylim[1])
+    ax_utility.set_xticks([])
+    ax_utility2.set_ylim(util2_ylim[0], util2_ylim[1])
+    ax_utility2.set_xticks([])
     ax_privacy.set_ylim(priv_ylim[0], priv_ylim[1])
+    ax_privacy.set_xticks([])
     ax_exposure.set_ylim(expo_ylim[0], expo_ylim[1])
 
 
@@ -272,7 +287,7 @@ def gen_utility_privacy_bar_chart_for_uber(metric, privacy_metric):
             axes=axes,
             privacy_metric=privacy_metric,
             util_ylim=(0, 0.28),
-            priv_ylim=(0, 0.65)
+            priv_ylim=(0, 0.65),
         )
 
     fig.suptitle(
@@ -303,7 +318,7 @@ def gen_utility_privacy_bar_chart_for_tpr_uber(metric, privacy_metric):
             axes=axes,
             privacy_metric=privacy_metric,
             util_ylim=(0, 0.28),
-            priv_ylim=(0, 0.6)
+            priv_ylim=(0, 0.6),
         )
 
     fig.suptitle(f"Utility ({clean_metric(metric)}) vs. Exposure (True Positive Rate)")

@@ -18,43 +18,39 @@ mpl.rcParams["hatch.linewidth"] = 0.2
 from constants import PRIVACY_RESULTS_DIR
 
 
-def gen_combined_utility_privacy_bar_chart(metric):
-    # Create a 3x4 subplot grid
-    fig, axes = plt.subplots(3, 4, figsize=(24, 15))
+import matplotlib.gridspec as gridspec
 
-    # Flatten axes to make it easier to iterate
-    axes = axes.flatten()
+def gen_combined_utility_privacy_bar_chart():
+    fig = plt.figure(figsize=(24, 15))
+    gs = gridspec.GridSpec(4, 4, height_ratios=[0.5, 0.5, 1, 1])
+
+    # Create axes for all subplots
+    axes = [fig.add_subplot(gs[i, j]) for i in range(4) for j in range(4)]
 
     # First 2 rows: data from gen_data_for_ptr_utility
-    tpr_data = gen_data_for_tpr_utility(utility_metric=metric)
-    ptr_data, _, _ = gen_data_for_ptr_utility(
-            utility_metric=metric
-        )
+    tpr_data = gen_data_for_tpr_utility(utility_metric="bertscore")
+    ptr_data, _, _ = gen_data_for_ptr_utility(utility_metric="rougeL")
 
     for i in range(4):
         gen_utility_privacy_bar_chart(
             ptr_data,
             tpr_data,
-            metric,
+            "roguel",
             i,
             "",
             [],
             axes=axes,
-            util_ylim=(0, 0.28),
-            priv_ylim=(0, 0.65)
+            util_ylim=(0.05, 0.275),
+            util2_ylim=(0.75, 0.9),
+            priv_ylim=(0, 0.65),
+            expo_ylim=(0, 0.6)
         )
-
-    # # Add a shared title for the figure
-    # fig.suptitle(
-    #     f"Utility ({clean_metric(metric)}) vs. Privacy/Exposure Metrics",
-    #     fontsize=18,
-    #     y=1.02,
-    # )
 
     # Adjust layout and save
     plt.tight_layout()
     plt.savefig(
-        f"{PRIVACY_RESULTS_DIR}/graphs/combined-privacy-utility-{metric}.png",
+        f"{PRIVACY_RESULTS_DIR}/graphs/combined-privacy-utility-compressed.png",
         bbox_inches="tight",
         dpi=1200,
     )
+

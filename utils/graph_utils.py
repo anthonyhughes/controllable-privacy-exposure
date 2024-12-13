@@ -89,4 +89,4 @@ def gen_graphs():
     # utility_metric = "rougeL"
     # privacy_metric = "tpr"
     # gen_utility_privacy_bar_chart_for_tpr_uber(utility_metric, privacy_metric)
-    gen_combined_utility_privacy_bar_chart("rougeL")
+    gen_combined_utility_privacy_bar_chart()
