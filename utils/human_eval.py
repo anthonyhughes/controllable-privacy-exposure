@@ -105,11 +105,11 @@ def random_file_selection_from_dir(participants):
 def calculate_inter_annotation_agreement():
     df_annotator_1 = pd.read_csv(
         HUMAN_EVALS_DIR
-        + "1221c161-e2fd-4faf-90e5-767eabcdd6cf_private_summaries_random_sample_eval_version_2 - summaries_evaluation.csv"
+        + "calibrate/1221c161-e2fd-4faf-90e5-767eabcdd6cf_private_summaries_random_sample_eval_version_2 - summaries_evaluation.csv"
     )
     df_annotator_2 = pd.read_csv(
         HUMAN_EVALS_DIR
-        + "dd6832cd-1618-46ce-bfc2-77ca348d6730_private_summaries_random_sample_eval_version_2 - summaries_evaluation.csv"
+        + "calibrate/dd6832cd-1618-46ce-bfc2-77ca348d6730_private_summaries_random_sample_eval_version_2 - summaries_evaluation.csv"
     )
     # get column 5. Which summary did you find easier to read overall? as a list
     for i in range(6, 12):
@@ -123,6 +123,9 @@ def calculate_inter_annotation_agreement():
 
 
 def calculate_preferences_annotators(participant_ids):
+    opens_q_prefs = {}
+    closeds_q_prefs = {}
+    
     for id in participant_ids:
         df_annotator = pd.read_csv(
             HUMAN_EVALS_DIR
@@ -131,43 +134,49 @@ def calculate_preferences_annotators(participant_ids):
         model_selection_data = pd.read_csv(
             HUMAN_EVALS_DIR + "random_selection_calibration.csv"
         )
-        # slect a row by the value of its Doc ID column
-        opens_q_prefs = {}
-        closeds_q_prefs = {}
-        for row in model_selection_data.iterrows():
-            current_doc_id = row[1]["uid"]
-            model_a = row[1]["Model A"]
-            model_b = row[1]["Model B"]
+        
+        for _, row in model_selection_data.iterrows():
+            current_doc_id = row["uid"]
+            model_a = row["Model A"]
+            model_b = row["Model B"]
             df_annotator_1_row = df_annotator.loc[df_annotator["UID"] == current_doc_id]
-            for i in range(4, 10):
-                question_selection_a = df_annotator_1_row.iloc[:, i].tolist()
-                print(question_selection_a)
+            
+            if df_annotator_1_row.empty:
+                continue  # Skip if no matching row is found
+            
+            for i in range(4, 10):  # Adjust based on actual column indexing
                 if i not in opens_q_prefs:
                     opens_q_prefs[i] = 0
                 if i not in closeds_q_prefs:
-                    closeds_q_prefs[i] = 0                
-                if len(question_selection_a) == 0:
+                    closeds_q_prefs[i] = 0
+                
+                question_selection_a = df_annotator_1_row.iloc[:, i].tolist()
+                if not question_selection_a:
                     continue
                 
-                if question_selection_a[0] == "Both":
-                    closeds_q_prefs[i] += 1
-                    opens_q_prefs[i] += 1
-                elif question_selection_a[0] == "Summary 1":
-                    print(f"{model_a} was selected")
+                # if question_selection_a[0] == "Both":
+                    # closeds_q_prefs[i] += 1
+                    # opens_q_prefs[i] += 1
+                if question_selection_a[0] == "Summary 1":
                     if model_a == "claude-3-5-sonnet-20240620":
                         closeds_q_prefs[i] += 1
                     elif model_a == "Meta-Llama-3.1-70B-Instruct-bnb-4bit":
                         opens_q_prefs[i] += 1
                 elif question_selection_a[0] == "Summary 2":
-                    print(f"{model_b} was selected")
                     if model_b == "claude-3-5-sonnet-20240620":
                         closeds_q_prefs[i] += 1
                     elif model_b == "Meta-Llama-3.1-70B-Instruct-bnb-4bit":
                         opens_q_prefs[i] += 1
-                print(opens_q_prefs)
-                print(closeds_q_prefs)
-    print(opens_q_prefs)
-    print(closeds_q_prefs)
+
+    print("Open Model Preferences:", opens_q_prefs)
+    print("Closed Model Preferences:", closeds_q_prefs)
+    
+    # Optional: Merge dictionaries if required
+    merged_prefs = {key: opens_q_prefs.get(key, 0) + closeds_q_prefs.get(key, 0) for key in set(opens_q_prefs) | set(closeds_q_prefs)}
+    print("Merged Preferences:", merged_prefs)
+
+    return opens_q_prefs, closeds_q_prefs, merged_prefs
+
 
 
 if __name__ == "__main__":
