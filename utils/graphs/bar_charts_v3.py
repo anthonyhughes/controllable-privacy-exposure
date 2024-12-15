@@ -2,6 +2,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 import pandas as pd
+from matplotlib.backends.backend_pdf import PdfPages
+
 
 from utils.graphs.bar_charts_v2 import gen_utility_privacy_bar_chart
 from utils.graphs.graph_data import gen_data_for_ptr_utility, gen_data_for_tpr_utility
@@ -22,10 +24,10 @@ import matplotlib.gridspec as gridspec
 
 def gen_combined_utility_privacy_bar_chart():
     fig = plt.figure(figsize=(24, 15))
-    gs = gridspec.GridSpec(4, 4, height_ratios=[0.5, 0.5, 1, 1])
+    gs = gridspec.GridSpec(5, 4, height_ratios=[0.4, 0.4, 0.4, 0.4, 0.4])
 
     # Create axes for all subplots
-    axes = [fig.add_subplot(gs[i, j]) for i in range(4) for j in range(4)]
+    axes = [fig.add_subplot(gs[i, j]) for i in range(5) for j in range(4)]
 
     # First 2 rows: data from gen_data_for_ptr_utility
     tpr_data = gen_data_for_tpr_utility(utility_metric="bertscore")
@@ -48,9 +50,12 @@ def gen_combined_utility_privacy_bar_chart():
 
     # Adjust layout and save
     plt.tight_layout()
+    pp = PdfPages(f"{PRIVACY_RESULTS_DIR}/graphs/combined-privacy-utility-compressed.pdf")
     plt.savefig(
         f"{PRIVACY_RESULTS_DIR}/graphs/combined-privacy-utility-compressed.png",
         bbox_inches="tight",
-        dpi=1200,
+        dpi=300,
     )
+    pp.savefig(fig)
+    pp.close()
 

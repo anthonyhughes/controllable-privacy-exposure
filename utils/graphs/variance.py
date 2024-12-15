@@ -1,6 +1,7 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+from matplotlib.backends.backend_pdf import PdfPages
 
 from constants import PRIVACY_RESULTS_DIR
 
@@ -27,7 +28,7 @@ def gen_variance_graph(data, file_suffix):
         plt.text(i, ptr + 0.005, f"{ptr:.2f}", ha='center', fontsize=10)
 
     # Labels and title
-    plt.xlabel("Prompt Prefix Variant", fontsize=12)
+    plt.xlabel("Prompt Variant", fontsize=12)
     plt.ylabel("Private Token Ratio (PTR)", fontsize=12)
     plt.title("Avg. PTR per Prompt Variant", fontsize=14)
     plt.tight_layout()
@@ -49,7 +50,7 @@ def gen_std_variance_graph(data, file_suffix):
     std_devs = data["PTR_Std"]
 
     # Create bar chart with error bars
-    plt.figure(figsize=(10, 6))
+    fig = plt.figure(figsize=(10, 6))
     bars = plt.bar(variances, means, yerr=std_devs, capsize=5, color="skyblue", edgecolor="black", alpha=0.8)
 
     # Highlight the bar with the lowest mean PTR
@@ -62,7 +63,7 @@ def gen_std_variance_graph(data, file_suffix):
         plt.text(i, mean + 0.005, f"{mean:.2f} ± {std:.2f}", ha="center", fontsize=font_size)
 
     # Labels and title
-    plt.xlabel("Prompt Prefix Variant", fontsize=font_size)
+    plt.xlabel("Prompt Variant", fontsize=font_size)
     plt.ylabel("Private Token Ratio (PTR)", fontsize=font_size)
 
     # Set tick label sizes
@@ -71,10 +72,12 @@ def gen_std_variance_graph(data, file_suffix):
 
     # Adjust layout
     plt.tight_layout()
-
+    pp = PdfPages(f"./{PRIVACY_RESULTS_DIR}/graphs/privacy-mean-std-variance-{file_suffix}.pdf")
     # Save the figure
     plt.savefig(
-        f"./{PRIVACY_RESULTS_DIR}/graphs/privacy-mean-std-variance-{file_suffix}.png",
+        f"./{PRIVACY_RESULTS_DIR}/graphs/privacy-mean-std-variance-{file_suffix}.svg",
         bbox_inches="tight",
-        dpi=1200,
+        dpi=300,
     )
+    pp.savefig(fig)
+    pp.close()

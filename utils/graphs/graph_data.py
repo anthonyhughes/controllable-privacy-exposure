@@ -10,11 +10,11 @@ from constants import (
     PRIVACY_RESULTS_DIR,
     UTILITY_RESULTS_DIR,
 )
-from utils.graphs.utils import clean_variations
+from utils.graphs.utils import clean_variations, micro_averaged_fpr
 
 target_tasks = [
     "brief_hospital_course",
-    "discharge_instructions",    
+    "discharge_instructions",
     "legal_court",
     "cnn",
 ]
@@ -162,10 +162,16 @@ def gen_data_for_ptr_utility(utility_metric, privacy_metric="private_token_ratio
                                 + privacy_data[key]["variation_2"][privacy_metric]
                                 + privacy_data[key]["variation_3"][privacy_metric]
                             ) / 3
+                            avg_ldr = (
+                                privacy_data[key]["variation_1"]["pii_document_percentage"]
+                                + privacy_data[key]["variation_2"]["pii_document_percentage"]
+                                + privacy_data[key]["variation_3"]["pii_document_percentage"]
+                            ) / 3
                         else:
                             avg_ptr = privacy_data[key]["variation_1"][privacy_metric]
+                            avg_ldr = privacy_data[key]["variation_1"]["pii_document_percentage"]
                         tmp_data[model][nkey].append(
-                            (data[key][utility_metric], avg_ptr)
+                            (data[key][utility_metric], avg_ptr, avg_ldr)
                         )
     # sort the nested keys of each model so that 0 shot comes first
     for model in tmp_data.keys():
@@ -408,7 +414,17 @@ def gen_data_for_tpr_utility(utility_metric, privacy_metric="private_token_ratio
                 nkey = handle_key(key)
                 if nkey not in tmp_data[model]:
                     tmp_data[model][nkey] = []
+                tps = [
+                    reid_data[key]["PERSON"]["tp"],
+                    # reid_data[key]["DATE"]["tp"],
+                    reid_data[key]["ORG"]["tp"],
+                ]
+                fns = [
+                    reid_data[key]["PERSON"]["fn"],
+                    # reid_data[key]["DATE"]["fn"],
+                    reid_data[key]["ORG"]["fn"],
+                ]
                 tmp_data[model][nkey].append(
-                    (data[key][utility_metric], reid_data[key]["PERSON"]["recall"])
+                    (data[key][utility_metric], micro_averaged_fpr(tps, fns))
                 )
     return tmp_data

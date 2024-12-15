@@ -104,10 +104,11 @@ def gen_utility_privacy_bar_chart(
     baseline_model,
     baseline_metrics,
     axes,
-    util_ylim=(0.05, 0.275),
+    util_ylim=(0.05, 0.28),
     util2_ylim=(0.75, 0.90),
     priv_ylim=(0, 0.6),
-    expo_ylim=(0, 0.7)
+    doc_priv_ylim=(0, 1.02),
+    expo_ylim=(0, 0.48)
 ):
     # Process data
     n_metric = clean_metric(metric)
@@ -123,17 +124,14 @@ def gen_utility_privacy_bar_chart(
         model_data = bs_data[model]
         for methodology in methodologies:
             struct = (
-                model_data[methodology][target_task_idx][0], #utliity
-                tpr_data[model][methodology][target_task_idx][0], # bertscore
-                model_data[methodology][target_task_idx][1], # ptr
-                tpr_data[model][methodology][target_task_idx][1], # tpr
+                model_data[methodology][target_task_idx][0],  # Utility
+                tpr_data[model][methodology][target_task_idx][0],  # BertScore
+                model_data[methodology][target_task_idx][1],  # PTR
+                tpr_data[model][methodology][target_task_idx][1],  # TPR
+                model_data[methodology][target_task_idx][2],  # LDR
+                
             )
             data[model].append(struct)
-
-    # Sort data by average score
-    # data = dict(
-    #     sorted(data.items(), key=lambda item: sum(t[1] for t in item[1]) / len(item[1]))
-    # )
 
     models = list(data.keys())
     method_colors = ["orange", "blue", "green"]
@@ -156,16 +154,18 @@ def gen_utility_privacy_bar_chart(
     utility2_values = []
     privacy_values = []
     exposure_values = []
+    doc_priv_values = []
     colors = []
     current_x = 0
 
     for model, scores in data.items():
-        for idx, (utility, utility2, privacy, exposure) in enumerate(scores):
+        for idx, (utility, utility2, privacy, exposure, doc_privacy) in enumerate(scores):
             x_positions.append(current_x)
             utility_values.append(utility)
             utility2_values.append(utility2)
             privacy_values.append(privacy)
             exposure_values.append(exposure)
+            doc_priv_values.append(doc_privacy)
             colors.append(method_colors[idx])
             current_x += 0.25
         current_x += gap
@@ -175,37 +175,37 @@ def gen_utility_privacy_bar_chart(
 
     # Plot utility bars (top row)
     ax_utility = axes[target_task_idx]
-    utility_bars = ax_utility.bar(
-        x_positions, utility_values, bar_width, color=colors, alpha=0.7
-    )
+    ax_utility.bar(x_positions, utility_values, bar_width, color=colors, alpha=0.7)
 
     ax_utility2 = axes[target_task_idx + 4]
-    utility2_bars = ax_utility2.bar(
-        x_positions, utility2_values, bar_width, color=colors, alpha=0.7
-    )
+    ax_utility2.bar(x_positions, utility2_values, bar_width, color=colors, alpha=0.7)
 
     ax_privacy = axes[target_task_idx + 8]
-    privacy_bars = ax_privacy.bar(
-        x_positions, privacy_values, bar_width, color=colors, alpha=0.7
-    )
+    ax_privacy.bar(x_positions, privacy_values, bar_width, color=colors, alpha=0.7)
 
-    # Plot privacy bars (bottom row)
-    ax_exposure = axes[target_task_idx + 12]
-    expo_bars = ax_exposure.bar(
-        x_positions, exposure_values, bar_width, color=colors, alpha=0.7
-    )
+    ax_doc_privacy = axes[target_task_idx + 12]
+    ax_doc_privacy.bar(x_positions, doc_priv_values, bar_width, color=colors, alpha=0.7)
 
-    # Configure both plots
-    for i, (ax, values, metric_name) in enumerate([
+    ax_exposure = axes[target_task_idx + 16]
+    ax_exposure.bar(x_positions, exposure_values, bar_width, color=colors, alpha=0.7)
+
+    # Add grid lines and configure all axes
+    for ax, values, metric_name in [
         (ax_utility, utility_values, n_metric),
         (ax_utility2, utility2_values, n2_metric),
         (ax_privacy, privacy_values, "PTR"),
+        (ax_doc_privacy, doc_priv_values, "LDR"),
         (ax_exposure, exposure_values, "TPR"),
-    ]):
+    ]:
         ax.set_xticks(model_centers)
         ax.set_xticklabels(
-            [clean_model_name(model) for model in models], fontsize=8, rotation=25, ha="right"
+            [clean_model_name(model) for model in models], fontsize=12, rotation=25, ha="right"
         )
+
+        # Restore x-ticks for grid line support
+        if ax != ax_exposure:  # Keep x-ticks only on the bottom row
+            ax.set_xticklabels([])
+            ax.tick_params(axis="x", bottom=False)  # Hide tick marks but preserve grid lines
 
         if baseline_model:
             baseline_value = baseline_metrics[target_task_idx][
@@ -224,17 +224,19 @@ def gen_utility_privacy_bar_chart(
                 y=baseline_value,
                 s=f"{clean_model_name(baseline_model)} Baseline",
                 color="black",
-                fontsize=8,
+                fontsize=12,
                 ha="right",
                 va="bottom",
                 backgroundcolor="white",
             )
 
         ax.grid(axis="y", linestyle="--", alpha=0.6)
+        ax.grid(axis="x", linestyle="--", alpha=0.6)  # Ensure x-axis grid lines
         dataset_label = fetch_clean_dataset_name(target_task_idx)
-        ax.set_title(f"{dataset_label}", fontsize=10)
+        if ax == ax_utility:
+            ax.set_title(f"{dataset_label}", fontsize=14)
 
-    # Add legend to first column only
+    # Add legend to the first column only
     if target_task_idx == 0:
         methodology_handles = [
             plt.Line2D([0], [0], color=color, marker="o", linestyle="", label=label)
@@ -251,21 +253,23 @@ def gen_utility_privacy_bar_chart(
             handles=methodology_handles,
             title="Methodologies",
             loc="upper left",
-            fontsize=9,
+            fontsize=12,
         )
-    # set y axis label
+
+    # Set y-axis labels and limits
     if target_task_idx == 0:
-        ax_utility.set_ylabel(n_metric)
-        ax_utility2.set_ylabel(n2_metric)
-        ax_privacy.set_ylabel(clean_metric("PTR"))
-        ax_exposure.set_ylabel(clean_metric("TPR"))
-    ax_utility.set_ylim(util_ylim[0], util_ylim[1])
-    ax_utility.set_xticks([])
-    ax_utility2.set_ylim(util2_ylim[0], util2_ylim[1])
-    ax_utility2.set_xticks([])
-    ax_privacy.set_ylim(priv_ylim[0], priv_ylim[1])
-    ax_privacy.set_xticks([])
-    ax_exposure.set_ylim(expo_ylim[0], expo_ylim[1])
+        ax_utility.set_ylabel(n_metric, fontsize=14)
+        ax_utility2.set_ylabel(n2_metric, fontsize=14)
+        ax_privacy.set_ylabel(clean_metric("PTR"), fontsize=14)
+        ax_doc_privacy.set_ylabel(clean_metric("LDR"), fontsize=14)
+        ax_exposure.set_ylabel(clean_metric("TPR"), fontsize=14)
+
+    ax_utility.set_ylim(util_ylim)
+    ax_utility2.set_ylim(util2_ylim)
+    ax_privacy.set_ylim(priv_ylim)
+    ax_doc_privacy.set_ylim(doc_priv_ylim)
+    ax_exposure.set_ylim(expo_ylim)
+
 
 
 def gen_utility_privacy_bar_chart_for_uber(metric, privacy_metric):

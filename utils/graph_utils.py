@@ -54,8 +54,8 @@ def gen_graphs():
     # bs_data = gen_data_for_ptr_variation(privacy_metric="private_token_ratio")
     # gen_variance_graph(bs_data, file_suffix="private_token_ratio")
 
-    # bs_data = gen_data_for_ptr_mean_std_variation(privacy_metric="private_token_ratio")
-    # gen_std_variance_graph(bs_data, file_suffix="private_token_ratio")
+    bs_data = gen_data_for_ptr_mean_std_variation(privacy_metric="private_token_ratio")
+    gen_std_variance_graph(bs_data, file_suffix="private_token_ratio")
 
     # bs_data = gen_data_for_document_length(privacy_metric="private_token_ratio")
 
