@@ -379,6 +379,28 @@
             "env": {
                 "PYTHONPATH": "${cwd}"
             },
-        }
+        },
+        {
+            "name": "Randomizer",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "utils/randomizer.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            }
+        },
+        {
+            "name": "Context Window Check",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "utils/context_check.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            }
+        },
     ]
 }
