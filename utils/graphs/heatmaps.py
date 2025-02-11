@@ -141,7 +141,7 @@ def plot_heat_maps_side_by_side(models, tasks, data_fp, data_fn, task_suffix):
     # plt.tight_layout()
     # Save the figure
     plt.savefig(
-        f"{PRIVACY_RESULTS_DIR}/graphs/fp-fn-heatmaps-{task_suffix}.svg",
+        f"{PRIVACY_RESULTS_DIR}/graphs/fp-fn-heatmaps-{task_suffix}.png",
         dpi=300,
         bbox_inches='tight'
     )

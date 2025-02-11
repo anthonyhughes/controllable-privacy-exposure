@@ -105,7 +105,7 @@ def handle_key(key):
     elif "_in_context" in key:
         return "1 Shot"
     elif "_sani_summ" in key:
-        return "Sanitize and Summarize"
+        return "Anonymize and Summarize"
     else:
         return "0 Shot"
 
@@ -301,7 +301,8 @@ def gen_fp_positives_for_heat_map(task_suffix, positive_type="fp"):
     ]
     hmap_data = [[], [], [], [], [], [], [], []]
     for target_task in target_tasks:
-        if target_task == "cnn" or target_task == "legal_court":
+        if target_task == "cnn": continue
+        if target_task == "legal_court":
             files = reid_non_clinical_files
         else:
             files = reid_clinical_files
@@ -311,7 +312,7 @@ def gen_fp_positives_for_heat_map(task_suffix, positive_type="fp"):
                 task_data = data[target_task + task_suffix]
                 all_false_pos = (
                     task_data["PERSON"][positive_type]
-                    + task_data["DATE"][positive_type]
+                    # + task_data["DATE"][positive_type]
                     + task_data["ORG"][positive_type]
                 )
                 hmap_data[i].append(all_false_pos)
@@ -331,7 +332,8 @@ def gen_fn_positives_for_heat_map(task_suffix, positive_type="fp"):
     ]
     hmap_data = [[], [], [], [], [], [], [], []]
     for target_task in target_tasks:
-        if target_task == "cnn" or target_task == "legal_court":
+        if target_task == "cnn": continue
+        if target_task == "legal_court":
             files = reid_non_clinical_files
         else:
             files = reid_clinical_files

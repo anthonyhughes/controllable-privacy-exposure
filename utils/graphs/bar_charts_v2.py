@@ -242,7 +242,7 @@ def gen_utility_privacy_bar_chart(
             plt.Line2D([0], [0], color=color, marker="o", linestyle="", label=label)
             for color, label in zip(
                 method_colors,
-                ["0 Shot Private", "1 Shot Private", "Sanitize and Summarize"],
+                ["0 Shot Private", "1 Shot Private", "Anonymize and Summarize"],
             )
         ]
         if baseline_model:
