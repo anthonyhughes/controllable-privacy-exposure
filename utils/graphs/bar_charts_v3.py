@@ -24,16 +24,16 @@ import matplotlib.gridspec as gridspec
 
 def gen_combined_utility_privacy_bar_chart():
     fig = plt.figure(figsize=(24, 15))
-    gs = gridspec.GridSpec(5, 4, height_ratios=[0.4, 0.4, 0.4, 0.4, 0.4])
+    gs = gridspec.GridSpec(5, 3, height_ratios=[0.5, 0.4, 0.4, 0.4, 0.4])
 
     # Create axes for all subplots
-    axes = [fig.add_subplot(gs[i, j]) for i in range(5) for j in range(4)]
+    axes = [fig.add_subplot(gs[i, j]) for i in range(5) for j in range(3)]
 
     # First 2 rows: data from gen_data_for_ptr_utility
     tpr_data = gen_data_for_tpr_utility(utility_metric="bertscore")
     ptr_data, _, _ = gen_data_for_ptr_utility(utility_metric="rougeL")
 
-    for i in range(4):
+    for i in range(3):
         gen_utility_privacy_bar_chart(
             ptr_data,
             tpr_data,

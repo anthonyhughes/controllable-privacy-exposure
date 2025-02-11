@@ -177,16 +177,16 @@ def gen_utility_privacy_bar_chart(
     ax_utility = axes[target_task_idx]
     ax_utility.bar(x_positions, utility_values, bar_width, color=colors, alpha=0.7)
 
-    ax_utility2 = axes[target_task_idx + 4]
+    ax_utility2 = axes[target_task_idx + 3]
     ax_utility2.bar(x_positions, utility2_values, bar_width, color=colors, alpha=0.7)
 
-    ax_privacy = axes[target_task_idx + 8]
+    ax_privacy = axes[target_task_idx + 6]
     ax_privacy.bar(x_positions, privacy_values, bar_width, color=colors, alpha=0.7)
 
-    ax_doc_privacy = axes[target_task_idx + 12]
+    ax_doc_privacy = axes[target_task_idx + 9]
     ax_doc_privacy.bar(x_positions, doc_priv_values, bar_width, color=colors, alpha=0.7)
 
-    ax_exposure = axes[target_task_idx + 16]
+    ax_exposure = axes[target_task_idx + 12]
     ax_exposure.bar(x_positions, exposure_values, bar_width, color=colors, alpha=0.7)
 
     # Add grid lines and configure all axes

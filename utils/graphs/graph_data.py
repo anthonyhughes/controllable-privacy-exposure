@@ -16,7 +16,7 @@ target_tasks = [
     "brief_hospital_course",
     "discharge_instructions",
     "legal_court",
-    "cnn",
+    # "cnn",
 ]
 models_in_order = [
     "gpt-4o-mini",
