@@ -402,5 +402,27 @@
                 "PYTHONPATH": "${cwd}"
             }
         },
+        {
+            "name": "Human Summ Check",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/human_eval_pipeline.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            }
+        },
+        {
+            "name": "Human Summ Privacy",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "utils/gold_pii_eval.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            }
+        },
     ]
 }
