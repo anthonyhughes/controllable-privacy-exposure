@@ -73,11 +73,11 @@ def gen_graphs():
     # bs_data = gen_fp_positives_for_heat_map(task_suffix="_sani_summ", positive_type=pos_type)
     # plot_heat_map(bs_data[0], bs_data[1], bs_data[2], task_suffix="_sani_summ", positive_type=pos_type)
 
-    bs_data_fp = gen_fp_positives_for_heat_map(task_suffix="_sani_summ", positive_type="fp")
-    bs_data_fn = gen_fn_positives_for_heat_map(task_suffix="_sani_summ", positive_type="fn")
-    plot_heat_maps_side_by_side(
-        bs_data_fp[0], bs_data_fp[1], bs_data_fp[2], bs_data_fn[2], task_suffix="_sani_summ"
-    )
+    # bs_data_fp = gen_fp_positives_for_heat_map(task_suffix="_sani_summ", positive_type="fp")
+    # bs_data_fn = gen_fn_positives_for_heat_map(task_suffix="_sani_summ", positive_type="fn")
+    # plot_heat_maps_side_by_side(
+    #     bs_data_fp[0], bs_data_fp[1], bs_data_fp[2], bs_data_fn[2], task_suffix="_sani_summ"
+    # )
 
     # bs_data = gen_ptr_tp_data()
     # gen_diff_plot_for_privacy(bs_data)

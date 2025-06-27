@@ -424,5 +424,16 @@
                 "PYTHONPATH": "${cwd}"
             }
         },
+        {
+            "name": "HF Inference",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "pipelines/hf_api_client.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "PYTHONPATH": "${cwd}"
+            }
+        },
     ]
 }
